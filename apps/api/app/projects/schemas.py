@@ -1,0 +1,37 @@
+from datetime import datetime
+
+from pydantic import BaseModel, Field
+
+
+class ProjectCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=200)
+    template: str = "clean"
+
+
+class ProjectUpdate(BaseModel):
+    name: str = Field(min_length=1, max_length=200)
+
+
+class ProjectOut(BaseModel):
+    id: int
+    name: str
+    slug: str
+    template_id: str
+    role: str
+    revision: int
+    updated_at: datetime
+
+
+class DocOut(BaseModel):
+    doc: dict
+    revision: int
+
+
+class DocIn(BaseModel):
+    doc: dict
+    base_revision: int  # the revision this edit was based on
+
+
+class SavedOut(BaseModel):
+    revision: int
+    warnings: list[dict] = []

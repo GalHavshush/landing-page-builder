@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.auth.routes import router as auth_router
 from app.config import get_settings
+from app.projects.routes import router as projects_router
 
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
         return await call_next(request)
 
     app.include_router(auth_router)
+    app.include_router(projects_router)
 
     @app.get("/health")
     def health() -> dict:
