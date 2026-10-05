@@ -125,3 +125,59 @@ export const updateTheme =
   (doc) => {
     Object.assign(doc.theme, patch);
   };
+
+// ---- page / site settings, navigation and languages -------------------------------------
+
+type PageSeo = Page["seo"];
+
+export const updatePageSeo =
+  (pageId: string, patch: Partial<PageSeo>): Recipe =>
+  (doc) => {
+    const page = doc.pages.find((p) => p.id === pageId);
+    if (page) Object.assign(page.seo, patch);
+  };
+
+/** Set (or clear, with undefined) one translated page field: title, slug, seo_title, seo_description. */
+export const setPageTranslation =
+  (pageId: string, lang: string, field: "title" | "slug" | "seo_title" | "seo_description", value: string | undefined): Recipe =>
+  (doc) => {
+    const page = doc.pages.find((p) => p.id === pageId);
+    if (!page) return;
+    const bucket = (page.i18n[lang] ??= { title: null, slug: null, seo_title: null, seo_description: null });
+    bucket[field] = value === undefined || value === "" ? null : value;
+    if (Object.values(bucket).every((v) => v === null)) delete page.i18n[lang];
+  };
+
+export const setSiteTranslation =
+  (lang: string, field: "name" | "tagline" | "description" | "address" | "footer_text", value: string | undefined): Recipe =>
+  (doc) => {
+    const bucket = (doc.site.i18n[lang] ??= { name: null, tagline: null, description: null, address: null, hours: null, footer_text: null });
+    bucket[field] = value === undefined || value === "" ? null : value;
+    if (Object.values(bucket).every((v) => v === null)) delete doc.site.i18n[lang];
+  };
+
+export const setNav =
+  (nav: SiteDocument["site"]["nav"]): Recipe =>
+  (doc) => {
+    doc.site.nav = nav as Draft<SiteDocument["site"]["nav"]>;
+  };
+
+export const addLanguage =
+  (code: string): Recipe =>
+  (doc) => {
+    if (!doc.site.languages.includes(code)) doc.site.languages.push(code);
+  };
+
+/** Remove a language and every translation of it (the server rejects dangling translations). */
+export const removeLanguage =
+  (code: string): Recipe =>
+  (doc) => {
+    if (code === doc.site.default_language) throw new Error("cannot remove the default language");
+    doc.site.languages = doc.site.languages.filter((l) => l !== code);
+    delete doc.site.i18n[code];
+    for (const item of doc.site.nav) delete item.labels[code];
+    for (const page of doc.pages) {
+      delete page.i18n[code];
+      for (const section of page.sections) delete section.i18n[code];
+    }
+  };

@@ -16,7 +16,7 @@ const section = (id: string, heading = id) =>
 function doc(): SiteDocument {
   return {
     schema_version: 1,
-    site: { name: "T", nav: [{ label: "Home", page: "p1", labels: {} }, { label: "B", page: "p2", labels: {} }], default_language: "en", languages: ["en"] },
+    site: { name: "T", nav: [{ label: "Home", page: "p1", labels: {} }, { label: "B", page: "p2", labels: {} }], default_language: "en", languages: ["en"], i18n: {} },
     theme: {},
     pages: [
       { id: "p1", slug: "", title: "Home", seo: {}, i18n: {}, sections: [section("a"), section("b"), section("c")] },
@@ -68,5 +68,40 @@ describe("page commands", () => {
   });
   it("refuses to delete the last page", () => {
     expect(() => run(run(doc(), c.removePage("p2")), c.removePage("p1"))).toThrow();
+  });
+});
+
+describe("language and settings commands", () => {
+  const multi = () => {
+    const d = doc();
+    d.site.languages = ["en", "he"];
+    d.site.nav[0].labels = { he: "בית" };
+    d.pages[0].i18n = { he: { title: "בית", slug: null, seo_title: null, seo_description: null } } as never;
+    d.pages[0].sections[0].i18n = { he: { heading: "שלום" } };
+    d.site.i18n = { he: { name: "ת", tagline: null, description: null, address: null, hours: null, footer_text: null } } as never;
+    return d;
+  };
+  it("adds a language once", () => {
+    const d = run(run(doc(), c.addLanguage("he")), c.addLanguage("he"));
+    expect(d.site.languages).toEqual(["en", "he"]);
+  });
+  it("removing a language deletes every translation of it", () => {
+    const d = run(multi(), c.removeLanguage("he"));
+    expect(d.site.languages).toEqual(["en"]);
+    expect(d.site.i18n).toEqual({});
+    expect(d.site.nav[0].labels).toEqual({});
+    expect(d.pages[0].i18n).toEqual({});
+    expect(d.pages[0].sections[0].i18n).toEqual({});
+    expect(JSON.stringify(d)).not.toContain("שלום");
+  });
+  it("cannot remove the default language", () => {
+    expect(() => run(doc(), c.removeLanguage("en"))).toThrow();
+  });
+  it("page and site translations are cleaned up when emptied", () => {
+    const a = run(doc(), c.setPageTranslation("p1", "he", "title", "בית"));
+    expect(a.pages[0].i18n.he.title).toBe("בית");
+    expect(run(a, c.setPageTranslation("p1", "he", "title", "")).pages[0].i18n).toEqual({});
+    const b = run(doc(), c.setSiteTranslation("he", "name", "ת"));
+    expect(run(b, c.setSiteTranslation("he", "name", undefined)).site.i18n).toEqual({});
   });
 });

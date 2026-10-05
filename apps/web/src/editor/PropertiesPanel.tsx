@@ -3,6 +3,7 @@ import type { EditorMeta, PropSchema, Section, SectionMeta } from "@/api/types";
 import { setVariant, setTranslation, updateProps, updateStyle } from "./commands";
 import { SegmentedControl } from "./controls/basic";
 import { Control, type Env } from "./controls/registry";
+import { SettingsPanel } from "./SettingsPanel";
 import { currentPage, useEditor } from "./store";
 
 const humanize = (s: string) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
@@ -90,13 +91,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
   const [tab, setTab] = useState<"content" | "design">("content");
   const section = page?.sections.find((s) => s.id === selectedId);
 
-  if (!section) {
-    return (
-      <aside className="min-h-0 overflow-y-auto border-l border-slate-200 bg-white p-4">
-        <p className="text-sm text-slate-500">Select a section in the list or in the preview to edit it.</p>
-      </aside>
-    );
-  }
+  if (!section) return <SettingsPanel meta={meta} />;
   const sectionMeta: SectionMeta | undefined = meta.sections.find((m) => m.type === section.type);
   const entries = Object.entries(sectionMeta?.props_schema.properties ?? {});
   const content = entries.filter(([, s]) => s.group === "content");

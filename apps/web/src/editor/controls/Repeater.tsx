@@ -5,7 +5,7 @@ import { itemTitle } from "./schema";
  * A list of items edited inline: expand to edit, move up/down, remove, add.
  * `renderItem` draws the fields of one item (the registry supplies it from the item schema).
  */
-export function Repeater<T extends Record<string, unknown>>({
+export function Repeater<T extends object>({
   label, items, onChange, renderItem, makeBlank, addLabel,
 }: {
   label: string;
@@ -38,14 +38,14 @@ export function Repeater<T extends Record<string, unknown>>({
               <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}
                 className="min-w-0 flex-1 truncate px-2.5 py-2 text-left text-sm font-medium">
                 <span className="mr-1.5 text-slate-400">{open === i ? "▾" : "▸"}</span>
-                {itemTitle(item, i)}
+                {itemTitle(item as Record<string, unknown>, i)}
               </button>
               <div className="flex gap-0.5 pr-1 text-slate-500">
-                <button type="button" aria-label={`Move ${itemTitle(item, i)} up`} disabled={i === 0} onClick={() => move(i, -1)}
+                <button type="button" aria-label={`Move ${itemTitle(item as Record<string, unknown>, i)} up`} disabled={i === 0} onClick={() => move(i, -1)}
                   className="rounded px-1.5 py-1 hover:bg-slate-200 disabled:opacity-25">↑</button>
-                <button type="button" aria-label={`Move ${itemTitle(item, i)} down`} disabled={i === items.length - 1} onClick={() => move(i, 1)}
+                <button type="button" aria-label={`Move ${itemTitle(item as Record<string, unknown>, i)} down`} disabled={i === items.length - 1} onClick={() => move(i, 1)}
                   className="rounded px-1.5 py-1 hover:bg-slate-200 disabled:opacity-25">↓</button>
-                <button type="button" aria-label={`Remove ${itemTitle(item, i)}`} onClick={() => remove(i)}
+                <button type="button" aria-label={`Remove ${itemTitle(item as Record<string, unknown>, i)}`} onClick={() => remove(i)}
                   className="rounded px-1.5 py-1 hover:bg-red-50 hover:text-red-600">✕</button>
               </div>
             </div>
