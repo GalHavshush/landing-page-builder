@@ -6,6 +6,7 @@ Links end in index.html explicitly so they also work without a web server.
 
 import posixpath
 
+from sitegen.posts import BLOG_DIR, Post
 from sitegen.schema import SiteDocument
 
 
@@ -23,3 +24,8 @@ def plan_pages(doc: SiteDocument) -> dict[tuple[str, str], str]:
 def relative(from_file: str, to_file: str) -> str:
     start = posixpath.dirname(from_file) or "."
     return posixpath.relpath(to_file, start)
+
+
+def post_output_path(doc: SiteDocument, post: Post) -> str:
+    prefix = "" if post.lang == doc.site.default_language else f"{post.lang}/"
+    return f"{prefix}{BLOG_DIR}/{post.slug}/index.html"

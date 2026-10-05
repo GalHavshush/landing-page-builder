@@ -9,7 +9,7 @@
 {% if head.canonical %}<link rel="canonical" href="{{ head.canonical }}">{% endif %}
 {% for hreflang, url in head.alternates %}<link rel="alternate" hreflang="{{ hreflang }}" href="{{ url }}">
 {% endfor %}
-<meta property="og:type" content="website">
+<meta property="og:type" content="{{ head.og_type }}">
 <meta property="og:title" content="{{ head.title }}">
 {% if head.description %}<meta property="og:description" content="{{ head.description }}">{% endif %}
 {% if head.canonical %}<meta property="og:url" content="{{ head.canonical }}">{% endif %}

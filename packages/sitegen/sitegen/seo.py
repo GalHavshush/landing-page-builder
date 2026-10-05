@@ -3,6 +3,7 @@
 from xml.sax.saxutils import escape
 
 from sitegen import paths
+from sitegen.posts import Post, sort_newest_first
 from sitegen.schema import Page, SiteDocument
 
 
@@ -48,7 +49,7 @@ def alternates(doc: SiteDocument, page: Page, plan: dict) -> list[tuple[str, str
     return alts
 
 
-def sitemap_xml(doc: SiteDocument) -> str | None:
+def sitemap_xml(doc: SiteDocument, posts: list[Post] | None = None) -> str | None:
     if not doc.site.base_url:
         return None
     plan = paths.plan_pages(doc)
@@ -64,6 +65,19 @@ def sitemap_xml(doc: SiteDocument) -> str | None:
             rows.append(
                 f"<url><loc>{escape(public_url(doc, plan[(page.id, lang)]))}</loc>{links}</url>"
             )
+    for post in posts or []:
+        if post.lang not in doc.site.languages:
+            continue
+        group = [p for p in (posts or []) if p.translation_group == post.translation_group]
+        links = "".join(
+            f'<xhtml:link rel="alternate" hreflang="{p.lang}" '
+            f'href="{escape(public_url(doc, paths.post_output_path(doc, p)))}"/>'
+            for p in group
+            if len(group) > 1
+        )
+        loc = escape(public_url(doc, paths.post_output_path(doc, post)))
+        lastmod = post.published_at.date().isoformat()
+        rows.append(f"<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod>{links}</url>")
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
@@ -76,3 +90,27 @@ def robots_txt(doc: SiteDocument) -> str:
     if doc.site.base_url:
         lines.append(f"Sitemap: {doc.site.base_url}/sitemap.xml")
     return "\n".join(lines) + "\n"
+
+
+def rss_xml(doc: SiteDocument, posts: list[Post], lang: str) -> str | None:
+    """RSS 2.0 feed of one language's posts (needs base_url: feeds use absolute links)."""
+    items = sort_newest_first([p for p in posts if p.lang == lang])
+    if not doc.site.base_url or not items:
+        return None
+    tr = doc.site.i18n.get(lang) if lang != doc.site.default_language else None
+    title = (tr.name if tr and tr.name else None) or doc.site.name
+    entries = "".join(
+        f"<item><title>{escape(p.title)}</title>"
+        f"<link>{escape(public_url(doc, paths.post_output_path(doc, p)))}</link>"
+        f'<guid isPermaLink="true">{escape(public_url(doc, paths.post_output_path(doc, p)))}</guid>'
+        f"<pubDate>{p.published_at.strftime('%a, %d %b %Y %H:%M:%S +0000')}</pubDate>"
+        f"<description>{escape(p.excerpt)}</description></item>"
+        for p in items
+    )
+    prefix = "" if lang == doc.site.default_language else f"{lang}/"
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel>'
+        f"<title>{escape(title)}</title><link>{escape(doc.site.base_url)}/{prefix}</link>"
+        f"<description>{escape(doc.site.seo.default_description or title)}</description>"
+        f"<language>{lang}</language>{entries}</channel></rss>\n"
+    )

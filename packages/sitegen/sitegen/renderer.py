@@ -1,5 +1,7 @@
 """Turns a SiteDocument + one page + one language into an HTML string."""
 
+import hashlib
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import lru_cache
@@ -13,6 +15,7 @@ from sitegen.css import STATIC, compose_css
 from sitegen.icons import render_icon
 from sitegen.markdown import render_markdown
 from sitegen.models import Button, ImageRef, Link
+from sitegen.posts import Post, format_date, sort_newest_first
 from sitegen.schema import SEO, Page, SiteDocument, language_dir
 from sitegen.sections import REGISTRY
 from sitegen.sections.base import SECTIONS_DIR
@@ -81,8 +84,10 @@ class RenderContext:
         absolute: bool = False,
         page_id: str | None = None,
         preview: PreviewOptions | None = None,
+        posts: list[Post] | None = None,
     ):
         self.doc = doc
+        self.posts = posts or []
         self.lang = lang
         self.out_path = out_path
         self.assets = assets
@@ -202,17 +207,85 @@ class RenderContext:
             self.issues.append(Issue("warning", f"Could not read this YouTube link: {url!r}"))
         return vid
 
+    def blog_posts(self, limit: int = 0) -> list[dict]:
+        """Published posts in this language, newest first, ready for templates."""
+        posts = sort_newest_first([p for p in self.posts if p.lang == self.lang])
+        if limit:
+            posts = posts[:limit]
+        return [self.post_view(p) for p in posts]
+
+    def post_view(self, post: Post) -> dict:
+        cover = self.image(ImageRef(asset=post.cover)) if post.cover else None
+        return {
+            "title": post.title,
+            "excerpt": post.excerpt,
+            "href": self.rel(paths.post_output_path(self.doc, post)),
+            "cover": cover,
+            "date": format_date(post.published_at, self.lang),
+            "iso_date": post.published_at.date().isoformat(),
+        }
+
     def md(self, source: str) -> Markup:
+        """Markdown -> safe HTML. `asset:<id>` links/images resolve to uploaded files."""
+
+        def resolve(match):
+            asset_id = match.group(1)
+            if self.preview:
+                return self.preview.asset_url(asset_id)
+            path = self.asset_path(asset_id)
+            if path is None:
+                self.issues.append(Issue("warning", f"missing asset {asset_id!r} in text"))
+                return "#"
+            return self.rel(path)
+
+        source = re.sub(r"asset:(asset_[0-9a-f]+)", resolve, source or "")
         return Markup(render_markdown(source))  # noqa: S704 - sanitised by nh3
 
 
 def asset_output_path(asset_id: str, asset: AssetFile) -> str:
-    import hashlib
-    import re
-
     digest = hashlib.sha256(asset.data).hexdigest()[:8]
     name = re.sub(r"[^a-zA-Z0-9._-]+", "-", asset.filename).strip("-") or "file"
     return f"assets/{digest}-{name}"
+
+
+def _render_layout(
+    doc: SiteDocument,
+    lang: str,
+    ctx: RenderContext,
+    sections_html: list[str],
+    head: dict,
+    preview: PreviewOptions | None,
+    languages: list[dict],
+) -> str:
+    plan = ctx.plan
+    home = plan[(doc.pages[0].id, lang)] if doc.pages else ctx.out_path
+    return (
+        get_env()
+        .get_template("layout.html.j2")
+        .render(
+            lang=lang,
+            dir=language_dir(lang),
+            head=head,
+            css_href=ctx.rel(CSS_PATH),
+            js_href=ctx.rel(JS_PATH),
+            home_href=ctx.rel(home),
+            site=ctx.site_view(),
+            nav=ctx.nav(),
+            languages=languages,
+            sections_html=sections_html,
+            doc=doc,
+            ctx=ctx,
+            preview=preview is not None,
+            inline_css=compose_css(doc) if preview else None,
+            inline_js=(STATIC / "site.js").read_text() if preview else None,
+            preview_js=(STATIC / "preview.js").read_text() if preview else None,
+        )
+    )
+
+
+def _social_image_url(doc: SiteDocument, ctx: RenderContext, asset_id: str | None) -> str | None:
+    path = ctx.asset_path(asset_id) if asset_id else None
+    return f"{doc.site.base_url}/{path}" if path and doc.site.base_url else None
 
 
 def render_page(
@@ -225,9 +298,9 @@ def render_page(
     out_path: str | None = None,
     absolute: bool = False,
     preview: PreviewOptions | None = None,
+    posts: list[Post] | None = None,
 ) -> str:
     """Render one page in one language. `out_path`/`absolute` are for synthetic pages (404)."""
-    env = get_env()
     plan = paths.plan_pages(doc)
     out_path = out_path or plan[(page.id, lang)]
     is_real_page = (page.id, lang) in plan
@@ -240,8 +313,9 @@ def render_page(
         absolute=absolute,
         page_id=page.id if is_real_page else None,
         preview=preview,
+        posts=posts,
     )
-    wrapper = env.get_template("_section.html.j2")
+    wrapper = get_env().get_template("_section.html.j2")
     sections_html = [
         wrapper.render(
             s=section,
@@ -252,39 +326,87 @@ def render_page(
         for section in page.sections
     ]
     site = ctx.site_view()
-    social_id = page.seo.social_image or doc.site.seo.social_image
-    social_path = ctx.asset_path(social_id) if social_id else None
     head = {
         "title": seo.page_title(doc, page, lang, site["name"], site["tagline"])
         if doc.pages
         else page.title,
         "description": seo.page_description(doc, page, lang, site["description"]),
         "canonical": seo.public_url(doc, out_path) if is_real_page else None,
-        "image": f"{doc.site.base_url}/{social_path}"
-        if social_path and doc.site.base_url
-        else None,
+        "image": _social_image_url(doc, ctx, page.seo.social_image or doc.site.seo.social_image),
         "noindex": page.seo.noindex or not is_real_page,
         "alternates": seo.alternates(doc, page, plan) if is_real_page else [],
+        "og_type": "website",
     }
-    home = plan[(doc.pages[0].id, lang)] if doc.pages else out_path
-    return env.get_template("layout.html.j2").render(
-        lang=lang,
-        dir=language_dir(lang),
-        head=head,
-        css_href=ctx.rel(CSS_PATH),
-        js_href=ctx.rel(JS_PATH),
-        home_href=ctx.rel(home),
-        site=site,
-        nav=ctx.nav(),
-        languages=ctx.language_links(),
-        sections_html=sections_html,
-        doc=doc,
-        ctx=ctx,
-        preview=preview is not None,
-        inline_css=compose_css(doc) if preview else None,
-        inline_js=(STATIC / "site.js").read_text() if preview else None,
-        preview_js=(STATIC / "preview.js").read_text() if preview else None,
+    return _render_layout(doc, lang, ctx, sections_html, head, preview, ctx.language_links())
+
+
+def blog_index_path(doc: SiteDocument, lang: str) -> str:
+    """Where "Back to blog" goes: the first page showing a blog list, else the home page."""
+    plan = paths.plan_pages(doc)
+    for page in doc.pages:
+        if any(s.type == "blog_list" for s in page.sections):
+            return plan[(page.id, lang)]
+    return plan[(doc.pages[0].id, lang)]
+
+
+def render_post(
+    doc: SiteDocument,
+    post: Post,
+    assets: dict[str, AssetFile],
+    issues: list[Issue],
+    all_posts: list[Post],
+    *,
+    preview: PreviewOptions | None = None,
+) -> str:
+    lang = post.lang
+    out_path = paths.post_output_path(doc, post)
+    ctx = RenderContext(doc, lang, out_path, assets, issues, preview=preview, posts=all_posts)
+    view = ctx.post_view(post)
+    article = (
+        get_env()
+        .get_template("_post.html.j2")
+        .render(
+            post=view,
+            body=ctx.md(post.body_md),
+            ctx=ctx,
+            back_href=ctx.rel(blog_index_path(doc, lang)),
+        )
     )
+    wrapper = (
+        f'<section class="s sp-normal bg-default"><div class="container">{article}</div></section>'
+    )
+    site = ctx.site_view()
+    translations = [p for p in all_posts if p.translation_group == post.translation_group]
+    alternates = []
+    languages = []
+    if len(translations) > 1:
+        for t in sorted(
+            translations,
+            key=lambda t: doc.site.languages.index(t.lang) if t.lang in doc.site.languages else 99,
+        ):
+            target = paths.post_output_path(doc, t)
+            languages.append(
+                {
+                    "code": t.lang,
+                    "label": strings.language_name(t.lang),
+                    "href": ctx.rel(target),
+                    "current": t.lang == lang,
+                }
+            )
+            if doc.site.base_url:
+                alternates.append((t.lang, seo.public_url(doc, target)))
+    head = {
+        "title": doc.site.seo.title_template.replace("{page}", post.title).replace(
+            "{site}", site["name"]
+        ),
+        "description": post.excerpt or site["description"],
+        "canonical": seo.public_url(doc, out_path),
+        "image": _social_image_url(doc, ctx, post.cover or doc.site.seo.social_image),
+        "noindex": False,
+        "alternates": alternates,
+        "og_type": "article",
+    }
+    return _render_layout(doc, lang, ctx, [wrapper], head, preview, languages)
 
 
 def render_not_found(doc: SiteDocument, assets, issues: list[Issue]) -> str:

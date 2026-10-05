@@ -21,6 +21,9 @@ KEYS = (
     "open_map",
     "watch_video",
     "play_video",
+    "read_more",
+    "back_to_blog",
+    "no_posts",
 )
 
 STRINGS = {
@@ -41,6 +44,9 @@ STRINGS = {
         "Open in Maps",
         "Watch on YouTube",
         "Play video",
+        "Read more",
+        "Back to blog",
+        "No posts yet",
     ),
     "he": (
         "דלג לתוכן",
@@ -59,6 +65,9 @@ STRINGS = {
         "פתח במפות",
         "צפה ב-YouTube",
         "הפעל וידאו",
+        "קרא עוד",
+        "חזרה לבלוג",
+        "אין פוסטים עדיין",
     ),
     "es": (
         "Saltar al contenido",
@@ -77,6 +86,9 @@ STRINGS = {
         "Abrir en Mapas",
         "Ver en YouTube",
         "Reproducir vídeo",
+        "Leer más",
+        "Volver al blog",
+        "Aún no hay entradas",
     ),
     "de": (
         "Zum Inhalt springen",
@@ -95,6 +107,9 @@ STRINGS = {
         "In Karten öffnen",
         "Auf YouTube ansehen",
         "Video abspielen",
+        "Weiterlesen",
+        "Zurück zum Blog",
+        "Noch keine Beiträge",
     ),
     "fr": (
         "Aller au contenu",
@@ -113,6 +128,9 @@ STRINGS = {
         "Ouvrir dans Plans",
         "Voir sur YouTube",
         "Lire la vidéo",
+        "Lire la suite",
+        "Retour au blog",
+        "Pas encore d'articles",
     ),
     "ar": (
         "انتقل إلى المحتوى",
@@ -131,6 +149,9 @@ STRINGS = {
         "افتح في الخرائط",
         "شاهد على يوتيوب",
         "تشغيل الفيديو",
+        "اقرأ المزيد",
+        "العودة إلى المدونة",
+        "لا توجد مقالات بعد",
     ),
 }
 _TABLES = {lang: dict(zip(KEYS, values, strict=True)) for lang, values in STRINGS.items()}

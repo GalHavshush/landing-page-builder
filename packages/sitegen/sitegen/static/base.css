@@ -84,3 +84,11 @@ a{color:var(--color-primary)}
   .s-hero--split .hero-grid.has-image{grid-template-columns:1.05fr .95fr}
   .s-hero--split .hero-grid.image-start .hero-media{order:-1}
 }
+
+/* blog post page */
+.post{max-width:46rem;margin-inline:auto}
+.post-meta{color:var(--color-muted);font-size:.9rem;margin:0 0 .5rem}
+.post-hero{width:100%;border-radius:calc(var(--radius)*1.4);margin-block:1.5rem 2rem}
+.post .prose{max-width:none;font-size:1.1rem}
+.post .prose h2{margin-block-start:2rem}
+.post-back{margin-block-start:3rem;padding-block-start:1.5rem;border-block-start:1px solid var(--color-border)}

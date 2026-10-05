@@ -1,0 +1,10 @@
+<article class="post">
+  <header>
+    <p class="post-meta"><time datetime="{{ post.iso_date }}">{{ post.date }}</time></p>
+    <h1>{{ post.title }}</h1>
+    {% if post.excerpt %}<p class="lead">{{ post.excerpt }}</p>{% endif %}
+  </header>
+  {% if post.cover %}<img class="post-hero" src="{{ post.cover.src }}" alt=""{% if post.cover.width %} width="{{ post.cover.width }}" height="{{ post.cover.height }}"{% endif %}>{% endif %}
+  <div class="prose">{{ body }}</div>
+  <p class="post-back"><a href="{{ back_href }}">&larr; {{ ctx.t("back_to_blog") }}</a></p>
+</article>

@@ -5,6 +5,7 @@ from typing import Annotated, Union
 from pydantic import Field
 
 from sitegen.sections.base import SectionDef
+from sitegen.sections.blog_list.model import DEF as BLOG_LIST
 from sitegen.sections.contact.model import DEF as CONTACT
 from sitegen.sections.faq.model import DEF as FAQ
 from sitegen.sections.features.model import DEF as FEATURES
@@ -31,6 +32,7 @@ REGISTRY: dict[str, SectionDef] = {
         CONTACT,
         YOUTUBE,
         MAP,
+        BLOG_LIST,
     )
 }
 
