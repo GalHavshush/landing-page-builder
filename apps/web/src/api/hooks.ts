@@ -212,3 +212,23 @@ export function useDeleteProject() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
   });
 }
+
+export interface StockPhoto { id: string; thumb_url: string; width: number; height: number; alt: string; credit: string; page_url: string }
+export interface StockSearch { enabled: boolean; provider: string; results: StockPhoto[] }
+
+/** `q` empty only asks whether stock search is set up on this server. */
+export const useStockSearch = (projectId: number, q: string) =>
+  useQuery({
+    queryKey: ["stock", projectId, q],
+    queryFn: () => api<StockSearch>(`/projects/${projectId}/stock/search?q=${encodeURIComponent(q)}`),
+    staleTime: 5 * 60_000,
+  });
+
+export function useImportStock(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (photoId: string) =>
+      api<Asset>(`/projects/${projectId}/stock/import`, { method: "POST", body: { photo_id: photoId } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assets", projectId] }),
+  });
+}

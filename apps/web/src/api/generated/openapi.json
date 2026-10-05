@@ -706,6 +706,123 @@
         }
       }
     },
+    "/projects/{project_id}/stock/search": {
+      "get": {
+        "tags": [
+          "stock"
+        ],
+        "summary": "Search Stock",
+        "operationId": "search_stock_projects__project_id__stock_search_get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100,
+              "default": "",
+              "title": "Q"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 20,
+              "minimum": 1,
+              "default": 1,
+              "title": "Page"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StockSearchOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/stock/import": {
+      "post": {
+        "tags": [
+          "stock"
+        ],
+        "summary": "Import Stock",
+        "operationId": "import_stock_projects__project_id__stock_import_post",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Project Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects/{project_id}/posts": {
       "get": {
         "tags": [
@@ -1601,6 +1718,11 @@
           "alt_default": {
             "type": "string",
             "title": "Alt Default"
+          },
+          "credit": {
+            "type": "string",
+            "title": "Credit",
+            "default": ""
           }
         },
         "type": "object",
@@ -1762,6 +1884,22 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "ImportBody": {
+        "properties": {
+          "photo_id": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 1,
+            "pattern": "^\\d+$",
+            "title": "Photo Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "photo_id"
+        ],
+        "title": "ImportBody"
       },
       "InvitationCreated": {
         "properties": {
@@ -2306,6 +2444,75 @@
           "revision"
         ],
         "title": "SavedOut"
+      },
+      "StockPhotoOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "thumb_url": {
+            "type": "string",
+            "title": "Thumb Url"
+          },
+          "width": {
+            "type": "integer",
+            "title": "Width"
+          },
+          "height": {
+            "type": "integer",
+            "title": "Height"
+          },
+          "alt": {
+            "type": "string",
+            "title": "Alt"
+          },
+          "credit": {
+            "type": "string",
+            "title": "Credit"
+          },
+          "page_url": {
+            "type": "string",
+            "title": "Page Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "thumb_url",
+          "width",
+          "height",
+          "alt",
+          "credit",
+          "page_url"
+        ],
+        "title": "StockPhotoOut"
+      },
+      "StockSearchOut": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider",
+            "default": ""
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/StockPhotoOut"
+            },
+            "type": "array",
+            "title": "Results",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "title": "StockSearchOut"
       },
       "TranslateIn": {
         "properties": {

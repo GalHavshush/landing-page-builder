@@ -28,4 +28,5 @@ class Asset(Base):
     # smaller copies for srcset: [{"width": 640, "key": "p1/token/name-640.webp"}, ...]
     variants: Mapped[list] = mapped_column(JSONType, default=list)
     color: Mapped[str] = mapped_column(String(9), default="")  # average colour placeholder
+    credit: Mapped[str] = mapped_column(String(300), default="")  # e.g. "Photo by X on Pexels"
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)

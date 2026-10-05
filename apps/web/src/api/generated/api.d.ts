@@ -226,6 +226,40 @@ export interface paths {
         patch: operations["update_asset_projects__project_id__assets__asset_id__patch"];
         trace?: never;
     };
+    "/projects/{project_id}/stock/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search Stock */
+        get: operations["search_stock_projects__project_id__stock_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{project_id}/stock/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import Stock */
+        post: operations["import_stock_projects__project_id__stock_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/projects/{project_id}/posts": {
         parameters: {
             query?: never;
@@ -483,6 +517,11 @@ export interface components {
             size_bytes: number;
             /** Alt Default */
             alt_default: string;
+            /**
+             * Credit
+             * @default
+             */
+            credit: string;
         };
         /** AssetPatch */
         AssetPatch: {
@@ -542,6 +581,11 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** ImportBody */
+        ImportBody: {
+            /** Photo Id */
+            photo_id: string;
         };
         /** InvitationCreated */
         InvitationCreated: {
@@ -761,6 +805,38 @@ export interface components {
             warnings: {
                 [key: string]: unknown;
             }[];
+        };
+        /** StockPhotoOut */
+        StockPhotoOut: {
+            /** Id */
+            id: string;
+            /** Thumb Url */
+            thumb_url: string;
+            /** Width */
+            width: number;
+            /** Height */
+            height: number;
+            /** Alt */
+            alt: string;
+            /** Credit */
+            credit: string;
+            /** Page Url */
+            page_url: string;
+        };
+        /** StockSearchOut */
+        StockSearchOut: {
+            /** Enabled */
+            enabled: boolean;
+            /**
+             * Provider
+             * @default
+             */
+            provider: string;
+            /**
+             * Results
+             * @default []
+             */
+            results: components["schemas"]["StockPhotoOut"][];
         };
         /** TranslateIn */
         TranslateIn: {
@@ -1309,6 +1385,75 @@ export interface operations {
         responses: {
             /** @description Successful Response */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_stock_projects__project_id__stock_search_get: {
+        parameters: {
+            query?: {
+                q?: string;
+                page?: number;
+            };
+            header?: never;
+            path: {
+                project_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockSearchOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_stock_projects__project_id__stock_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -14,6 +14,7 @@ dependencies = [
   "python-multipart>=0.0.9",
   "pillow>=10.4",
   "boto3>=1.35",
+  "httpx>=0.27",
   "sitegen",
 ]
 
@@ -21,7 +22,7 @@ dependencies = [
 sitegen = { workspace = true }
 
 [dependency-groups]
-dev = ["httpx>=0.27", "moto[s3]>=5.0"]
+dev = ["moto[s3]>=5.0"]
 # optional: a bundled Postgres for running migrations without Docker (see README)
 pg = ["pgserver>=0.1"]
 

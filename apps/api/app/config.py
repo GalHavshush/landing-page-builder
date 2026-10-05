@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     # /media itself; behind a reverse proxy or CDN this can point elsewhere).
     media_url_prefix: str = "/api/media"
     max_upload_bytes: int = 10 * 1024 * 1024
+    # Optional: enables the stock photo search in the image library (https://www.pexels.com/api/).
+    pexels_api_key: str | None = None
     cors_origins: list[str] = ["http://localhost:5173"]
 
 

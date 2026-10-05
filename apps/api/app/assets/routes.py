@@ -30,6 +30,7 @@ class AssetOut(BaseModel):
     height: int
     size_bytes: int
     alt_default: str
+    credit: str = ""
 
 
 class AssetPatch(BaseModel):
@@ -50,6 +51,7 @@ def asset_out(a: Asset) -> AssetOut:
         height=a.height,
         size_bytes=a.size_bytes,
         alt_default=a.alt_default,
+        credit=a.credit,
     )
 
 
@@ -63,23 +65,18 @@ def _clean_name(name: str) -> str:
     return re.sub(r"[^a-zA-Z0-9._-]+", "-", stem).strip("-")[:80] or "image"
 
 
-@router.post("/projects/{project_id}/assets", response_model=AssetOut, status_code=201)
-async def upload_asset(
-    file: UploadFile = File(...),
-    access: Access = EDIT_CONTENT,
-    db: Session = Depends(get_db),
-    storage: Storage = Depends(get_storage),
-):
-    limit = get_settings().max_upload_bytes
-    data = await file.read(limit + 1)  # never read more than the limit into memory
-    if len(data) > limit:
-        raise HTTPException(413, f"Images can be at most {limit // (1024 * 1024)} MB")
-    try:
-        processed = process_image(data)
-    except InvalidImage as exc:
-        raise HTTPException(422, str(exc)) from exc
-
-    name = _clean_name(file.filename or "")
+def store_image(
+    db: Session,
+    storage: Storage,
+    access: Access,
+    data: bytes,
+    filename: str,
+    alt: str = "",
+    credit: str = "",
+) -> Asset:
+    """Validate and re-encode image bytes, store every size, and record the asset."""
+    processed = process_image(data)  # raises InvalidImage
+    name = _clean_name(filename)
     token = secrets.token_urlsafe(16)  # unguessable: files are public by URL, like on a CDN
     base = f"p{access.project.id}/{token}"
     variant_rows = [{"width": w, "key": f"{base}/{name}-{w}.webp"} for w, _ in processed.variants]
@@ -95,15 +92,34 @@ async def upload_asset(
         width=processed.width,
         height=processed.height,
         sha256=hashlib.sha256(processed.main).hexdigest(),
-        alt_default="",
+        alt_default=alt,
+        credit=credit,
         variants=variant_rows,
         color=processed.color,
     )
     storage.put(asset.storage_key, processed.main, "image/webp")
-    for (_, data), row in zip(processed.variants, variant_rows, strict=True):
-        storage.put(row["key"], data, "image/webp")
+    for (_, data_), row in zip(processed.variants, variant_rows, strict=True):
+        storage.put(row["key"], data_, "image/webp")
     db.add(asset)
     db.flush()
+    return asset
+
+
+@router.post("/projects/{project_id}/assets", response_model=AssetOut, status_code=201)
+async def upload_asset(
+    file: UploadFile = File(...),
+    access: Access = EDIT_CONTENT,
+    db: Session = Depends(get_db),
+    storage: Storage = Depends(get_storage),
+):
+    limit = get_settings().max_upload_bytes
+    data = await file.read(limit + 1)  # never read more than the limit into memory
+    if len(data) > limit:
+        raise HTTPException(413, f"Images can be at most {limit // (1024 * 1024)} MB")
+    try:
+        asset = store_image(db, storage, access, data, file.filename or "")
+    except InvalidImage as exc:
+        raise HTTPException(422, str(exc)) from exc
     return asset_out(asset)
 
 

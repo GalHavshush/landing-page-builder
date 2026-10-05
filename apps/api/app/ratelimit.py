@@ -47,6 +47,7 @@ def client_ip(request: Request) -> str:
 
 login_limiter = RateLimiter(max_attempts=15, window_seconds=300)
 register_limiter = RateLimiter(max_attempts=8, window_seconds=3600)
+stock_limiter = RateLimiter(max_attempts=60, window_seconds=60)
 
 
 def limit_login(request: Request) -> None:
@@ -57,3 +58,8 @@ def limit_login(request: Request) -> None:
 def limit_register(request: Request) -> None:
     if get_settings().rate_limit_enabled:
         register_limiter.check(client_ip(request))
+
+
+def limit_stock(user_id: int) -> None:
+    if get_settings().rate_limit_enabled:
+        stock_limiter.check(f"stock:{user_id}")

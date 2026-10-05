@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
-import { useAssets, useDeleteAsset, useUploadAsset } from "@/api/hooks";
+import { useAssets, useDeleteAsset, useStockSearch, useUploadAsset } from "@/api/hooks";
 import type { Asset } from "@/api/types";
 import { IconClose } from "@/components/icons";
 import { Button } from "@/components/ui";
 import { useEditor } from "../store";
 import { FieldShell, type ControlProps } from "./basic";
+import { StockPanel } from "./StockPanel";
 
 export interface ImageValue {
   asset: string;
@@ -118,6 +119,8 @@ export function AssetPicker({
   const remove = useDeleteAsset(projectId);
   const [dragging, setDragging] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+  const [tab, setTab] = useState<"mine" | "stock">("mine");
+  const stockOn = useStockSearch(projectId, "").data?.enabled ?? false;
 
   const send = (files: FileList | File[]) => {
     Array.from(files).forEach((f) => upload.mutate(f, { onSuccess: (a) => files.length === 1 && onPick(a) }));
@@ -140,7 +143,16 @@ export function AssetPicker({
             <button aria-label="Close" className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialogRef.current?.close()}><IconClose size={15} /></button>
           </div>
         </div>
+        {stockOn && (
+          <div role="tablist" aria-label="Image source" className="mb-3 flex gap-4 border-b border-ink-200">
+            {([["mine", "My images"], ["stock", "Stock photos"]] as const).map(([k, l]) => (
+              <button key={k} role="tab" type="button" aria-selected={tab === k} onClick={() => setTab(k)}
+                className={`-mb-px border-b-[1.5px] py-2 text-[13px] font-medium transition ${tab === k ? "border-ink-900 text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"}`}>{l}</button>
+            ))}
+          </div>
+        )}
         {error && <p role="alert" className="mb-3 text-sm text-red-600">{error}</p>}
+        {stockOn && tab === "stock" ? <StockPanel projectId={projectId} onPick={onPick} /> : (
         <div className={`rounded-lg border-2 border-dashed p-3 ${dragging ? "border-accent-500 bg-accent-50" : "border-ink-200"}`}>
           {assets.data?.length === 0 && <p className="py-8 text-center text-sm text-ink-500">Drop images here or use “Upload image”. JPEG, PNG or WebP, up to 10 MB.</p>}
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
@@ -157,6 +169,7 @@ export function AssetPicker({
             ))}
           </ul>
         </div>
+        )}
       </div>
     </dialog>
   );
