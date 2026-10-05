@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthMutation, useMe } from "@/api/hooks";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { PreferencesMenu } from "@/components/Preferences";
 import { Button, ErrorText, Field } from "@/components/ui";
 import { t } from "@/i18n";
 
@@ -50,7 +50,7 @@ export default function Login() {
       </section>
 
       <section className="relative flex items-center justify-center px-6 py-12">
-        <div className="absolute end-5 top-5"><ThemeToggle /></div>
+        <div className="absolute end-5 top-5"><PreferencesMenu /></div>
         <div className="w-full max-w-[340px]">
           <h1 className="text-[22px] font-semibold tracking-[-0.02em]">{mode === "login" ? t("Welcome back") : t("Create your account")}</h1>
           <p className="mt-1 text-[13px] text-ink-500">{mode === "login" ? t("Sign in to continue to your sites.") : t("Start with a template, finish in minutes.")}</p>

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getUiLang, setUiLang, type UiLang } from "@/i18n";
 import { getThemePref, setThemePref, type ThemePref } from "@/theme";
@@ -79,11 +79,13 @@ export function useCreateProject() {
   });
 }
 
-export const useEditorMeta = () =>
+/** `lang`: the language of the placeholder text for new sections and pages (the site's language). */
+export const useEditorMeta = (lang?: string) =>
   useQuery({
-    queryKey: ["editor-meta"],
-    queryFn: () => api<EditorMeta>("/editor-meta"),
+    queryKey: ["editor-meta", lang ?? null],
+    queryFn: () => api<EditorMeta>(`/editor-meta${lang ? `?lang=${lang}` : ""}`),
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
   });
 
 export const useProject = (id: number) =>

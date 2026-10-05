@@ -14,7 +14,7 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255))
     name: Mapped[str] = mapped_column(String(200), default="")
     # editor preferences, independent of any site's language
-    ui_language: Mapped[str] = mapped_column(String(8), default="en", server_default="en")
+    ui_language: Mapped[str] = mapped_column(String(8), default="he", server_default="en")
     ui_theme: Mapped[str] = mapped_column(String(8), default="system", server_default="system")
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
 

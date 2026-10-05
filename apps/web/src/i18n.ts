@@ -15,11 +15,12 @@ const KEY = "ui-language";
 const DICTS: Record<UiLang, Record<string, string>> = { en: {}, he };
 const listeners = new Set<() => void>();
 
+/** Hebrew unless the person chose English (also when storage is blocked). */
 const read = (): UiLang => {
   try {
-    return localStorage.getItem(KEY) === "he" ? "he" : "en";
+    return localStorage.getItem(KEY) === "en" ? "en" : "he";
   } catch {
-    return "en"; // storage can be blocked
+    return "he";
   }
 };
 let lang: UiLang = read();
@@ -28,6 +29,7 @@ export const getUiLang = () => lang;
 export const isRtl = (l: UiLang = lang) => l === "he";
 
 export function applyLang() {
+  if (typeof document === "undefined") return; // unit tests
   document.documentElement.lang = lang;
   document.documentElement.dir = isRtl() ? "rtl" : "ltr";
 }

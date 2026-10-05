@@ -14,7 +14,8 @@ export default function EditorPage() {
   const projectId = Number(useParams().projectId);
   const project = useProject(projectId);
   const docQuery = useDocument(projectId);
-  const meta = useEditorMeta();
+  const siteLang = useEditor((s) => s.doc?.site.default_language);
+  const meta = useEditorMeta(siteLang);
   const load = useEditor((s) => s.load);
   const loadedFor = useEditor((s) => s.projectId);
 

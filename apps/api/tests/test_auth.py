@@ -87,7 +87,7 @@ def test_registration_can_be_closed(client, monkeypatch):
 
 def test_editor_preferences_are_saved_on_the_account(client):
     user = register(client).json()
-    assert (user["ui_language"], user["ui_theme"]) == ("en", "system")
+    assert (user["ui_language"], user["ui_theme"]) == ("he", "system")  # Hebrew by default
     r = client.patch("/auth/me", json={"ui_language": "he"})
     assert (
         r.status_code == 200

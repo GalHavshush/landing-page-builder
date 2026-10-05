@@ -99,8 +99,6 @@ export const he: Record<string, string> = {
   "Match my device": "בהתאם למכשיר",
   "Couldn't save your settings. They will apply on this device only.": "לא הצלחנו לשמור את ההגדרות. הן יחולו במכשיר הזה בלבד.",
   "All sites": "כל האתרים",
-  "Color theme": "ערכת צבעים",
-  "{name} theme": "ערכה: {name}",
 
   // ---- editor top bar ----
   "Preview": "תצוגה מקדימה",

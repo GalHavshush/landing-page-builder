@@ -7,7 +7,7 @@ import { useCreateProject, useDeleteProject, useEditorMeta, useLogout, useMe, us
 import { IconClose, IconEye, IconPlus, IconSettings } from "@/components/icons";
 import { LivePreview } from "@/components/LivePreview";
 import { Button, ErrorText, Field } from "@/components/ui";
-import { t } from "@/i18n";
+import { getUiLang, t } from "@/i18n";
 
 const ROLE_LABEL: Record<string, string> = { owner: "Owner", designer: "Designer", editor: "Client access" };
 
@@ -136,7 +136,7 @@ function NewProject({ onDone }: { onDone: () => void }) {
   const [name, setName] = useState("");
   const [template, setTemplate] = useState("clean");
   const meta = useEditorMeta();
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState<string>(getUiLang()); // the editor language, to start with
   const [extra, setExtra] = useState<string[]>([]);
   const names = meta.data?.languages ?? { en: "English" };
   const others = Object.keys(names).filter((c) => c !== language);
