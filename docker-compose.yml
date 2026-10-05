@@ -1,13 +1,21 @@
-# Local development services. The API (M6+) connects to these.
+# Local services for development:      docker compose up -d postgres minio
+# Whole stack (api + web + database):  docker compose --profile app up -d --build
+#   -> the editor is then at http://localhost:8080
+# NOTE: the api/web images are provided for deployment convenience; they have not been
+# built in CI yet, so expect to adjust them for your environment.
 services:
   postgres:
     image: postgres:16
     environment:
       POSTGRES_USER: builder
-      POSTGRES_PASSWORD: builder
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-builder}
       POSTGRES_DB: builder
     ports: ["5432:5432"]
     volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U builder"]
+      interval: 5s
+      retries: 10
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
@@ -16,6 +24,25 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin
     ports: ["9000:9000", "9001:9001"]
     volumes: ["miniodata:/data"]
+  api:
+    profiles: ["app"]
+    build: { context: ., dockerfile: apps/api/Dockerfile }
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      BUILDER_DATABASE_URL: postgresql+psycopg://builder:${POSTGRES_PASSWORD:-builder}@postgres:5432/builder
+      BUILDER_STORAGE_BACKEND: ${BUILDER_STORAGE_BACKEND:-local}
+      BUILDER_STORAGE_PATH: /data/uploads
+      BUILDER_COOKIE_SECURE: ${BUILDER_COOKIE_SECURE:-false}
+      BUILDER_ALLOW_REGISTRATION: ${BUILDER_ALLOW_REGISTRATION:-true}
+      BUILDER_TRUST_PROXY: "true"   # requests arrive through the web container's nginx
+    volumes: ["uploads:/data/uploads"]
+  web:
+    profiles: ["app"]
+    build: apps/web
+    depends_on: [api]
+    ports: ["8080:80"]
 volumes:
   pgdata:
   miniodata:
+  uploads:

@@ -17,6 +17,11 @@ Decisions are recorded in [`docs/adr/`](adr/). This document is the overview.
 | 4 | v1 ships ZIP export only; automatic publishing is post-v1 | [004](adr/004-zip-first.md) |
 | 5 | Agency mode first: roles and client content editor are early | [005](adr/005-agency-first.md) |
 | 6 | Multi-language is in the schema from day one | [006](adr/006-multi-language.md) |
+| 7 | Synchronous SQLAlchemy; SQLite for fast tests, Postgres in production | [007](adr/007-sync-sqlalchemy-sqlite-tests.md) |
+| 8 | Blog posts are Markdown with a toolbar and real live preview | [008](adr/008-blog-editor-markdown.md) |
+| 9 | Every export is a stored, versioned artifact | [009](adr/009-exports-as-artifacts.md) |
+| 10 | Client role enforced by whitelist merge on the server | [010](adr/010-content-only-enforcement.md) |
+| 11 | System font stacks for v1 (self-hosted fonts planned) | [011](adr/011-system-fonts.md) |
 
 ## High-level shape
 
@@ -120,7 +125,35 @@ docs/adr/            decision records
 docker-compose.yml   postgres + minio for local dev
 ```
 
-## Roadmap
+## Status
+
+All milestones M0-M21 are implemented, each as its own commit(s). What exists:
+
+- **sitegen** (pure Python): schema, 12 section types, theme tokens, 3 starter templates, multi-language
+  output with RTL, SEO (meta, canonical, hreflang, sitemap, robots, 404), blog (posts, lists, RSS),
+  preview mode, ZIP export, CLI (`python -m sitegen build site.json out/ --zip site.zip`).
+- **API** (FastAPI): auth (argon2, hashed sessions, CSRF header, rate limits), projects with optimistic
+  locking, roles + invite links + content-only enforcement, image upload pipeline, posts, exports with
+  history, security headers, request ids.
+- **Editor** (React): live preview, drag-and-drop sections, schema-driven properties, undo/redo,
+  autosave with conflict handling, image library, page/site/theme/language settings, blog view,
+  Share dialog, restricted client editor, export dialog.
+
+## Known gaps and next steps
+
+- **Automatic publishing and custom domains** are intentionally post-v1 (ADR 004). The `exports` artifact
+  is the input for a `Deployer` (Cloudflare Pages Direct Upload with a bring-your-own token first).
+- **Blog editor** is Markdown + toolbar, not WYSIWYG (ADR 008).
+- **Fonts** are system stacks, not self-hosted (ADR 011).
+- **Docker images** (`apps/api/Dockerfile`, `apps/web/Dockerfile`, `docker-compose.yml`) were written but
+  not built in CI; a production-only install of the API was verified without Docker.
+- **S3 storage** is covered by tests against a mock S3 (moto), not a live MinIO/R2.
+- **No background jobs**: exports build inside the request. Add a worker when sites get big.
+- **Rate limiting is per process** (see `app/ratelimit.py`); also limit at the reverse proxy.
+- **Email**: invitations are copyable links; no email is sent. No password reset yet.
+- **Concurrent editing** is last-save-detected (409 + reload), not real-time collaboration.
+
+## Roadmap (completed)
 
 **A. Generator (no web app)**
 - M0 Repo skeleton (this commit)
