@@ -3104,6 +3104,16 @@
           ],
           "title": "Heading Style",
           "type": "string"
+        },
+        "motion": {
+          "default": "subtle",
+          "enum": [
+            "none",
+            "subtle",
+            "lively"
+          ],
+          "title": "Motion",
+          "type": "string"
         }
       },
       "required": [
@@ -3115,7 +3125,8 @@
         "spacing",
         "card_style",
         "image_style",
-        "heading_style"
+        "heading_style",
+        "motion"
       ],
       "title": "Theme",
       "type": "object"

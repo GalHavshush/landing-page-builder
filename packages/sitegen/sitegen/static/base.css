@@ -204,3 +204,12 @@ a{color:var(--color-primary);text-underline-offset:.2em;text-decoration-thicknes
 .heads-caps h1,.heads-caps h2{text-transform:uppercase;letter-spacing:.03em;font-weight:700;line-height:1.08}
 .heads-caps h1{font-size:clamp(2rem,4.6vw,3.4rem)}.heads-caps h2{font-size:clamp(1.5rem,2.8vw,2.1rem)}
 .heads-light h1,.heads-light h2,.heads-light h3{font-weight:300;letter-spacing:-.03em}
+
+/* Motion setting: none turns hover and scroll movement off; lively makes it more pronounced. */
+.motion-none *,.motion-none *::before,.motion-none *::after{transition:none!important;animation:none!important}
+.motion-none .btn:hover,.motion-none .item:hover,.motion-none .plan:hover,.motion-none .post-card:hover,.motion-none .member:hover{transform:none}
+.motion-lively .reveal{transform:translateY(34px);transition-duration:1s}
+.motion-lively .reveal.reveal-image{transform:scale(.94) translateY(24px)}
+.motion-lively .reveal.in,.motion-lively .reveal.reveal-image.in{transform:none}
+.motion-lively .s-features--cards .item:hover,.motion-lively .s-services--cards .item:hover,.motion-lively .plan:hover,.motion-lively .post-card:hover{transform:translateY(-8px)}
+.motion-lively .gallery figure:hover img,.motion-lively .s-services .item:hover img{transform:scale(1.08)}

@@ -29,6 +29,9 @@ KEYS = (
     "before",
     "after",
     "compare_slider",
+    "lb_close",
+    "lb_prev",
+    "lb_next",
 )
 
 STRINGS = {
@@ -57,6 +60,9 @@ STRINGS = {
         "Before",
         "After",
         "Drag to compare before and after",
+        "Close",
+        "Previous photo",
+        "Next photo",
     ),
     "he": (
         "דלג לתוכן",
@@ -83,6 +89,9 @@ STRINGS = {
         "לפני",
         "אחרי",
         "גררו כדי להשוות בין לפני ואחרי",
+        "סגור",
+        "התמונה הקודמת",
+        "התמונה הבאה",
     ),
     "es": (
         "Saltar al contenido",
@@ -109,6 +118,9 @@ STRINGS = {
         "Antes",
         "Después",
         "Arrastra para comparar antes y después",
+        "Cerrar",
+        "Foto anterior",
+        "Foto siguiente",
     ),
     "de": (
         "Zum Inhalt springen",
@@ -135,6 +147,9 @@ STRINGS = {
         "Vorher",
         "Nachher",
         "Ziehen, um Vorher und Nachher zu vergleichen",
+        "Schließen",
+        "Voriges Foto",
+        "Nächstes Foto",
     ),
     "fr": (
         "Aller au contenu",
@@ -161,6 +176,9 @@ STRINGS = {
         "Avant",
         "Après",
         "Faites glisser pour comparer avant et après",
+        "Fermer",
+        "Photo précédente",
+        "Photo suivante",
     ),
     "ar": (
         "انتقل إلى المحتوى",
@@ -187,6 +205,9 @@ STRINGS = {
         "قبل",
         "بعد",
         "اسحب للمقارنة بين قبل وبعد",
+        "إغلاق",
+        "الصورة السابقة",
+        "الصورة التالية",
     ),
 }
 _TABLES = {lang: dict(zip(KEYS, values, strict=True)) for lang, values in STRINGS.items()}

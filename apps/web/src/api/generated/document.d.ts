@@ -58,6 +58,7 @@ export type Spacing = "compact" | "normal" | "spacious";
 export type CardStyle = "outlined" | "flat" | "elevated";
 export type ImageStyle = "rounded" | "square" | "soft";
 export type HeadingStyle = "tight" | "caps" | "light";
+export type Motion = "none" | "subtle" | "lively";
 export type Id = string;
 export type Slug = string;
 export type Title = string;
@@ -404,6 +405,7 @@ export interface Theme {
   card_style: CardStyle;
   image_style: ImageStyle;
   heading_style: HeadingStyle;
+  motion: Motion;
 }
 export interface Palette {
   [k: string]: string;

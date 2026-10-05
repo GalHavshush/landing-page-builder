@@ -22,7 +22,7 @@
 {% if preview %}<style>{{ inline_css|safe }}</style>{% else %}<link rel="stylesheet" href="{{ css_href }}">
 <script src="{{ js_href }}" defer></script>{% endif %}
 </head>
-<body class="tpl-{{ doc.theme.template }} btn-style-{{ doc.theme.button_style }} cards-{{ doc.theme.card_style }} imgs-{{ doc.theme.image_style }} heads-{{ doc.theme.heading_style }}{% if header.overlay %} has-overlay-header{% endif %}">
+<body class="tpl-{{ doc.theme.template }} btn-style-{{ doc.theme.button_style }} cards-{{ doc.theme.card_style }} imgs-{{ doc.theme.image_style }} heads-{{ doc.theme.heading_style }} motion-{{ doc.theme.motion }}{% if header.overlay %} has-overlay-header{% endif %}">
 <a class="skip" href="#main">{{ ctx.t("skip") }}</a>
 {% from "_macros.html.j2" import img as picture %}
 {% if header.announcement %}

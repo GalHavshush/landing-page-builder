@@ -157,6 +157,7 @@ class Theme(Strict):
     card_style: Literal["outlined", "flat", "elevated"] = "outlined"
     image_style: Literal["rounded", "square", "soft"] = "rounded"
     heading_style: Literal["tight", "caps", "light"] = "tight"
+    motion: Literal["none", "subtle", "lively"] = "subtle"
 
     @field_validator("palette")
     @classmethod

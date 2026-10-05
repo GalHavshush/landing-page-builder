@@ -344,3 +344,23 @@ def test_page_recipes_build_cleanly():
         )
         issues = [i for i in build(doc).issues if i.level == "warning"]
         assert not issues, (key, issues)
+
+
+def test_gallery_images_link_to_full_size_for_the_lightbox():
+    s = create_section("gallery")
+    s.props.items = [GalleryItem(image=ImageRef(asset="a1", alt="One"), caption="First")]
+    doc = SiteDocument.model_validate(
+        {"site": {"name": "T"}, "pages": [{"id": "p", "title": "A", "sections": [s.model_dump(mode="json")]}]}
+    )
+    asset = AssetFile("a.png", b"x", "image/png", 800, 600)
+    html = build(doc, {"a1": asset}).files["index.html"].decode()
+    assert 'class="lb"' in html and "data-lb" in html and 'data-lb-close="Close"' in html
+
+
+@pytest.mark.parametrize("motion", ["none", "subtle", "lively"])
+def test_motion_setting_is_a_body_class(motion):
+    from sitegen.starters import load_starter
+
+    doc = load_starter("clean")
+    doc.theme.motion = motion
+    assert f"motion-{motion}" in build(doc).files["index.html"].decode()

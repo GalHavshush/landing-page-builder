@@ -1,11 +1,11 @@
 {% from "_macros.html.j2" import head, img as picture %}
 {{ head(p) }}
-<div class="gallery cols-{{ p.columns }}">
+<div class="gallery cols-{{ p.columns }}"{% if not ctx.preview %} data-lb-close="{{ ctx.t('lb_close') }}" data-lb-prev="{{ ctx.t('lb_prev') }}" data-lb-next="{{ ctx.t('lb_next') }}"{% endif %}>
   {% for it in p.items %}
   {% set img = ctx.image(it.image) %}
   {% if img %}
   <figure>
-    {{ picture(img, "(min-width:900px) 400px, 50vw") }}
+    {% if ctx.preview %}{{ picture(img, "(min-width:900px) 400px, 50vw") }}{% else %}<a class="lb" href="{{ img.src }}" data-lb>{{ picture(img, "(min-width:900px) 400px, 50vw") }}</a>{% endif %}
     {% if it.caption %}<figcaption>{{ it.caption }}</figcaption>{% endif %}
   </figure>
   {% endif %}

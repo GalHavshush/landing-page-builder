@@ -16,7 +16,8 @@ document.documentElement.classList.add("js");
 // reduced motion, without IntersectionObserver, and in the editor preview.
 (function () {
   var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (calm || !("IntersectionObserver" in window) || document.querySelector("[data-section-id]")) return;
+  var off = document.body.classList.contains("motion-none"); // the site owner turned animation off
+  if (calm || off || !("IntersectionObserver" in window) || document.querySelector("[data-section-id]")) return;
   var SELECTORS = ".s .section-head,.hero-copy>*,.hero-media,.s .item,.post-card,.plan,.quote-item,.gallery figure,.contact-info,.contact-form,.faq details,.video,.map,.prose,.post header,.post-hero";
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
@@ -98,7 +99,7 @@ document.querySelectorAll("[data-compare]").forEach(function (box) {
 (function () {
   var els = document.querySelectorAll(".stat-value[data-count]");
   var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!els.length || calm || !("IntersectionObserver" in window) || document.querySelector("[data-section-id]")) return;
+  if (!els.length || calm || document.body.classList.contains("motion-none") || !("IntersectionObserver" in window) || document.querySelector("[data-section-id]")) return;
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (!e.isIntersecting) return;
@@ -122,4 +123,45 @@ document.querySelectorAll("[data-compare]").forEach(function (box) {
     requestAnimationFrame(tick);
   }
   els.forEach(function (el) { io.observe(el); });
+})();
+
+// Gallery lightbox: click a picture to see it large; arrows/Esc work, focus is trapped by <dialog>.
+// Without JS the picture is a plain link to the full image.
+(function () {
+  var galleries = document.querySelectorAll(".gallery[data-lb-close]");
+  if (!galleries.length || typeof HTMLDialogElement === "undefined") return;
+  var dlg = document.createElement("dialog");
+  dlg.className = "lightbox";
+  dlg.innerHTML = '<button type="button" class="lb-x"></button><button type="button" class="lb-prev"></button>' +
+    '<figure><img alt=""><figcaption></figcaption></figure><button type="button" class="lb-next"></button>';
+  document.body.appendChild(dlg);
+  var img = dlg.querySelector("img"), cap = dlg.querySelector("figcaption");
+  var items = [], at = 0;
+  function show(i) {
+    at = (i + items.length) % items.length;
+    var a = items[at], pic = a.querySelector("img"), fig = a.closest("figure").querySelector("figcaption");
+    img.src = a.getAttribute("href"); img.alt = pic ? pic.alt : "";
+    cap.textContent = fig ? fig.textContent : "";
+    dlg.classList.toggle("single", items.length < 2);
+  }
+  galleries.forEach(function (g) {
+    var links = Array.prototype.slice.call(g.querySelectorAll("a[data-lb]"));
+    dlg.querySelector(".lb-x").setAttribute("aria-label", g.getAttribute("data-lb-close"));
+    dlg.querySelector(".lb-prev").setAttribute("aria-label", g.getAttribute("data-lb-prev"));
+    dlg.querySelector(".lb-next").setAttribute("aria-label", g.getAttribute("data-lb-next"));
+    links.forEach(function (a, i) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault(); items = links; show(i); dlg.showModal();
+      });
+    });
+  });
+  dlg.querySelector(".lb-x").addEventListener("click", function () { dlg.close(); });
+  dlg.querySelector(".lb-prev").addEventListener("click", function () { show(at - 1); });
+  dlg.querySelector(".lb-next").addEventListener("click", function () { show(at + 1); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener("keydown", function (e) {
+    var rtl = document.documentElement.dir === "rtl";
+    if (e.key === "ArrowRight") show(at + (rtl ? -1 : 1));
+    if (e.key === "ArrowLeft") show(at + (rtl ? 1 : -1));
+  });
 })();

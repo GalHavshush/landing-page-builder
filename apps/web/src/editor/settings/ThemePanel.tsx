@@ -105,6 +105,8 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
         onChange={(v) => apply(updateTheme({ card_style: v as typeof theme.card_style }))} />
       <SegmentedControl label="Photos" value={theme.image_style} options={["rounded", "square", "soft"].map((v) => ({ value: v, label: v }))}
         onChange={(v) => apply(updateTheme({ image_style: v as typeof theme.image_style }))} />
+      <SegmentedControl label="Animation" value={theme.motion} options={["none", "subtle", "lively"].map((v) => ({ value: v, label: v }))}
+        onChange={(v) => apply(updateTheme({ motion: v as typeof theme.motion }))} />
       <SegmentedControl label="Headings" value={theme.heading_style} options={["tight", "caps", "light"].map((v) => ({ value: v, label: v }))}
         onChange={(v) => apply(updateTheme({ heading_style: v as typeof theme.heading_style }))} />
       <button type="button" className="w-full rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
