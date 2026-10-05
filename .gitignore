@@ -12,3 +12,4 @@ apps/api/data/
 qa/out/
 qa/shots/
 qa/node_modules/
+data/uploads/
