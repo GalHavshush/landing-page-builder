@@ -12,9 +12,10 @@ from sqlalchemy.orm import Session
 from app.auth.deps import get_current_user
 from app.auth.models import User
 from app.db import get_db, utcnow
-from app.permissions import Role
+from app.permissions import Role, can
 from app.projects import service
-from app.projects.deps import DELETE, EDIT_STRUCTURE, RENAME, VIEW, Access
+from app.projects.content_guard import content_violations
+from app.projects.deps import DELETE, EDIT_CONTENT, RENAME, VIEW, Access
 from app.projects.models import Project, ProjectMember
 from app.projects.schemas import (
     DocIn,
@@ -114,10 +115,21 @@ def parse_document(raw: dict) -> SiteDocument:
 @router.put("/projects/{project_id}/doc", response_model=SavedOut)
 def save_doc(
     body: DocIn,
-    access: Access = EDIT_STRUCTURE,
+    access: Access = EDIT_CONTENT,
     db: Session = Depends(get_db),
 ):
     doc = parse_document(body.doc)
+    if not can(access.role, "edit_structure"):
+        # a client may only change content: compare against what is stored (ADR 005)
+        violations = content_violations(access.project.draft_doc, doc.model_dump(mode="json"))
+        if violations:
+            raise HTTPException(
+                403,
+                {
+                    "message": "Your role may only edit content, not structure or design.",
+                    "paths": violations[:10],
+                },
+            )
     # Compare-and-swap: the UPDATE only matches if nobody saved since `base_revision`, so two
     # simultaneous saves cannot both win (a read-then-write check would race).
     result = db.execute(
