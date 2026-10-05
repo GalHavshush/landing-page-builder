@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import type { EditorMeta } from "@/api/types";
 import { AddSection } from "./AddSection";
 import { addPage, newId, removePage } from "./commands";
+import { BlogList } from "./blog/BlogList";
 import { SectionList } from "./SectionList";
 import { currentPage, useEditor } from "./store";
 
@@ -72,10 +73,34 @@ function PageList() {
   );
 }
 
+export function ViewTabs() {
+  const view = useEditor((s) => s.view);
+  const setView = useEditor((s) => s.setView);
+  return (
+    <div role="tablist" aria-label="Editor view" className="grid grid-cols-2 border-b border-slate-200 bg-white text-sm">
+      {(["site", "blog"] as const).map((v) => (
+        <button key={v} role="tab" aria-selected={view === v} onClick={() => setView(v)}
+          className={`py-2 capitalize ${view === v ? "border-b-2 border-indigo-600 font-medium text-indigo-700" : "text-slate-500 hover:text-slate-800"}`}>
+          {v === "site" ? "Pages" : "Blog"}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function LeftRail({ meta }: { meta: EditorMeta }) {
   const page = useEditor(currentPage);
+  const view = useEditor((s) => s.view);
+  if (view === "blog")
+    return (
+      <div className="flex min-h-0 flex-col border-r border-slate-200 bg-white">
+        <ViewTabs />
+        <BlogList />
+      </div>
+    );
   return (
     <aside className="flex min-h-0 flex-col border-r border-slate-200 bg-white">
+      <ViewTabs />
       <PageList />
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Sections</h2>

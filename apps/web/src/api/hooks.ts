@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError } from "./client";
-import type { Asset, EditorMeta, Project, SiteDocument, User } from "./types";
+import type { Asset, PostIn, PostOut, EditorMeta, Project, SiteDocument, User } from "./types";
 
 export function useMe() {
   return useQuery({
@@ -91,4 +91,32 @@ export function useDeleteAsset(projectId: number) {
     mutationFn: (assetId: string) => api<void>(`/projects/${projectId}/assets/${assetId}`, { method: "DELETE" }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["assets", projectId] }),
   });
+}
+
+export const usePosts = (projectId: number) =>
+  useQuery({ queryKey: ["posts", projectId], queryFn: () => api<PostOut[]>(`/projects/${projectId}/posts`) });
+
+export function usePostMutations(projectId: number) {
+  const qc = useQueryClient();
+  const refresh = () => qc.invalidateQueries({ queryKey: ["posts", projectId] });
+  return {
+    create: useMutation({
+      mutationFn: (body: PostIn) => api<PostOut>(`/projects/${projectId}/posts`, { method: "POST", body }),
+      onSuccess: refresh,
+    }),
+    save: useMutation({
+      mutationFn: ({ id, body }: { id: string; body: PostIn }) =>
+        api<PostOut>(`/projects/${projectId}/posts/${id}`, { method: "PUT", body }),
+      // no refresh here: the editor owns the text while it is open; the list is refreshed on close
+    }),
+    remove: useMutation({
+      mutationFn: (id: string) => api<void>(`/projects/${projectId}/posts/${id}`, { method: "DELETE" }),
+      onSuccess: refresh,
+    }),
+    translate: useMutation({
+      mutationFn: ({ id, lang }: { id: string; lang: string }) =>
+        api<PostOut>(`/projects/${projectId}/posts/${id}/translate`, { method: "POST", body: { lang } }),
+      onSuccess: refresh,
+    }),
+  };
 }

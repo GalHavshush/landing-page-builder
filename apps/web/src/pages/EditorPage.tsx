@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDocument, useEditorMeta, useProject } from "@/api/hooks";
+import { PostWorkspace } from "@/editor/blog/PostWorkspace";
 import { LeftRail } from "@/editor/LeftRail";
 import { Preview, usePreviewHtml } from "@/editor/Preview";
 import { PropertiesPanel } from "@/editor/PropertiesPanel";
@@ -41,6 +42,7 @@ function EditorShell({
   const pageId = useEditor((s) => s.pageId)!;
   const lang = useEditor((s) => s.lang)!;
   const { html, error } = usePreviewHtml(projectId, doc, pageId, lang);
+  const view = useEditor((s) => s.view);
   const saveStatus = useEditor((s) => s.saveStatus);
   const saveError = useEditor((s) => s.saveError);
   useAutosave(projectId);
@@ -51,6 +53,10 @@ function EditorShell({
       <TopBar project={project} meta={meta} />
       <div className="grid min-h-0 grid-cols-[260px_1fr_320px]">
         <LeftRail meta={meta} />
+        {view === "blog" ? (
+          <PostWorkspace />
+        ) : (
+        <>
         <main className="relative min-h-0">
           <Preview html={html} />
           {(saveStatus === "conflict" || saveStatus === "invalid") && (
@@ -70,6 +76,8 @@ function EditorShell({
           )}
         </main>
         <PropertiesPanel meta={meta} />
+        </>
+        )}
       </div>
     </div>
   );

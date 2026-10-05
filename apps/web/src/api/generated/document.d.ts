@@ -167,6 +167,14 @@ export type Heading10 = string;
 export type Subheading8 = string;
 export type Query = string;
 export type Height = "short" | "medium" | "tall";
+export type Id12 = string;
+export type Type11 = "blog_list";
+export type Variant11 = "cards" | "list";
+export type Heading11 = string;
+export type Subheading9 = string;
+export type Limit = 0 | 3 | 6 | 9 | 12;
+export type ShowExcerpt = boolean;
+export type ShowCover = boolean;
 export type Sections = (
   | HeroSection
   | TextSection
@@ -179,6 +187,7 @@ export type Sections = (
   | ContactSection
   | YoutubeSection
   | MapSection
+  | BlogListSection
 )[];
 export type Title4 = string | null;
 export type Slug1 = string | null;
@@ -271,7 +280,7 @@ export interface Page1 {
   title: Title;
   seo: SEO;
   sections: Sections;
-  i18n: I18N12;
+  i18n: I18N13;
 }
 export interface SEO {
   title: Title1;
@@ -556,7 +565,27 @@ export interface MapProps {
   query: Query;
   height: Height;
 }
+export interface BlogListSection {
+  id: Id12;
+  style: SectionStyle;
+  i18n: I18N12;
+  type: Type11;
+  variant: Variant11;
+  props: BlogListProps;
+}
 export interface I18N12 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface BlogListProps {
+  heading: Heading11;
+  subheading: Subheading9;
+  limit: Limit;
+  show_excerpt: ShowExcerpt;
+  show_cover: ShowCover;
+}
+export interface I18N13 {
   [k: string]: PageTranslation;
 }
 export interface PageTranslation {

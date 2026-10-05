@@ -6,6 +6,7 @@ import type { Recipe } from "./commands";
 enablePatches();
 
 export type Device = "desktop" | "mobile";
+export type View = "site" | "blog";
 export type SaveStatus = "saved" | "dirty" | "saving" | "error" | "conflict" | "invalid";
 
 interface HistoryEntry {
@@ -31,6 +32,8 @@ interface EditorState {
   lang: string | null;
   selectedId: string | null;
   device: Device;
+  view: View;
+  postId: string | null;
 
   load: (projectId: number, doc: SiteDocument, revision: number) => void;
   apply: (recipe: Recipe, opts?: { coalesceKey?: string }) => void;
@@ -39,6 +42,8 @@ interface EditorState {
   selectPage: (pageId: string) => void;
   selectSection: (id: string | null) => void;
   setDevice: (d: Device) => void;
+  setView: (v: View) => void;
+  openPost: (id: string | null) => void;
   setLang: (lang: string) => void;
   setSave: (status: SaveStatus, error?: string | null) => void;
   markSaved: (savedDoc: SiteDocument, revision: number) => void;
@@ -77,6 +82,8 @@ export const useEditor = create<EditorState>((set, get) => ({
   lang: null,
   selectedId: null,
   device: "desktop",
+  view: "site",
+  postId: null,
 
   load: (projectId, doc, revision) =>
     set({
@@ -140,6 +147,8 @@ export const useEditor = create<EditorState>((set, get) => ({
   selectPage: (pageId) => set({ pageId, selectedId: null }),
   selectSection: (selectedId) => set({ selectedId }),
   setDevice: (device) => set({ device }),
+  setView: (view) => set({ view }),
+  openPost: (postId) => set({ postId, view: "blog" }),
   setLang: (lang) => set({ lang }),
   setSave: (saveStatus, saveError = null) => set({ saveStatus, saveError }),
   markSaved: (savedDoc, revision) =>

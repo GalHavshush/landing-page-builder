@@ -11,7 +11,9 @@ export interface ImageValue {
 }
 
 /** Image field: shows the chosen image, lets you pick/upload another, and edit its alt text. */
-export function ImageControl({ label, value, onChange }: ControlProps<ImageValue | null>) {
+export function ImageControl({
+  label, value, onChange, hideAlt,
+}: ControlProps<ImageValue | null> & { hideAlt?: boolean }) {
   const projectId = useEditor((s) => s.projectId)!;
   const assets = useAssets(projectId);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -36,7 +38,7 @@ export function ImageControl({ label, value, onChange }: ControlProps<ImageValue
         <Button type="button" variant="ghost" className="w-full" onClick={() => dialog.current?.showModal()}>
           {value ? "Change image" : "Choose image"}
         </Button>
-        {value && (
+        {value && !hideAlt && (
           <div>
             <label className="block text-xs text-slate-500" htmlFor={`${label}-alt`}>
               Description for screen readers (alt text)
@@ -61,7 +63,7 @@ export function ImageControl({ label, value, onChange }: ControlProps<ImageValue
   );
 }
 
-function AssetPicker({
+export function AssetPicker({
   dialogRef, projectId, selected, onPick,
 }: {
   dialogRef: React.RefObject<HTMLDialogElement | null>;

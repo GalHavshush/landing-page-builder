@@ -1,5 +1,110 @@
 {
   "$defs": {
+    "BlogListProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "limit": {
+          "control": "select",
+          "default": 0,
+          "enum": [
+            0,
+            3,
+            6,
+            9,
+            12
+          ],
+          "group": "design",
+          "hint": "0 shows every post",
+          "title": "Limit",
+          "type": "integer"
+        },
+        "show_excerpt": {
+          "control": "toggle",
+          "default": true,
+          "group": "design",
+          "title": "Show Excerpt",
+          "type": "boolean"
+        },
+        "show_cover": {
+          "control": "toggle",
+          "default": true,
+          "group": "design",
+          "title": "Show Cover",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "limit",
+        "show_excerpt",
+        "show_cover"
+      ],
+      "title": "BlogListProps",
+      "type": "object"
+    },
+    "BlogListSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "blog_list",
+          "default": "blog_list",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cards",
+          "enum": [
+            "cards",
+            "list"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/BlogListProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "BlogListSection",
+      "type": "object"
+    },
     "Business": {
       "additionalProperties": false,
       "description": "Shared business info. Sections (contact, footer, map) read from here.",
@@ -944,6 +1049,7 @@
           "items": {
             "discriminator": {
               "mapping": {
+                "blog_list": "#/$defs/BlogListSection",
                 "contact": "#/$defs/ContactSection",
                 "faq": "#/$defs/FaqSection",
                 "features": "#/$defs/FeaturesSection",
@@ -991,6 +1097,9 @@
               },
               {
                 "$ref": "#/$defs/MapSection"
+              },
+              {
+                "$ref": "#/$defs/BlogListSection"
               }
             ]
           },
