@@ -47,3 +47,40 @@ document.querySelectorAll(".yt[data-yt]").forEach(function (box) {
     box.appendChild(f);
   });
 });
+
+// Hero cover video: a muted, looping YouTube player behind the text. It starts after the page has
+// loaded, never for visitors who prefer reduced motion or have data saver on, and never in the editor
+// preview. The picture stays visible as the poster until the video is ready.
+(function () {
+  var holders = document.querySelectorAll(".cover-video[data-yt-bg]");
+  if (!holders.length || document.querySelector("[data-section-id]")) return;
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var saver = navigator.connection && navigator.connection.saveData;
+  if (calm || saver) return;
+  function start() {
+    holders.forEach(function (holder) {
+      var id = holder.getAttribute("data-yt-bg");
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id +
+        "&controls=0&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3&enablejsapi=1";
+      f.allow = "autoplay; encrypted-media";
+      f.tabIndex = -1;
+      f.setAttribute("aria-hidden", "true");
+      f.title = "";
+      f.addEventListener("load", function () { setTimeout(function () { holder.classList.add("on"); }, 600); });
+      holder.appendChild(f);
+      var toggle = holder.closest(".hero-cover").querySelector(".cover-toggle");
+      if (!toggle) return;
+      var paused = false;
+      toggle.hidden = false;
+      toggle.addEventListener("click", function () {
+        paused = !paused;
+        f.contentWindow.postMessage(JSON.stringify({ event: "command", func: paused ? "pauseVideo" : "playVideo", args: "" }), "*");
+        toggle.classList.toggle("paused", paused);
+        var label = toggle.getAttribute(paused ? "data-play" : "data-pause");
+        toggle.setAttribute("aria-label", label);
+      });
+    });
+  }
+  if (document.readyState === "complete") start(); else window.addEventListener("load", start);
+})();

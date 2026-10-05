@@ -24,6 +24,8 @@ KEYS = (
     "read_more",
     "back_to_blog",
     "no_posts",
+    "pause_background",
+    "play_background",
 )
 
 STRINGS = {
@@ -47,6 +49,8 @@ STRINGS = {
         "Read more",
         "Back to blog",
         "No posts yet",
+        "Pause background video",
+        "Play background video",
     ),
     "he": (
         "דלג לתוכן",
@@ -68,6 +72,8 @@ STRINGS = {
         "קרא עוד",
         "חזרה לבלוג",
         "אין פוסטים עדיין",
+        "השהה וידאו רקע",
+        "הפעל וידאו רקע",
     ),
     "es": (
         "Saltar al contenido",
@@ -89,6 +95,8 @@ STRINGS = {
         "Leer más",
         "Volver al blog",
         "Aún no hay entradas",
+        "Pausar vídeo de fondo",
+        "Reproducir vídeo de fondo",
     ),
     "de": (
         "Zum Inhalt springen",
@@ -110,6 +118,8 @@ STRINGS = {
         "Weiterlesen",
         "Zurück zum Blog",
         "Noch keine Beiträge",
+        "Hintergrundvideo pausieren",
+        "Hintergrundvideo abspielen",
     ),
     "fr": (
         "Aller au contenu",
@@ -131,6 +141,8 @@ STRINGS = {
         "Lire la suite",
         "Retour au blog",
         "Pas encore d'articles",
+        "Mettre en pause la vidéo d'arrière-plan",
+        "Lire la vidéo d'arrière-plan",
     ),
     "ar": (
         "انتقل إلى المحتوى",
@@ -152,6 +164,8 @@ STRINGS = {
         "اقرأ المزيد",
         "العودة إلى المدونة",
         "لا توجد مقالات بعد",
+        "إيقاف فيديو الخلفية مؤقتًا",
+        "تشغيل فيديو الخلفية",
     ),
 }
 _TABLES = {lang: dict(zip(KEYS, values, strict=True)) for lang, values in STRINGS.items()}

@@ -1,5 +1,6 @@
-<section id="{{ s.id }}" class="s s-{{ s.type }} s-{{ s.type }}--{{ s.variant }} bg-{{ s.style.background }} sp-{{ s.style.spacing }} al-{{ s.style.align }}"{% if preview %} data-section-id="{{ s.id }}" data-section-type="{{ s.type }}"{% endif %}>
-<div class="container">
+{% set bleed = s.type == "hero" and s.variant == "cover" %}
+<section id="{{ s.id }}" class="s s-{{ s.type }} s-{{ s.type }}--{{ s.variant }} bg-{{ s.style.background }} sp-{{ s.style.spacing }} al-{{ s.style.align }}{% if bleed %} bleed{% endif %}"{% if preview %} data-section-id="{{ s.id }}" data-section-type="{{ s.type }}"{% endif %}>
+{% if not bleed %}<div class="container">{% endif %}
 {% include s.type ~ "/template.html.j2" %}
-</div>
+{% if not bleed %}</div>{% endif %}
 </section>

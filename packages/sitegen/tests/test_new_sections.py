@@ -126,3 +126,61 @@ def test_map_uses_business_address_when_query_is_empty():
     assert "q=12%20Main%20St" in html and 'loading="lazy"' in html
     html, _ = render(s)
     assert "<iframe" not in html
+
+
+def hero_cover(**props):
+    s = create_section("hero")
+    s.variant = "cover"
+    for key, value in props.items():
+        setattr(s.props, key, value)
+    return s
+
+
+def test_cover_hero_is_full_bleed_with_text_over_the_image():
+    s = hero_cover(image=ImageRef(asset="a1", alt="Loaves"), overlay="heavy", height="screen")
+    doc = SiteDocument.model_validate(
+        {
+            "site": {"name": "T"},
+            "pages": [{"id": "pg", "title": "A", "sections": [s.model_dump(mode="json")]}],
+        }
+    )
+    html = (
+        build(doc, {"a1": AssetFile("loaf.webp", b"img", width=8, height=6)})
+        .files["index.html"]
+        .decode()
+    )
+    assert "hero-cover hc-screen ov-heavy" in html
+    assert 'class="s s-hero s-hero--cover' in html and " bleed" in html
+    section = html[html.index("<section") : html.index("</section>")]
+    assert (
+        section.count('class="container') == 1
+    )  # only the text; the picture ignores the container
+    assert (
+        'aria-hidden="true"' in html and 'alt=""' in html
+    )  # decorative: the text carries the meaning
+    assert "<h1>Your headline here</h1>" in html
+
+
+def test_cover_hero_video_is_a_deferred_youtube_background_with_a_pause_button():
+    html, issues = render(hero_cover(video_url="https://youtu.be/dQw4w9WgXcQ"))
+    assert 'data-yt-bg="dQw4w9WgXcQ"' in html
+    assert "<iframe" not in html  # nothing is loaded from YouTube by the HTML itself
+    assert 'class="cover-toggle"' in html and "Pause background video" in html
+    assert not [i for i in issues if i.level == "warning" and "base_url" not in i.message]
+
+
+def test_cover_hero_bad_video_link_warns_and_falls_back_to_the_picture():
+    html, issues = render(hero_cover(video_url="https://vimeo.com/1"))
+    assert "data-yt-bg" not in html and "cover-toggle" not in html
+    assert any("YouTube" in i.message for i in issues)
+
+
+def test_cover_hero_without_any_media_still_renders():
+    html, _ = render(hero_cover())
+    assert "hero-cover" in html and "<h1>" in html and "<img" not in html
+
+
+def test_other_hero_layouts_are_unchanged():
+    s = create_section("hero")
+    html, _ = render(s)
+    assert "hero-cover" not in html and 'class="container"' in html

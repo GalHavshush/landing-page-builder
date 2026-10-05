@@ -49,7 +49,7 @@ export type Background = "default" | "alt" | "primary" | "dark";
 export type Spacing1 = "compact" | "normal" | "spacious";
 export type Align = "start" | "center" | "end";
 export type Type = "hero";
-export type Variant = "centered" | "split";
+export type Variant = "centered" | "split" | "cover";
 export type Eyebrow = string;
 export type Heading = string;
 export type Subheading = string;
@@ -62,6 +62,9 @@ export type Asset1 = string | null;
 export type Style = "primary" | "secondary" | "outline" | "link";
 export type Buttons = Button[];
 export type ImagePosition = "start" | "end";
+export type VideoUrl = string;
+export type Overlay = "none" | "light" | "dark" | "heavy";
+export type Height = "medium" | "tall" | "screen";
 export type Id2 = string;
 export type Type1 = "text";
 export type Variant1 = "single" | "columns";
@@ -166,7 +169,7 @@ export type Variant10 = "embedded";
 export type Heading10 = string;
 export type Subheading8 = string;
 export type Query = string;
-export type Height = "short" | "medium" | "tall";
+export type Height1 = "short" | "medium" | "tall";
 export type Id12 = string;
 export type Type11 = "blog_list";
 export type Variant11 = "cards" | "list";
@@ -316,6 +319,9 @@ export interface HeroProps {
   image: ImageRef | null;
   buttons: Buttons;
   image_position: ImagePosition;
+  video_url: VideoUrl;
+  overlay: Overlay;
+  height: Height;
 }
 export interface ImageRef {
   asset: Asset;
@@ -563,7 +569,7 @@ export interface MapProps {
   heading: Heading10;
   subheading: Subheading8;
   query: Query;
-  height: Height;
+  height: Height1;
 }
 export interface BlogListSection {
   id: Id12;

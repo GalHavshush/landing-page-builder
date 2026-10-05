@@ -744,6 +744,40 @@
           "group": "design",
           "title": "Image Position",
           "type": "string"
+        },
+        "video_url": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "hint": "Cover layout: a YouTube link to play silently behind the text. Optional.",
+          "title": "Video Url",
+          "type": "string"
+        },
+        "overlay": {
+          "control": "segmented",
+          "default": "dark",
+          "enum": [
+            "none",
+            "light",
+            "dark",
+            "heavy"
+          ],
+          "group": "design",
+          "hint": "Cover layout: tint over the picture so the text stays readable.",
+          "title": "Overlay",
+          "type": "string"
+        },
+        "height": {
+          "control": "segmented",
+          "default": "tall",
+          "enum": [
+            "medium",
+            "tall",
+            "screen"
+          ],
+          "group": "design",
+          "title": "Height",
+          "type": "string"
         }
       },
       "required": [
@@ -752,7 +786,10 @@
         "subheading",
         "image",
         "buttons",
-        "image_position"
+        "image_position",
+        "video_url",
+        "overlay",
+        "height"
       ],
       "title": "HeroProps",
       "type": "object"
@@ -785,7 +822,8 @@
           "default": "centered",
           "enum": [
             "centered",
-            "split"
+            "split",
+            "cover"
           ],
           "title": "Variant",
           "type": "string"
