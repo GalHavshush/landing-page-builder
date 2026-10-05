@@ -18,5 +18,5 @@
 </div>
 {% else %}
 {{ head(p) }}
-<div class="grid cols-{{ p.columns }}">{{ items() }}</div>
+<div class="grid cols-{{ fit_cols(p.columns, p.items|length) }}">{{ items() }}</div>
 {% endif %}

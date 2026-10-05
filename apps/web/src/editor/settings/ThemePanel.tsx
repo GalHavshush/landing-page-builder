@@ -1,10 +1,11 @@
 import type { EditorMeta, SiteDocument } from "@/api/types";
-import { updateTheme } from "../commands";
+import { balanceBackgrounds, updateTheme } from "../commands";
 import { SegmentedControl, SelectControl } from "../controls/basic";
 import { FontControl } from "../controls/FontControl";
 import { ColorControl } from "../controls/ColorControl";
 import { contrastRatio, isHex, MIN_CONTRAST } from "../contrast";
 import { useEditor } from "../store";
+import { paletteFromBrand } from "../palette";
 
 type Palette = SiteDocument["theme"]["palette"];
 
@@ -41,6 +42,22 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
   return (
     <div className="space-y-4">
       <div>
+        <div className="text-xs font-medium text-ink-600">Look</div>
+        <p className="text-xs text-ink-500">Switch colours, fonts and style. Your content stays as it is.</p>
+        <div className="mt-1.5 grid grid-cols-2 gap-2">
+          {meta.starter_info.map((st) => (
+            <button key={st.id} type="button" aria-pressed={theme.template === st.theme.template}
+              onClick={() => apply(updateTheme({ ...st.theme }))}
+              className="rounded-md border border-ink-200 p-1.5 text-left text-xs hover:border-ink-400 aria-pressed:border-accent-600">
+              <div className="mb-1 flex h-5 overflow-hidden rounded">
+                {Object.values(st.theme.palette).map((c, i) => <span key={i} className="flex-1" style={{ background: c }} />)}
+              </div>
+              {st.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
         <div className="text-xs font-medium text-ink-600">Color schemes</div>
         <div className="mt-1.5 grid grid-cols-3 gap-2">
           {Object.entries(PALETTES).map(([name, p]) => (
@@ -55,6 +72,16 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
             </button>
           ))}
         </div>
+      </div>
+      <div className="flex gap-2">
+        <button type="button" className="flex-1 rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
+          onClick={() => apply(updateTheme({ palette: paletteFromBrand(theme.palette.primary, "light") }))}>
+          Build light palette from brand color
+        </button>
+        <button type="button" className="flex-1 rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
+          onClick={() => apply(updateTheme({ palette: paletteFromBrand(theme.palette.primary, "dark") }))}>
+          Dark version
+        </button>
       </div>
       {(Object.keys(LABELS) as (keyof Palette)[]).map((key) => (
         <ColorControl key={key} label={LABELS[key]} value={theme.palette[key]} onChange={(v, t) => setColor(key, v, t)} />
@@ -74,6 +101,16 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
         onChange={(v) => apply(updateTheme({ button_style: v as typeof theme.button_style }))} />
       <SegmentedControl label="Spacing" value={theme.spacing} options={["compact", "normal", "spacious"].map((v) => ({ value: v, label: v }))}
         onChange={(v) => apply(updateTheme({ spacing: v as typeof theme.spacing }))} />
+      <SegmentedControl label="Cards" value={theme.card_style} options={["outlined", "flat", "elevated"].map((v) => ({ value: v, label: v }))}
+        onChange={(v) => apply(updateTheme({ card_style: v as typeof theme.card_style }))} />
+      <SegmentedControl label="Photos" value={theme.image_style} options={["rounded", "square", "soft"].map((v) => ({ value: v, label: v }))}
+        onChange={(v) => apply(updateTheme({ image_style: v as typeof theme.image_style }))} />
+      <SegmentedControl label="Headings" value={theme.heading_style} options={["tight", "caps", "light"].map((v) => ({ value: v, label: v }))}
+        onChange={(v) => apply(updateTheme({ heading_style: v as typeof theme.heading_style }))} />
+      <button type="button" className="w-full rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
+        onClick={() => apply(balanceBackgrounds())}>
+        Tidy section backgrounds (alternate plain and tinted)
+      </button>
     </div>
   );
 }

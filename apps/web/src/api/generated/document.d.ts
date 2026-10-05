@@ -55,6 +55,9 @@ export type Template = string;
 export type Radius = "none" | "sm" | "md" | "lg" | "full";
 export type ButtonStyle = "solid" | "outline" | "soft";
 export type Spacing = "compact" | "normal" | "spacious";
+export type CardStyle = "outlined" | "flat" | "elevated";
+export type ImageStyle = "rounded" | "square" | "soft";
+export type HeadingStyle = "tight" | "caps" | "light";
 export type Id = string;
 export type Slug = string;
 export type Title = string;
@@ -398,6 +401,9 @@ export interface Theme {
   radius: Radius;
   button_style: ButtonStyle;
   spacing: Spacing;
+  card_style: CardStyle;
+  image_style: ImageStyle;
+  heading_style: HeadingStyle;
 }
 export interface Palette {
   [k: string]: string;

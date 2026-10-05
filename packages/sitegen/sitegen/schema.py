@@ -154,6 +154,9 @@ class Theme(Strict):
     radius: Literal["none", "sm", "md", "lg", "full"] = "md"
     button_style: Literal["solid", "outline", "soft"] = "solid"
     spacing: Literal["compact", "normal", "spacious"] = "normal"
+    card_style: Literal["outlined", "flat", "elevated"] = "outlined"
+    image_style: Literal["rounded", "square", "soft"] = "rounded"
+    heading_style: Literal["tight", "caps", "light"] = "tight"
 
     @field_validator("palette")
     @classmethod

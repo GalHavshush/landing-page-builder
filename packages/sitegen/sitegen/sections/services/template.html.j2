@@ -1,6 +1,6 @@
 {% from "_macros.html.j2" import head, img as picture %}
 {{ head(p) }}
-<div class="grid cols-{{ p.columns }} svc-{{ s.variant }}">
+<div class="grid cols-{{ fit_cols(p.columns, p.items|length) }} svc-{{ s.variant }}">
   {% for it in p.items %}
   {% set img = ctx.image(it.image) %}
   <article class="item">

@@ -24,6 +24,7 @@ def starter_info() -> list[dict]:
             "id": name,
             "label": STARTER_INFO.get(name, (name, ""))[0],
             "description": STARTER_INFO.get(name, (name, ""))[1],
+            "theme": load_starter(name).theme.model_dump(mode="json"),
         }
         for name in list_starters()
     ]

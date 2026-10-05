@@ -105,3 +105,17 @@ describe("language and settings commands", () => {
     expect(run(b, c.setSiteTranslation("he", "name", undefined)).site.i18n).toEqual({});
   });
 });
+
+describe("balanceBackgrounds", () => {
+  it("alternates plain and tinted, restarting after bold sections", () => {
+    const mk = (type: string, background: string, variant = "") =>
+      ({ id: type + background + Math.random(), type, variant, props: {}, style: { background, align: "start", spacing: "normal" } }) as never;
+    const doc = {
+      pages: [{ sections: [mk("text", "alt"), mk("text", "alt"), mk("cta", "primary"), mk("text", "alt"), mk("text", "default"), mk("text", "default")] }],
+    } as never;
+    const next = produce(doc as unknown as SiteDocument, c.balanceBackgrounds());
+    expect(next.pages[0].sections.map((s) => s.style.background)).toEqual(
+      ["default", "alt", "primary", "default", "alt", "default"],
+    );
+  });
+});

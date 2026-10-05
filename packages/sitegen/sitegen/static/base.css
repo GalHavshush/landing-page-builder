@@ -192,3 +192,15 @@ a{color:var(--color-primary);text-underline-offset:.2em;text-decoration-thicknes
 /* over a dark picture the logo turns into a white silhouette until the header turns solid */
 .hdr-overlay.hdr-tone-light:not(.is-scrolled) .brand-logo{filter:brightness(0) invert(1)}
 .brand-logo{transition:filter .3s}
+
+/* Style packs: card, image and heading character, set once in the theme. */
+.cards-flat{--card-line:transparent}
+.cards-flat .s-features--cards .item,.cards-flat .s-services--cards .item,.cards-flat .s-testimonials--cards .quote-item,.cards-flat .post-card,.cards-flat .plan:not(.plan--hl),.cards-flat .team-cards .member,.cards-flat .hours-card,.cards-flat .stats-cards .stat,.cards-flat .contact-form,.cards-flat .logos-grid li{border-color:transparent}
+.cards-elevated .s-features--cards .item,.cards-elevated .s-services--cards .item,.cards-elevated .s-testimonials--cards .quote-item,.cards-elevated .post-card,.cards-elevated .plan:not(.plan--hl),.cards-elevated .team-cards .member,.cards-elevated .hours-card,.cards-elevated .stats-cards .stat,.cards-elevated .contact-form{border-color:transparent;box-shadow:0 1px 2px color-mix(in srgb,var(--color-text) 8%,transparent),0 14px 30px -18px color-mix(in srgb,var(--color-text) 35%,transparent)}
+.cards-elevated .bg-alt{--card:var(--color-bg)}
+.imgs-square .hero-media img,.imgs-square .prose img,.imgs-square .post-hero,.imgs-square .gallery figure,.imgs-square .s-services .item,.imgs-square .team-cards .member,.imgs-square .compare{border-radius:0}
+.imgs-soft .hero-media img{box-shadow:none}
+.imgs-soft .hero-media img,.imgs-soft .gallery figure,.imgs-soft .prose img{border-radius:calc(var(--radius)*2.4)}
+.heads-caps h1,.heads-caps h2{text-transform:uppercase;letter-spacing:.03em;font-weight:700;line-height:1.08}
+.heads-caps h1{font-size:clamp(2rem,4.6vw,3.4rem)}.heads-caps h2{font-size:clamp(1.5rem,2.8vw,2.1rem)}
+.heads-light h1,.heads-light h2,.heads-light h3{font-weight:300;letter-spacing:-.03em}

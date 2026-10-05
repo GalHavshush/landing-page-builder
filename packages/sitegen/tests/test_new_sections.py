@@ -321,3 +321,10 @@ def test_team_variants_render_initial_placeholder_without_photo(variant):
     s.props.items[0].photo = None
     html, _ = render(s)
     assert s.props.items[0].name[0] in html
+
+
+def test_fit_cols_avoids_empty_columns():
+    from sitegen.renderer import fit_cols
+
+    assert [fit_cols(3, n) for n in (1, 2, 3, 4, 5, 6)] == [1, 2, 3, 2, 3, 3]
+    assert fit_cols(4, 4) == 4 and fit_cols(2, 1) == 1

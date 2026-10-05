@@ -58,14 +58,25 @@ class Issue:
     where: str = ""
 
 
+def fit_cols(columns: int, count: int) -> int:
+    """Columns that suit `count` items: no empty columns, and 4 items sit as a tidy 2x2."""
+    if count <= 1:
+        return 1
+    if count == 4 and columns == 3:
+        return 2
+    return min(columns, count)
+
+
 @lru_cache(maxsize=1)
 def get_env() -> Environment:
-    return Environment(
+    env = Environment(
         loader=FileSystemLoader([str(TEMPLATES_DIR), str(SECTIONS_DIR)]),
         autoescape=True,  # every template is HTML
         undefined=StrictUndefined,
         lstrip_blocks=True,
     )
+    env.globals["fit_cols"] = fit_cols
+    return env
 
 
 def localized_props(section, lang: str, default_lang: str):

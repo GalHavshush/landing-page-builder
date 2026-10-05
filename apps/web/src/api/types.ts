@@ -41,6 +41,7 @@ export interface EditorMeta {
   languages: Record<string, string>;
   rtl_languages: string[];
   starters: string[];
+  starter_info: { id: string; label: string; description: string; theme: SiteDocument["theme"] }[];
 }
 
 export interface FontOption {

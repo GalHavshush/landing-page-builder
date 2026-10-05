@@ -3074,6 +3074,36 @@
           ],
           "title": "Spacing",
           "type": "string"
+        },
+        "card_style": {
+          "default": "outlined",
+          "enum": [
+            "outlined",
+            "flat",
+            "elevated"
+          ],
+          "title": "Card Style",
+          "type": "string"
+        },
+        "image_style": {
+          "default": "rounded",
+          "enum": [
+            "rounded",
+            "square",
+            "soft"
+          ],
+          "title": "Image Style",
+          "type": "string"
+        },
+        "heading_style": {
+          "default": "tight",
+          "enum": [
+            "tight",
+            "caps",
+            "light"
+          ],
+          "title": "Heading Style",
+          "type": "string"
         }
       },
       "required": [
@@ -3082,7 +3112,10 @@
         "fonts",
         "radius",
         "button_style",
-        "spacing"
+        "spacing",
+        "card_style",
+        "image_style",
+        "heading_style"
       ],
       "title": "Theme",
       "type": "object"

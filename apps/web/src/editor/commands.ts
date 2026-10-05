@@ -181,3 +181,22 @@ export const removeLanguage =
       for (const section of page.sections) delete section.i18n[code];
     }
   };
+
+/**
+ * Give a page's sections an even rhythm: plain and tinted backgrounds alternate, while coloured
+ * (primary/dark) sections and cover heroes are left alone and restart the alternation.
+ */
+export const balanceBackgrounds =
+  (): Recipe =>
+  (doc) => {
+    for (const page of doc.pages) {
+      let tinted = false;
+      for (const s of page.sections) {
+        const bold = s.style.background === "primary" || s.style.background === "dark";
+        const cover = s.type === "hero" && (s.variant === "cover" || s.variant === "banner");
+        if (bold || cover) { tinted = false; continue; }
+        s.style.background = tinted ? "alt" : "default";
+        tinted = !tinted;
+      }
+    }
+  };

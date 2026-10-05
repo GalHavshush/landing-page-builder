@@ -1,7 +1,7 @@
 {% from "_macros.html.j2" import head, img as picture %}
 {{ head(p) }}
 {% set n = p.items|length %}
-<div class="grid cols-{{ [p.columns, n]|min if n else p.columns }} team-{{ s.variant }}">
+<div class="grid cols-{{ fit_cols(p.columns, n) if n else p.columns }} team-{{ s.variant }}">
   {% for m in p.items %}
   {% set photo = ctx.image(m.photo) %}
   <article class="item member">
