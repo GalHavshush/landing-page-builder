@@ -5,7 +5,7 @@ description = "Workspace root for the static website builder"
 requires-python = ">=3.11"
 
 [tool.uv.workspace]
-members = ["packages/sitegen"]
+members = ["packages/sitegen", "apps/api"]
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6"]
@@ -18,7 +18,8 @@ target-version = "py311"
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
-testpaths = ["packages/sitegen/tests"]
+testpaths = ["packages/sitegen/tests", "apps/api/tests"]
+pythonpath = ["apps/api"]
 
 [tool.ruff.lint.per-file-ignores]
 "packages/sitegen/sitegen/icons.py" = ["E501"]

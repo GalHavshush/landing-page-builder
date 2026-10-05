@@ -9,7 +9,8 @@ Static output, ZIP export, no lock-in. See [docs/ARCHITECTURE.md](docs/ARCHITECT
 uv sync --all-packages
 uv run pytest
 uv run ruff check . && uv run ruff format --check .
-docker compose up -d        # postgres + minio (used from M6)
+docker compose up -d        # postgres + minio
+cd apps/api && uv run alembic upgrade head && uv run uvicorn app.main:app --reload
 ```
 
 ## Layout
