@@ -24,7 +24,7 @@ export default function Dashboard() {
             <Link to={`/projects/${p.id}`} className="block rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:ring-indigo-400">
               <h2 className="font-medium">{p.name}</h2>
               <p className="mt-1 text-xs text-slate-500">
-                {p.role} · template: {p.template_id}
+                {p.role === "owner" ? "Owner" : p.role === "editor" ? "Client access" : "Designer"} · {p.template_id}
               </p>
             </Link>
           </li>
@@ -48,18 +48,24 @@ function NewProject() {
   };
 
   return (
-    <form onSubmit={submit} className="flex flex-wrap items-end gap-3 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-      <div className="min-w-60 flex-1">
-        <Field label="New site name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Rosa Bakery" />
+    <form onSubmit={submit} className="space-y-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <Field label="New site name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Rosa's Bakery" />
+      <fieldset>
+        <legend className="mb-2 text-sm font-medium text-slate-700">Starting point</legend>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {(templates.data ?? []).map((t) => (
+            <label key={t.id} className={`cursor-pointer rounded-lg border p-3 text-sm transition ${template === t.id ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500" : "border-slate-200 hover:border-slate-300"}`}>
+              <input type="radio" name="template" value={t.id} checked={template === t.id} onChange={() => setTemplate(t.id)} className="sr-only" />
+              <div className="font-medium">{t.label}</div>
+              <div className="mt-0.5 text-xs text-slate-500">{t.description}</div>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div className="flex items-center gap-3">
+        <Button type="submit" disabled={create.isPending}>Create site</Button>
+        <ErrorText>{create.error?.message}</ErrorText>
       </div>
-      <label className="text-sm font-medium text-slate-700">
-        Template
-        <select className="mt-1 block rounded-md border border-slate-300 bg-white px-3 py-2 text-sm" value={template} onChange={(e) => setTemplate(e.target.value)}>
-          {(templates.data ?? ["clean"]).map((t) => <option key={t}>{t}</option>)}
-        </select>
-      </label>
-      <Button type="submit" disabled={create.isPending}>Create site</Button>
-      <ErrorText>{create.error?.message}</ErrorText>
     </form>
   );
 }

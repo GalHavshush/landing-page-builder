@@ -4,7 +4,7 @@ from sitegen.icons import ICONS
 from sitegen.models import SectionStyle
 from sitegen.schema import RTL_LANGUAGES, Theme
 from sitegen.sections import REGISTRY
-from sitegen.starters import list_starters
+from sitegen.starters import list_starters, starter_info
 from sitegen.strings import LANGUAGE_NAMES
 from sitegen.theme import FONT_STACKS, RADII
 
@@ -34,4 +34,5 @@ def editor_meta() -> dict:
         "languages": LANGUAGE_NAMES,
         "rtl_languages": sorted(RTL_LANGUAGES),
         "starters": list_starters(),
+        "starter_info": starter_info(),
     }

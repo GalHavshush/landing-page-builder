@@ -41,7 +41,7 @@ export const useProjects = () =>
   useQuery({ queryKey: ["projects"], queryFn: () => api<Project[]>("/projects") });
 
 export const useTemplates = () =>
-  useQuery({ queryKey: ["templates"], queryFn: () => api<string[]>("/templates") });
+  useQuery({ queryKey: ["templates"], queryFn: () => api<{ id: string; label: string; description: string }[]>("/templates") });
 
 export function useCreateProject() {
   const qc = useQueryClient();

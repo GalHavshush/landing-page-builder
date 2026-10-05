@@ -92,3 +92,10 @@ a{color:var(--color-primary)}
 .post .prose{max-width:none;font-size:1.1rem}
 .post .prose h2{margin-block-start:2rem}
 .post-back{margin-block-start:3rem;padding-block-start:1.5rem;border-block-start:1px solid var(--color-border)}
+
+/* template personalities: small hooks, everything else comes from theme tokens */
+.tpl-minimal h1,.tpl-minimal h2{font-weight:600;letter-spacing:-.025em}
+.tpl-minimal h1{font-size:clamp(2.1rem,4.4vw,3.2rem)}
+.tpl-minimal .eyebrow{letter-spacing:.18em}
+.tpl-warm .btn{letter-spacing:.01em}
+.tpl-warm .eyebrow{color:var(--color-primary)}

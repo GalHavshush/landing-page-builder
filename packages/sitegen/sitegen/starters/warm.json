@@ -1,0 +1,458 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Rosa's Bakery",
+    "tagline": "Fresh bread, baked every morning",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0100",
+      "email": "hello@example.com",
+      "address": "12 Main Street, Springfield",
+      "hours": [
+        {
+          "label": "Mon-Fri",
+          "open": "07:00",
+          "close": "17:00",
+          "closed": false
+        },
+        {
+          "label": "Saturday",
+          "open": "08:00",
+          "close": "14:00",
+          "closed": false
+        },
+        {
+          "label": "Sunday",
+          "open": "",
+          "close": "",
+          "closed": true
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "A neighbourhood bakery making bread, pastries and coffee from scratch every morning.",
+      "social_image": null
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Menu",
+        "page": "pg_menu",
+        "labels": {}
+      },
+      {
+        "label": "Our story",
+        "page": "pg_about",
+        "labels": {}
+      },
+      {
+        "label": "Journal",
+        "page": "pg_blog",
+        "labels": {}
+      },
+      {
+        "label": "Visit",
+        "page": "pg_visit",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true
+    },
+    "i18n": {}
+  },
+  "theme": {
+    "template": "warm",
+    "palette": {
+      "primary": "#B4532A",
+      "accent": "#E0A458",
+      "background": "#FFFBF5",
+      "surface": "#F6EEE3",
+      "text": "#2B2118"
+    },
+    "fonts": {
+      "heading": "serif",
+      "body": "sans"
+    },
+    "radius": "lg",
+    "button_style": "solid",
+    "spacing": "normal"
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "seo": {
+        "title": null,
+        "description": "A neighbourhood bakery making bread, pastries and coffee from scratch every morning.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_home_hero",
+          "style": {
+            "background": "alt",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "hero",
+          "variant": "split",
+          "props": {
+            "eyebrow": "Since 2015",
+            "heading": "Bread worth waking up for",
+            "subheading": "We bake everything by hand before sunrise, with flour from a mill 30 miles away. Come in warm, leave happy.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "See the menu",
+                "href": {
+                  "page": "pg_menu",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "Find us",
+                "href": {
+                  "page": "pg_visit",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end"
+          }
+        },
+        {
+          "id": "sec_home_features",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "features",
+          "variant": "cards",
+          "props": {
+            "heading": "Made the slow way",
+            "subheading": "No shortcuts, no additives. Just good ingredients and time.",
+            "items": [
+              {
+                "icon": "leaf",
+                "title": "Local flour",
+                "text": "Stone-milled nearby and delivered weekly."
+              },
+              {
+                "icon": "clock",
+                "title": "Long fermentation",
+                "text": "Our dough rests for 24 hours for flavour and an open crumb."
+              },
+              {
+                "icon": "coffee",
+                "title": "Coffee, too",
+                "text": "Roasted down the road and pulled by people who care."
+              }
+            ],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_home_quotes",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "center"
+          },
+          "i18n": {},
+          "type": "testimonials",
+          "variant": "quote",
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [
+              {
+                "quote": "The best sourdough I have ever had, and the cardamom buns are dangerous.",
+                "author": "Maya L.",
+                "role": "Regular since 2016",
+                "avatar": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_home_blog",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "blog_list",
+          "variant": "cards",
+          "props": {
+            "heading": "From the journal",
+            "subheading": "",
+            "limit": 3,
+            "show_excerpt": true,
+            "show_cover": true
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_menu",
+      "slug": "menu",
+      "title": "Menu",
+      "seo": {
+        "title": null,
+        "description": "Our bread and pastry menu.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_menu_bread",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "services",
+          "variant": "list",
+          "props": {
+            "heading": "Bread",
+            "subheading": "Baked fresh, gone by lunchtime.",
+            "items": [
+              {
+                "title": "Country sourdough",
+                "description": "Our signature loaf with a crackling crust.",
+                "price": "$7",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Rye & caraway",
+                "description": "Dense, dark and made to be toasted.",
+                "price": "$8",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Seeded wholemeal",
+                "description": "Sunflower, pumpkin and flax.",
+                "price": "$7.50",
+                "image": null,
+                "link": null
+              }
+            ],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_menu_pastry",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "services",
+          "variant": "list",
+          "props": {
+            "heading": "Pastries",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Butter croissant",
+                "description": "Laminated over three days.",
+                "price": "$3.80",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Cardamom bun",
+                "description": "Twisted, sugared, unforgettable.",
+                "price": "$4.20",
+                "image": null,
+                "link": null
+              }
+            ],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_menu_faq",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "faq",
+          "variant": "accordion",
+          "props": {
+            "heading": "Good to know",
+            "subheading": "",
+            "items": [
+              {
+                "question": "Do you take pre-orders?",
+                "answer": "Yes. Call or email us before 4 pm the day before."
+              },
+              {
+                "question": "Do you have gluten-free options?",
+                "answer": "A few. Everything is made in a kitchen that handles wheat, so we can't promise zero traces."
+              }
+            ]
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_about",
+      "slug": "our-story",
+      "title": "Our story",
+      "seo": {
+        "title": null,
+        "description": "How Rosa's Bakery began.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_about_text",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "text",
+          "variant": "columns",
+          "props": {
+            "heading": "Started in a tiny kitchen",
+            "body": "Rosa began baking for friends in 2015 and the queue has not stopped since.\n\nToday a small team shares the same simple idea: make food you would be proud to put on your own table.\n\nWe are proud to work with local farmers and mills, and to be part of the street we live on."
+          }
+        },
+        {
+          "id": "sec_about_gallery",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "gallery",
+          "variant": "masonry",
+          "props": {
+            "heading": "In the bakery",
+            "subheading": "",
+            "items": [],
+            "columns": 3
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_blog",
+      "slug": "journal",
+      "title": "Journal",
+      "seo": {
+        "title": null,
+        "description": "News and recipes from the bakery.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_blog_all",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "blog_list",
+          "variant": "list",
+          "props": {
+            "heading": "Journal",
+            "subheading": "News, recipes and notes from the bakery.",
+            "limit": 0,
+            "show_excerpt": true,
+            "show_cover": true
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_visit",
+      "slug": "visit",
+      "title": "Visit",
+      "seo": {
+        "title": null,
+        "description": "Opening hours, address and contact details.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_visit_contact",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "contact",
+          "variant": "split",
+          "props": {
+            "heading": "Come say hello",
+            "text": "Walk-ins welcome. For large orders, send us a message.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_visit_map",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "map",
+          "variant": "embedded",
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "i18n": {}
+    }
+  ]
+}

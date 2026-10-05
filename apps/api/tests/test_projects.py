@@ -101,3 +101,16 @@ def test_rename_and_delete(client):
     assert r.json()["name"] == "Renamed"
     assert client.delete(f"/projects/{p['id']}").status_code == 204
     assert client.get(f"/projects/{p['id']}").status_code == 404
+
+
+def test_templates_are_described_and_each_one_creates_a_valid_project(client):
+    signup(client)
+    templates = client.get("/templates").json()
+    assert {t["id"] for t in templates} >= {"clean", "warm", "minimal"}
+    assert all(t["label"] and t["description"] for t in templates)
+    for t in templates:
+        p = make_project(client, f"Site {t['id']}", template=t["id"])
+        doc = client.get(f"/projects/{p['id']}/doc").json()["doc"]
+        assert doc["site"]["name"] == f"Site {t['id']}"
+        assert doc["theme"]["template"] == t["id"]
+        assert client.post(f"/projects/{p['id']}/exports").status_code == 201

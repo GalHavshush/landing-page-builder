@@ -1,7 +1,9 @@
+import os
+
 import pytest
 from app import models  # noqa: F401  (registers tables on Base.metadata)
 from app.assets.storage import LocalStorage, get_storage
-from app.db import Base, get_db
+from app.db import Base, get_db, make_engine
 from app.main import create_app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -11,14 +13,22 @@ from sqlalchemy.pool import StaticPool
 
 @pytest.fixture
 def db_session():
-    """A fresh in-memory SQLite database per test. Production uses Postgres (see README)."""
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
+    """A fresh database per test. SQLite in memory by default (no services needed); set
+    BUILDER_TEST_DATABASE_URL to run the same suite against PostgreSQL."""
+    url = os.environ.get("BUILDER_TEST_DATABASE_URL")
+    if url:
+        engine = make_engine(url)
+        Base.metadata.drop_all(engine)
+    else:
+        engine = create_engine(
+            "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+        )
     Base.metadata.create_all(engine)
     session = sessionmaker(engine, expire_on_commit=False)()
     yield session
     session.close()
+    if url:
+        Base.metadata.drop_all(engine)
     engine.dispose()
 
 

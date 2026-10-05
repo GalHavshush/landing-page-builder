@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import ValidationError
 from sitegen import SiteDocument
 from sitegen.migrations import UnsupportedVersion, load_document
-from sitegen.starters import list_starters, load_starter
+from sitegen.starters import list_starters, load_starter, starter_info
 from sitegen.validate import check
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
@@ -42,8 +42,8 @@ def project_out(project: Project, role: str) -> ProjectOut:
 
 
 @router.get("/templates")
-def templates(_: User = Depends(get_current_user)) -> list[str]:
-    return list_starters()
+def templates(_: User = Depends(get_current_user)) -> list[dict]:
+    return starter_info()
 
 
 @router.post("/projects", response_model=ProjectOut, status_code=201)

@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Alex Morgan",
+    "tagline": "Independent designer",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "",
+      "email": "hello@example.com",
+      "address": "",
+      "hours": [],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Alex Morgan is an independent designer helping small teams ship clear, calm products.",
+      "social_image": null
+    },
+    "nav": [
+      {
+        "label": "Work",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "About",
+        "page": "pg_about",
+        "labels": {}
+      },
+      {
+        "label": "Notes",
+        "page": "pg_blog",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": false
+    },
+    "i18n": {}
+  },
+  "theme": {
+    "template": "minimal",
+    "palette": {
+      "primary": "#111827",
+      "accent": "#9CA3AF",
+      "background": "#FFFFFF",
+      "surface": "#F5F5F5",
+      "text": "#111827"
+    },
+    "fonts": {
+      "heading": "humanist",
+      "body": "sans"
+    },
+    "radius": "sm",
+    "button_style": "outline",
+    "spacing": "spacious"
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Work",
+      "seo": {
+        "title": null,
+        "description": "Selected design work by Alex Morgan.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_home_hero",
+          "style": {
+            "background": "default",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "hero",
+          "variant": "centered",
+          "props": {
+            "eyebrow": "",
+            "heading": "I design clear, calm products for small teams.",
+            "subheading": "Product design, brand and websites. Currently booking projects for next quarter.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Get in touch",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "About me",
+                "href": {
+                  "page": "pg_about",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "link"
+              }
+            ],
+            "image_position": "end"
+          }
+        },
+        {
+          "id": "sec_home_work",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "gallery",
+          "variant": "masonry",
+          "props": {
+            "heading": "Selected work",
+            "subheading": "Add your project images here.",
+            "items": [],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_home_services",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "services",
+          "variant": "list",
+          "props": {
+            "heading": "What I do",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Product design",
+                "description": "From first sketch to shipped interface.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Brand identity",
+                "description": "A name, a mark and a system that holds together.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Websites",
+                "description": "Fast, accessible and easy to update.",
+                "price": "",
+                "image": null,
+                "link": null
+              }
+            ],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_home_quotes",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "testimonials",
+          "variant": "cards",
+          "props": {
+            "heading": "Kind words",
+            "subheading": "",
+            "items": [
+              {
+                "quote": "Alex made a complicated product feel simple, and the team loved working with them.",
+                "author": "Sam R.",
+                "role": "Founder",
+                "avatar": null
+              },
+              {
+                "quote": "Calm, precise and always on time.",
+                "author": "Priya K.",
+                "role": "Head of Product",
+                "avatar": null
+              }
+            ]
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_about",
+      "slug": "about",
+      "title": "About",
+      "seo": {
+        "title": null,
+        "description": "About Alex Morgan.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_about_text",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "text",
+          "variant": "single",
+          "props": {
+            "heading": "Hello, I'm Alex",
+            "body": "I'm a designer with ten years of experience in startups and studios.\n\nI like small teams, honest feedback and work that is finished rather than perfect.\n\nWhen I'm not designing I'm usually cycling, cooking or reading."
+          }
+        },
+        {
+          "id": "sec_about_faq",
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "faq",
+          "variant": "accordion",
+          "props": {
+            "heading": "Working together",
+            "subheading": "",
+            "items": [
+              {
+                "question": "How do projects usually start?",
+                "answer": "With a short call to understand the problem and whether I'm the right person to help."
+              },
+              {
+                "question": "What does it cost?",
+                "answer": "Fixed prices for defined projects, day rates for ongoing work. Ask for a quote."
+              }
+            ]
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_blog",
+      "slug": "notes",
+      "title": "Notes",
+      "seo": {
+        "title": null,
+        "description": "Writing on design and process.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_blog_all",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "blog_list",
+          "variant": "list",
+          "props": {
+            "heading": "Notes",
+            "subheading": "Short writing on design and process.",
+            "limit": 0,
+            "show_excerpt": true,
+            "show_cover": true
+          }
+        }
+      ],
+      "i18n": {}
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "seo": {
+        "title": null,
+        "description": "Get in touch.",
+        "social_image": null,
+        "noindex": false
+      },
+      "sections": [
+        {
+          "id": "sec_contact",
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "i18n": {},
+          "type": "contact",
+          "variant": "stacked",
+          "props": {
+            "heading": "Let's talk",
+            "text": "Tell me a little about your project and I'll reply within two working days.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "",
+            "form_endpoint": ""
+          }
+        }
+      ],
+      "i18n": {}
+    }
+  ]
+}
