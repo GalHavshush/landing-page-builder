@@ -29,6 +29,7 @@
       {% for item in nav %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>
       {% endfor %}
     </nav>
+    {% if languages %}<div class="langs" aria-label="Language">{% for l in languages %}<a href="{{ l.href }}" hreflang="{{ l.code }}" lang="{{ l.code }}"{% if l.current %} aria-current="true"{% endif %}>{{ l.label }}</a>{% endfor %}</div>{% endif %}
   </div>
 </header>
 <main id="main">

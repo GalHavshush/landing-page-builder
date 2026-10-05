@@ -50,7 +50,7 @@ a{color:var(--color-primary)}
 .nav a{color:var(--color-text);text-decoration:none;font-weight:500}
 .nav a:hover,.nav a[aria-current]{color:var(--color-primary)}
 .nav-toggle{display:none;background:none;border:1px solid var(--color-border);border-radius:var(--radius);padding:.4rem .7rem;font:inherit;color:inherit;cursor:pointer}
-.langs{display:flex;gap:.5rem;font-size:.9rem}
+.langs{display:flex;gap:.75rem;font-size:.9rem}.langs a{color:var(--color-muted);text-decoration:none}.langs a[aria-current]{color:var(--color-text);font-weight:700}
 @media (max-width:720px){
   .js .nav-toggle{display:block}
   .js .nav{display:none;position:absolute;inset-inline:0;top:100%;background:var(--color-bg);flex-direction:column;align-items:flex-start;padding:1rem 1.25rem;border-block-end:1px solid var(--color-border)}

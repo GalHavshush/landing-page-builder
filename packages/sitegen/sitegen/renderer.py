@@ -53,10 +53,8 @@ def localized_props(section, lang: str, default_lang: str):
     override = section.i18n.get(lang) if lang != default_lang else None
     if not override:
         return section.props
-    return section.props.model_copy(
-        update=REGISTRY[section.type]
-        .props_model.model_validate({**section.props.model_dump(), **override})
-        .model_dump()
+    return REGISTRY[section.type].props_model.model_validate(
+        {**section.props.model_dump(), **override}
     )
 
 
@@ -71,6 +69,7 @@ class RenderContext:
         assets,
         issues: list[Issue],
         absolute: bool = False,
+        page_id: str | None = None,
     ):
         self.doc = doc
         self.lang = lang
@@ -78,6 +77,7 @@ class RenderContext:
         self.assets = assets
         self.issues = issues
         self.plan = paths.plan_pages(doc)
+        self.page_id = page_id
         self.absolute = absolute  # root-relative URLs (needed for 404.html, served at any depth)
 
     def rel(self, target: str) -> str:
@@ -160,6 +160,23 @@ class RenderContext:
     def t(self, key: str) -> str:
         return strings.get(self.lang, key)
 
+    def language_links(self) -> list[dict]:
+        """Links to this same page in every language (empty for single-language sites)."""
+        if len(self.doc.site.languages) < 2 or self.page_id is None:
+            return []
+        links = []
+        for code in self.doc.site.languages:
+            target = self.plan[(self.page_id, code)]
+            links.append(
+                {
+                    "code": code,
+                    "label": strings.language_name(code),
+                    "href": self.rel(target),
+                    "current": code == self.lang,
+                }
+            )
+        return links
+
     def md(self, source: str) -> Markup:
         return Markup(render_markdown(source))  # noqa: S704 - sanitised by nh3
 
@@ -187,7 +204,16 @@ def render_page(
     env = get_env()
     plan = paths.plan_pages(doc)
     out_path = out_path or plan[(page.id, lang)]
-    ctx = RenderContext(doc, lang, out_path, assets, issues, absolute=absolute)
+    is_real_page = (page.id, lang) in plan
+    ctx = RenderContext(
+        doc,
+        lang,
+        out_path,
+        assets,
+        issues,
+        absolute=absolute,
+        page_id=page.id if is_real_page else None,
+    )
     wrapper = env.get_template("_section.html.j2")
     sections_html = [
         wrapper.render(
@@ -198,7 +224,6 @@ def render_page(
         for section in page.sections
     ]
     site = ctx.site_view()
-    is_real_page = (page.id, lang) in plan
     social_id = page.seo.social_image or doc.site.seo.social_image
     social_path = ctx.asset_path(social_id) if social_id else None
     head = {
@@ -223,6 +248,7 @@ def render_page(
         home_href=ctx.rel(home),
         site=site,
         nav=ctx.nav(),
+        languages=ctx.language_links(),
         sections_html=sections_html,
         doc=doc,
         ctx=ctx,

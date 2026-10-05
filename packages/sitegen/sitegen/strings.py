@@ -90,3 +90,26 @@ _TABLES = {lang: dict(zip(KEYS, values, strict=True)) for lang, values in STRING
 def get(lang: str, key: str) -> str:
     table = _TABLES.get(lang) or _TABLES.get(lang.split("-")[0]) or _TABLES["en"]
     return table[key]
+
+
+LANGUAGE_NAMES = {
+    "en": "English",
+    "he": "עברית",
+    "ar": "العربية",
+    "es": "Español",
+    "de": "Deutsch",
+    "fr": "Français",
+    "it": "Italiano",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "pl": "Polski",
+    "ru": "Русский",
+    "tr": "Türkçe",
+    "ja": "日本語",
+    "zh": "中文",
+    "fa": "فارسی",
+}
+
+
+def language_name(code: str) -> str:
+    return LANGUAGE_NAMES.get(code) or LANGUAGE_NAMES.get(code.split("-")[0]) or code
