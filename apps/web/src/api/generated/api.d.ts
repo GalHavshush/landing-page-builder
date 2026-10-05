@@ -69,7 +69,8 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update Preferences */
+        patch: operations["update_preferences_auth_me_patch"];
         trace?: never;
     };
     "/templates": {
@@ -716,6 +717,13 @@ export interface components {
             /** Published At */
             published_at?: string | null;
         };
+        /** PreferencesIn */
+        PreferencesIn: {
+            /** Ui Language */
+            ui_language?: ("en" | "he") | null;
+            /** Ui Theme */
+            ui_theme?: ("system" | "light" | "dark") | null;
+        };
         /** PreviewIn */
         PreviewIn: {
             /** Doc */
@@ -748,6 +756,13 @@ export interface components {
              * @default clean
              */
             template: string;
+            /**
+             * Language
+             * @default en
+             */
+            language: string;
+            /** Extra Languages */
+            extra_languages?: string[];
         };
         /** ProjectOut */
         ProjectOut: {
@@ -851,6 +866,10 @@ export interface components {
             email: string;
             /** Name */
             name: string;
+            /** Ui Language */
+            ui_language: string;
+            /** Ui Theme */
+            ui_theme: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -974,6 +993,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserOut"];
+                };
+            };
+        };
+    };
+    update_preferences_auth_me_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreferencesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

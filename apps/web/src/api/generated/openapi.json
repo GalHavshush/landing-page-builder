@@ -120,6 +120,45 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Update Preferences",
+        "operationId": "update_preferences_auth_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/templates": {
@@ -2248,6 +2287,43 @@
         ],
         "title": "PostPreviewIn"
       },
+      "PreferencesIn": {
+        "properties": {
+          "ui_language": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "he"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ui Language"
+          },
+          "ui_theme": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "light",
+                  "dark"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ui Theme"
+          }
+        },
+        "type": "object",
+        "title": "PreferencesIn"
+      },
       "PreviewIn": {
         "properties": {
           "doc": {
@@ -2312,6 +2388,18 @@
             "type": "string",
             "title": "Template",
             "default": "clean"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          },
+          "extra_languages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Extra Languages"
           }
         },
         "type": "object",
@@ -2540,13 +2628,23 @@
           "name": {
             "type": "string",
             "title": "Name"
+          },
+          "ui_language": {
+            "type": "string",
+            "title": "Ui Language"
+          },
+          "ui_theme": {
+            "type": "string",
+            "title": "Ui Theme"
           }
         },
         "type": "object",
         "required": [
           "id",
           "email",
-          "name"
+          "name",
+          "ui_language",
+          "ui_theme"
         ],
         "title": "UserOut"
       },
