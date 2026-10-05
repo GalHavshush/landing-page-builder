@@ -22,4 +22,5 @@ DEF = SectionDef(
     TextSection,
     TextProps,
     defaults={"heading": "About us", "body": "Write something about your business here."},
+    description="A heading and a block of formatted text.",
 )

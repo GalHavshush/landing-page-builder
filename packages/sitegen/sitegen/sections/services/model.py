@@ -43,4 +43,5 @@ DEF = SectionDef(
             {"title": "Premium package", "description": "Everything included.", "price": "$300"},
         ],
     },
+    description="What you offer, with optional prices, images and links.",
 )

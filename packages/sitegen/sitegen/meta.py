@@ -17,6 +17,7 @@ def editor_meta() -> dict:
             {
                 "type": d.type,
                 "label": d.label,
+                "description": d.description,
                 "variants": list(type(d.create()).model_fields["variant"].annotation.__args__),
                 "template": template,  # a complete new section (the editor assigns a fresh id)
                 # JSON Schema of the props; every property carries `group` and `control` hints

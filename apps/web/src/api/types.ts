@@ -22,6 +22,7 @@ export interface PropSchema {
 export interface SectionMeta {
   type: string;
   label: string;
+  description: string;
   variants: string[];
   template: Section;
   props_schema: { properties: Record<string, PropSchema>; $defs?: Record<string, unknown> };

@@ -30,4 +30,5 @@ DEF = SectionDef(
         "subheading": "A short line that explains what you offer.",
         "buttons": [{"label": "Get in touch", "href": {"url": "#contact"}}],
     },
+    description="A big headline with buttons and an optional image. Great at the top of a page.",
 )

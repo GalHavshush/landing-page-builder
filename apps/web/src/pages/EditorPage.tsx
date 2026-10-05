@@ -4,6 +4,7 @@ import { useDocument, useEditorMeta, useProject } from "@/api/hooks";
 import { LeftRail } from "@/editor/LeftRail";
 import { Preview, usePreviewHtml } from "@/editor/Preview";
 import { RightPanel } from "@/editor/RightPanel";
+import { useAutosave, useShortcuts } from "@/editor/saving";
 import { useEditor } from "@/editor/store";
 import { TopBar } from "@/editor/TopBar";
 
@@ -40,6 +41,10 @@ function EditorShell({
   const pageId = useEditor((s) => s.pageId)!;
   const lang = useEditor((s) => s.lang)!;
   const { html, error } = usePreviewHtml(projectId, doc, pageId, lang);
+  const saveStatus = useEditor((s) => s.saveStatus);
+  const saveError = useEditor((s) => s.saveError);
+  useAutosave(projectId);
+  useShortcuts();
 
   return (
     <div className="grid h-screen grid-rows-[3.25rem_1fr]">
@@ -48,6 +53,16 @@ function EditorShell({
         <LeftRail meta={meta} />
         <main className="relative min-h-0">
           <Preview html={html} />
+          {(saveStatus === "conflict" || saveStatus === "invalid") && (
+            <div role="alert" className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3 rounded-md bg-red-600 px-3 py-2 text-sm text-white shadow">
+              <span>{saveError}</span>
+              {saveStatus === "conflict" && (
+                <button className="rounded bg-white/20 px-2 py-1 hover:bg-white/30" onClick={() => window.location.reload()}>
+                  Reload latest
+                </button>
+              )}
+            </div>
+          )}
           {error && (
             <div role="alert" className="absolute inset-x-4 top-4 rounded-md bg-red-600 px-3 py-2 text-sm text-white shadow">
               Preview failed: {error}

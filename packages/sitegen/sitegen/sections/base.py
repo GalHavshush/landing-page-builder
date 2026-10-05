@@ -20,6 +20,7 @@ class SectionDef:
     section_model: type[BaseSection]
     props_model: type[BaseModel]
     defaults: dict | None = None  # starter props for a newly added section
+    description: str = ""  # one line shown in the editor's "add section" picker
 
     @property
     def folder(self) -> Path:

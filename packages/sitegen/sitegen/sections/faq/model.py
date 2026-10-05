@@ -34,4 +34,5 @@ DEF = SectionDef(
             {"question": "What are your opening hours?", "answer": "See the footer for our hours."},
         ],
     },
+    description="Questions and answers that expand when clicked.",
 )

@@ -39,4 +39,5 @@ DEF = SectionDef(
             {"icon": "heart", "title": "Friendly", "text": "We treat every customer like family."},
         ],
     },
+    description="A grid of short points, each with an icon, title and text.",
 )

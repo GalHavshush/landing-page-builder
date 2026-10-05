@@ -40,4 +40,5 @@ DEF = SectionDef(
             {"quote": "Great service and lovely people.", "author": "Sam R.", "role": "Customer"},
         ],
     },
+    description="Quotes from happy customers.",
 )
