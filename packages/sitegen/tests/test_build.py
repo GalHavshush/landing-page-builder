@@ -87,3 +87,23 @@ def test_cli_init_build_zip(tmp_path):
     assert main(["build", str(doc_path), str(out), "--zip", str(tmp_path / "s.zip")]) == 0
     assert "Acme" in (out / "index.html").read_text()
     assert (tmp_path / "s.zip").exists()
+
+
+def test_polish_head_footer_and_motion_script():
+    files = build(starter_with_base_url()).files
+    home = files["index.html"].decode()
+    assert 'rel="icon" href="data:image/svg+xml,' in home  # inline favicon, no extra request
+    assert 'name="theme-color" content="#FFFFFF"' in home
+    assert 'class="footer-nav"' in home and "&copy; Northside Studio" in home
+    js = files["js/site.js"].decode()
+    assert (
+        "prefers-reduced-motion" in js and "IntersectionObserver" in js
+    )  # motion is opt-out friendly
+    css = files["css/site.css"].decode()
+    assert ".reveal{opacity:0" in css and "prefers-reduced-motion:reduce" in css
+
+
+def test_content_is_visible_without_javascript():
+    """Reveal states are only applied by site.js; the HTML itself must not hide anything."""
+    html = build(starter_with_base_url()).files["index.html"].decode()
+    assert 'class="reveal' not in html

@@ -6,6 +6,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
+from urllib.parse import quote
+from xml.sax.saxutils import escape
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from markupsafe import Markup
@@ -19,6 +21,7 @@ from sitegen.posts import Post, format_date, sort_newest_first
 from sitegen.schema import SEO, Page, SiteDocument, language_dir
 from sitegen.sections import REGISTRY
 from sitegen.sections.base import SECTIONS_DIR
+from sitegen.theme import readable_on
 from sitegen.youtube import youtube_id
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -336,8 +339,22 @@ def render_page(
         "noindex": page.seo.noindex or not is_real_page,
         "alternates": seo.alternates(doc, page, plan) if is_real_page else [],
         "og_type": "website",
+        "favicon": favicon_href(doc, site["name"]),
     }
     return _render_layout(doc, lang, ctx, sections_html, head, preview, ctx.language_links())
+
+
+def favicon_href(doc: SiteDocument, site_name: str) -> str:
+    """An inline SVG favicon (site initial on the brand color): no extra file, no request."""
+    primary = doc.theme.palette["primary"]
+    letter = (site_name.strip()[:1] or "S").upper()
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'
+        f'<rect width="64" height="64" rx="14" fill="{primary}"/>'
+        f'<text x="32" y="44" font-family="Georgia,serif" font-size="36" font-weight="700" '
+        f'text-anchor="middle" fill="{readable_on(primary)}">{escape(letter)}</text></svg>'
+    )
+    return "data:image/svg+xml," + quote(svg)
 
 
 def blog_index_path(doc: SiteDocument, lang: str) -> str:
@@ -405,6 +422,7 @@ def render_post(
         "noindex": False,
         "alternates": alternates,
         "og_type": "article",
+        "favicon": favicon_href(doc, site["name"]),
     }
     return _render_layout(doc, lang, ctx, [wrapper], head, preview, languages)
 

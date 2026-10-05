@@ -6,3 +6,8 @@
 .faq summary::after{content:"+";font-weight:400;font-size:1.5rem;line-height:1}
 .faq details[open] summary::after{content:"\2212"}
 .faq .prose{padding-block-end:1.1rem;color:var(--muted)}
+.faq details::details-content{block-size:0;overflow:hidden;transition:block-size .35s cubic-bezier(.25,1,.5,1),content-visibility .35s allow-discrete}
+.faq details[open]::details-content{block-size:auto}
+.faq summary{transition:color .15s}.faq summary:hover{color:var(--color-primary)}
+.faq summary::after{transition:transform .3s cubic-bezier(.25,1,.5,1);flex:none}
+.faq details[open] summary::after{content:"+";transform:rotate(45deg)}

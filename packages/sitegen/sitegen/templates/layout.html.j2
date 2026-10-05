@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="{{ doc.theme.palette.background }}">
+<link rel="icon" href="{{ head.favicon }}">
 <title>{{ head.title }}</title>
 {% if head.description %}<meta name="description" content="{{ head.description }}">{% endif %}
 {% if head.noindex %}<meta name="robots" content="noindex">{% endif %}
@@ -38,8 +40,13 @@
 <footer class="site-footer">
   <div class="container">
     <div class="cols">
-      <div><h3>{{ site.name }}</h3>{% if site.tagline %}<p>{{ site.tagline }}</p>{% endif %}</div>
+      <div>
+        <a class="brand" href="{{ home_href }}">{{ site.name }}</a>
+        {% if site.tagline %}<p>{{ site.tagline }}</p>{% endif %}
+        {% if nav %}<nav class="footer-nav" aria-label="{{ ctx.t('menu') }}">{% for item in nav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>{% endif %}
+      </div>
       {% if doc.site.footer.show_business_info %}
+      {% if site.phone or site.email or site.address %}
       <div>
         <h3>{{ ctx.t("contact") }}</h3>
         <ul>
@@ -48,6 +55,7 @@
           {% if site.address %}<li>{{ site.address }}</li>{% endif %}
         </ul>
       </div>
+      {% endif %}
       {% if site.hours %}
       <div>
         <h3>{{ ctx.t("hours") }}</h3>
@@ -56,7 +64,7 @@
       {% endif %}
       {% endif %}
     </div>
-    {% if site.footer_text %}<div class="footer-note">{{ site.footer_text }}</div>{% endif %}
+    <div class="footer-note"><span>&copy; {{ site.name }}</span>{% if site.footer_text %}<span>{{ site.footer_text }}</span>{% endif %}</div>
   </div>
 </footer>
 {% if preview %}<script>{{ inline_js|safe }}</script><script>{{ preview_js|safe }}</script>{% endif %}

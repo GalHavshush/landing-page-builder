@@ -5,8 +5,33 @@ document.documentElement.classList.add("js");
     var open = n.classList.toggle("open");
     t.setAttribute("aria-expanded", open);
   });
+  var header = document.querySelector(".site-header");
+  if (header) {
+    var onScroll = function () { header.classList.toggle("is-scrolled", window.scrollY > 8); };
+    onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+  }
 })();
 
+// Scroll reveal: a gentle fade-up as things enter the viewport. Skipped for visitors who prefer
+// reduced motion, without IntersectionObserver, and in the editor preview.
+(function () {
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (calm || !("IntersectionObserver" in window) || document.querySelector("[data-section-id]")) return;
+  var SELECTORS = ".s .section-head,.hero-copy>*,.hero-media,.s .item,.post-card,.plan,.quote-item,.gallery figure,.contact-info,.contact-form,.faq details,.video,.map,.prose,.post header,.post-hero";
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+  document.querySelectorAll(".s").forEach(function (section) {
+    var seen = 0;
+    section.querySelectorAll(SELECTORS).forEach(function (el) {
+      if (el.closest(".reveal")) return; // never nest reveals
+      el.classList.add("reveal");
+      if (el.matches(".hero-media,.post-hero,.gallery figure,.s .item img")) el.classList.add("reveal-image");
+      el.style.setProperty("--d", Math.min(seen++, 6) * 70 + "ms"); // light stagger within a section
+      io.observe(el);
+    });
+  });
+})();
 // YouTube: nothing is requested from YouTube until the visitor clicks play (privacy + speed).
 document.querySelectorAll(".yt[data-yt]").forEach(function (box) {
   var link = box.querySelector(".yt-link");
