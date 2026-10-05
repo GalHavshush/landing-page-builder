@@ -15,6 +15,7 @@ from app.assets.models import Asset
 from app.assets.storage import Storage, StorageNotFound, get_storage
 from app.config import get_settings
 from app.db import get_db
+from app.posts.models import BlogPost
 from app.projects.deps import EDIT_CONTENT, VIEW, Access
 
 router = APIRouter(tags=["assets"])
@@ -129,7 +130,13 @@ def delete_asset(
     storage: Storage = Depends(get_storage),
 ):
     asset = _get_asset(db, access.project.id, asset_id)
-    if asset_id in json.dumps(access.project.draft_doc):
+    used_in_posts = db.scalar(
+        select(BlogPost.id).where(
+            BlogPost.project_id == access.project.id,
+            (BlogPost.cover_asset_id == asset_id) | BlogPost.body_md.contains(asset_id),
+        )
+    )
+    if asset_id in json.dumps(access.project.draft_doc) or used_in_posts:
         raise HTTPException(409, "This image is used on the site. Remove it there first.")
     storage.delete(asset.storage_key)
     storage.delete(asset.thumb_key)

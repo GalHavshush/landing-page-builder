@@ -11,7 +11,7 @@ from app.auth.deps import get_current_user
 from app.auth.models import User
 from app.config import get_settings
 from app.db import get_db
-from app.projects.build import build_project, preview_assets
+from app.projects.build import build_project, preview_assets, published_posts
 from app.projects.deps import VIEW, Access
 from app.projects.routes import parse_document
 from app.projects.schemas import PreviewIn, PreviewOut
@@ -45,6 +45,7 @@ def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db
                 f"{prefix}/{known[asset_id][1]}" if asset_id in known else ""
             ),
             assets={asset_id: file for asset_id, (file, _) in known.items()},
+            posts=published_posts(db, access.project),
         )
     except KeyError as exc:
         raise HTTPException(404, f"Unknown page or language: {exc.args[0]}") from exc
@@ -60,8 +61,8 @@ def export_zip(
     """Build the saved draft and return it as a ZIP: plain static files, deployable anywhere."""
     project = access.project
     doc = parse_document(project.draft_doc)
-    result = build_project(db, project, doc, storage)
-    data = make_zip(result.files, doc)
+    result, posts = build_project(db, project, doc, storage)
+    data = make_zip(result.files, doc, posts)
     filename = re.sub(r"[^a-z0-9-]", "", project.slug) or "site"
     return Response(
         data,

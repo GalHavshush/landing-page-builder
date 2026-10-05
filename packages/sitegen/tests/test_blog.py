@@ -112,7 +112,7 @@ def test_no_feed_without_base_url():
 
 def test_post_preview_renders_unsaved_drafts():
     html = render_post_preview(blog_doc(), post(1, title="Draft title")).html
-    assert "Draft title" in html and 'data-section-type=' not in html and "<style>" in html
+    assert "Draft title" in html and "data-section-type=" not in html and "<style>" in html
 
 
 def test_dates_are_localised():
