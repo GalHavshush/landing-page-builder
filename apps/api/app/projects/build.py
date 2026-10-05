@@ -11,6 +11,7 @@ from app.assets.models import Asset
 from app.assets.storage import Storage, get_storage
 from app.posts.models import BlogPost
 from app.projects.models import Project
+from app.projects.social_card import social_card
 
 
 def published_posts(db: Session, project: Project) -> list[GenPost]:
@@ -80,4 +81,7 @@ def build_project(
     db: Session, project: Project, doc: SiteDocument, storage: Storage | None = None
 ) -> tuple[BuildResult, list[GenPost]]:
     posts = published_posts(db, project)
-    return build(doc, load_assets(db, project, doc, storage, posts), posts), posts
+    card = None
+    if doc.site.base_url and not doc.site.seo.social_image:
+        card = social_card(doc)  # the share image everywhere no picture was chosen
+    return build(doc, load_assets(db, project, doc, storage, posts), posts, social_card=card), posts

@@ -46,7 +46,7 @@ def test_css_has_self_hosted_font_face_with_relative_urls_and_a_fallback_stack()
     css = build(doc_with()).files["css/site.css"].decode()
     assert 'font-family:"Fraunces"' in css and "font-display:swap" in css
     assert "src:url(../fonts/fraunces/latin.woff2)" in css
-    assert re.search(r'--font-heading: "Fraunces", "Iowan Old Style"', css)
+    assert re.search(r'--font-heading: "Fraunces", "Fraunces Fallback", "Iowan Old Style"', css)
     assert "fonts.googleapis" not in css and "http" not in css.split("@font-face")[1].split("}")[0]
 
 
@@ -84,3 +84,14 @@ def test_preview_loads_fonts_from_the_given_base():
         font_base="/api/fonts/",
     ).html
     assert "url(/api/fonts/fraunces/latin.woff2)" in html
+
+
+def test_web_fonts_get_a_metric_matched_fallback_face():
+    from sitegen import build
+    from sitegen.starters import load_starter
+
+    doc = load_starter("clean")  # plus-jakarta + dm-sans
+    css = build(doc).files["css/site.css"].decode()
+    assert '@font-face{font-family:"DM Sans Fallback";src:local("Arial");size-adjust:' in css
+    assert '"DM Sans", "DM Sans Fallback", system-ui' in css
+    assert "Fraunces Fallback" not in css  # only fonts the site uses

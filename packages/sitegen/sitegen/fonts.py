@@ -49,7 +49,11 @@ def font_stack(key: str, system_stacks: dict[str, str]) -> str:
     if key in system_stacks:
         return system_stacks[key]
     entry = manifest()[key]
-    return f'"{entry["family"]}", {system_stacks["sans" if entry["kind"] == "sans" else "serif"]}'
+    fallback = f', "{entry["family"]} Fallback"' if "metrics" in entry else ""
+    return (
+        f'"{entry["family"]}"{fallback}, '
+        f"{system_stacks['sans' if entry['kind'] == 'sans' else 'serif']}"
+    )
 
 
 def wanted_subsets(doc: SiteDocument) -> set[str]:
@@ -85,6 +89,15 @@ def font_files(doc: SiteDocument) -> dict[str, bytes]:
 def font_face_css(doc: SiteDocument, base: str) -> str:
     """@font-face rules. `base` is where the files are, relative to the stylesheet."""
     rules = []
+    for key in used_fonts(doc):
+        m = manifest()[key].get("metrics")
+        if m:  # a stand-in with the real font's proportions, so the swap does not shift the layout
+            rules.append(
+                f'@font-face{{font-family:"{manifest()[key]["family"]} Fallback";'
+                f'src:local("{m["local"]}");size-adjust:{m["size_adjust"]}%;'
+                f"ascent-override:{m['ascent']}%;descent-override:{m['descent']}%;"
+                f"line-gap-override:{m['line_gap']}%}}"
+            )
     for key, face in _faces(doc):
         rules.append(
             f'@font-face{{font-family:"{manifest()[key]["family"]}";font-style:normal;'

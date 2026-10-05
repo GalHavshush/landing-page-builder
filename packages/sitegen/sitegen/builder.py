@@ -9,6 +9,7 @@ from sitegen.posts import BLOG_DIR, Post
 from sitegen.renderer import (
     CSS_PATH,
     JS_PATH,
+    SOCIAL_CARD_PATH,
     AssetFile,
     Issue,
     asset_output_path,
@@ -31,8 +32,13 @@ def build(
     doc: SiteDocument,
     assets: dict[str, AssetFile] | None = None,
     posts: list[Post] | None = None,
+    social_card: bytes | None = None,
 ) -> BuildResult:
-    """Build the whole site. `posts` are the published posts (drafts are the caller's to omit)."""
+    """Build the whole site. `posts` are the published posts (drafts are the caller's to omit).
+
+    `social_card` is a PNG used as the share image wherever no picture was chosen; it is made by
+    the caller (see the API) because drawing images needs a library this package avoids.
+    """
     assets = assets or {}
     posts = list(posts or [])
     result = BuildResult()
@@ -40,7 +46,9 @@ def build(
     plan = paths.plan_pages(doc)
     for page in doc.pages:
         for lang in doc.site.languages:
-            html = render_page(doc, page, lang, assets, result.issues, posts=posts)
+            html = render_page(
+                doc, page, lang, assets, result.issues, posts=posts, social_card=bool(social_card)
+            )
             result.files[plan[(page.id, lang)]] = html.encode()
     for post in posts:
         if post.lang not in doc.site.languages:
@@ -48,7 +56,7 @@ def build(
                 Issue("warning", f"Post {post.title!r} is in an unknown language {post.lang!r}")
             )
             continue
-        html = render_post(doc, post, assets, result.issues, posts)
+        html = render_post(doc, post, assets, result.issues, posts, social_card=bool(social_card))
         result.files[paths.post_output_path(doc, post)] = html.encode()
     for lang in doc.site.languages:
         feed = seo.rss_xml(doc, posts, lang)
@@ -64,6 +72,8 @@ def build(
         result.issues.append(
             Issue("warning", "No base_url set: sitemap.xml, canonical and og:image were skipped")
         )
+    if social_card:
+        result.files[SOCIAL_CARD_PATH] = social_card
     result.files[CSS_PATH] = compose_css(doc).encode()
     result.files[JS_PATH] = (STATIC / "site.js").read_bytes()
     result.files.update(font_files(doc))  # only the fonts and scripts this site uses

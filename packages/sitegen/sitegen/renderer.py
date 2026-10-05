@@ -12,7 +12,7 @@ from xml.sax.saxutils import escape
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from markupsafe import Markup
 
-from sitegen import paths, seo, strings
+from sitegen import jsonld, paths, seo, strings
 from sitegen.css import STATIC, compose_css
 from sitegen.icons import render_icon
 from sitegen.markdown import render_markdown
@@ -103,7 +103,9 @@ class RenderContext:
         page_id: str | None = None,
         preview: PreviewOptions | None = None,
         posts: list[Post] | None = None,
+        social_card: bool = False,
     ):
+        self.social_card = social_card  # a generated share image exists at SOCIAL_CARD_PATH
         self.doc = doc
         self.posts = posts or []
         self.lang = lang
@@ -353,8 +355,13 @@ def _render_layout(
     )
 
 
+SOCIAL_CARD_PATH = "social-card.png"
+
+
 def _social_image_url(doc: SiteDocument, ctx: RenderContext, asset_id: str | None) -> str | None:
     path = ctx.asset_path(asset_id) if asset_id else None
+    if path is None and ctx.social_card:
+        path = SOCIAL_CARD_PATH  # no picture chosen: fall back to the generated card
     return f"{doc.site.base_url}/{path}" if path and doc.site.base_url else None
 
 
@@ -369,6 +376,7 @@ def render_page(
     absolute: bool = False,
     preview: PreviewOptions | None = None,
     posts: list[Post] | None = None,
+    social_card: bool = False,
 ) -> str:
     """Render one page in one language. `out_path`/`absolute` are for synthetic pages (404)."""
     plan = paths.plan_pages(doc)
@@ -384,6 +392,7 @@ def render_page(
         page_id=page.id if is_real_page else None,
         preview=preview,
         posts=posts,
+        social_card=social_card,
     )
     wrapper = get_env().get_template("_section.html.j2")
     sections_html = [
@@ -407,6 +416,10 @@ def render_page(
         "alternates": seo.alternates(doc, page, plan) if is_real_page else [],
         "og_type": "website",
         "favicon": favicon_href(doc, site["name"], ctx),
+        # the home page carries the business record; it is skipped in previews and on the 404
+        "jsonld": jsonld.business(site, doc.site.base_url, doc.site.business.social)
+        if is_real_page and page is doc.pages[0] and preview is None
+        else None,
     }
     return _render_layout(
         doc,
@@ -458,10 +471,20 @@ def render_post(
     all_posts: list[Post],
     *,
     preview: PreviewOptions | None = None,
+    social_card: bool = False,
 ) -> str:
     lang = post.lang
     out_path = paths.post_output_path(doc, post)
-    ctx = RenderContext(doc, lang, out_path, assets, issues, preview=preview, posts=all_posts)
+    ctx = RenderContext(
+        doc,
+        lang,
+        out_path,
+        assets,
+        issues,
+        preview=preview,
+        posts=all_posts,
+        social_card=social_card,
+    )
     view = ctx.post_view(post)
     article = (
         get_env()
@@ -507,6 +530,16 @@ def render_post(
         "alternates": alternates,
         "og_type": "article",
         "favicon": favicon_href(doc, site["name"], ctx),
+        "jsonld": jsonld.article(
+            post.title,
+            post.excerpt,
+            seo.public_url(doc, out_path),
+            post.published_at.date().isoformat(),
+            site["name"],
+            _social_image_url(doc, ctx, post.cover),
+        )
+        if preview is None
+        else None,
     }
     return _render_layout(doc, lang, ctx, [wrapper], head, preview, languages)
 
