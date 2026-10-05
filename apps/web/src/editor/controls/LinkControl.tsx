@@ -44,7 +44,7 @@ export function LinkControl({
   return (
     <FieldShell label={label}>
       <div className="mt-1 space-y-1.5">
-        <select aria-label={`${label} type`} className="block w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm"
+        <select aria-label={`${label} type`} className="block w-full rounded-md border border-ink-300 bg-white px-2 py-1.5 text-sm"
           value={value ? kind : "none"}
           onChange={(e) => (e.target.value === "none" ? onChange(null) : setKind(e.target.value as Kind))}>
           {optional && <option value="none">No link</option>}
@@ -54,7 +54,7 @@ export function LinkControl({
           <option value="phone">Phone number</option>
         </select>
         {value && kind === "page" && (
-          <select aria-label={`${label} page`} className="block w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm"
+          <select aria-label={`${label} page`} className="block w-full rounded-md border border-ink-300 bg-white px-2 py-1.5 text-sm"
             value={value.page ?? ""} onChange={(e) => onChange({ page: e.target.value })}>
             {pages.map((p) => (
               <option key={p.id} value={p.id}>{p.title}</option>
@@ -64,7 +64,7 @@ export function LinkControl({
         {value && kind !== "page" && (
           <>
             <input id={id} aria-label={`${label} address`} aria-invalid={invalid} value={draft}
-              className={`block w-full rounded-md border px-2.5 py-1.5 text-sm ${invalid ? "border-red-400" : "border-slate-300"}`}
+              className={`block w-full rounded-md border px-2.5 py-1.5 text-sm ${invalid ? "border-red-400" : "border-ink-300"}`}
               onChange={(e) => {
                 setDraft(e.target.value);
                 if (SAFE_URL.test(e.target.value)) onChange({ url: e.target.value }, true);

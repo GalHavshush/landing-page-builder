@@ -10,17 +10,14 @@ export interface ControlProps<T = unknown> {
   hint?: string;
 }
 
-const inputCls =
-  "mt-1 block w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:bg-slate-100 disabled:text-slate-400";
-
 export function FieldShell({ label, hint, htmlFor, children }: { label: string; hint?: string; htmlFor?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="block text-xs font-medium text-slate-600">
+      <label htmlFor={htmlFor} className="field-label">
         {label}
       </label>
-      {children}
-      {hint && <p className="mt-1 text-xs text-slate-400">{hint}</p>}
+      <div className="mt-1">{children}</div>
+      {hint && <p className="mt-1.5 text-[12px] leading-snug text-ink-500">{hint}</p>}
     </div>
   );
 }
@@ -29,7 +26,7 @@ export function TextControl({ label, value, onChange, placeholder, disabled, hin
   const id = useId();
   return (
     <FieldShell label={label} hint={hint} htmlFor={id}>
-      <input id={id} className={inputCls} value={value} placeholder={placeholder} disabled={disabled}
+      <input id={id} className="field-input" value={value} placeholder={placeholder} disabled={disabled}
         onChange={(e) => onChange(e.target.value, true)} />
     </FieldShell>
   );
@@ -39,32 +36,36 @@ export function TextAreaControl({ label, value, onChange, placeholder, disabled,
   const id = useId();
   return (
     <FieldShell label={label} hint={hint} htmlFor={id}>
-      <textarea id={id} rows={rows} className={inputCls} value={value} placeholder={placeholder} disabled={disabled}
+      <textarea id={id} rows={rows} className="field-input resize-y" value={value} placeholder={placeholder} disabled={disabled}
         onChange={(e) => onChange(e.target.value, true)} />
     </FieldShell>
   );
 }
 
+/** Options in a recessed track; the chosen one sits raised, like a physical switch. */
 export function SegmentedControl<T extends string | number>({
   label, value, onChange, options, disabled,
 }: ControlProps<T> & { options: { value: T; label: string }[] }) {
   return (
     <FieldShell label={label}>
-      <div role="group" aria-label={label} className="mt-1 flex overflow-hidden rounded-md border border-slate-300 text-sm">
-        {options.map((o) => (
-          <button
-            key={String(o.value)}
-            type="button"
-            disabled={disabled}
-            aria-pressed={o.value === value}
-            onClick={() => onChange(o.value)}
-            className={`flex-1 px-2 py-1.5 capitalize transition disabled:opacity-50 ${
-              o.value === value ? "bg-indigo-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
-            }`}
-          >
-            {o.label}
-          </button>
-        ))}
+      <div role="group" aria-label={label} className="flex gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200">
+        {options.map((o) => {
+          const on = o.value === value;
+          return (
+            <button
+              key={String(o.value)}
+              type="button"
+              disabled={disabled}
+              aria-pressed={on}
+              onClick={() => onChange(o.value)}
+              className={`flex-1 rounded-[5px] px-2 py-[5px] text-[12px] font-medium capitalize transition duration-150 disabled:opacity-50 ${
+                on ? "bg-white text-ink-900 shadow-[0_1px_2px_rgb(27_26_23/0.12),0_0_0_1px_rgb(27_26_23/0.06)]" : "text-ink-600 hover:text-ink-900"
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
       </div>
     </FieldShell>
   );
@@ -76,7 +77,9 @@ export function SelectControl<T extends string | number>({
   const id = useId();
   return (
     <FieldShell label={label} htmlFor={id}>
-      <select id={id} className={inputCls} value={String(value)} disabled={disabled}
+      <select id={id} className="field-input appearance-none bg-[length:12px] bg-[right_10px_center] bg-no-repeat pr-8"
+        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237d796e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")` }}
+        value={String(value)} disabled={disabled}
         onChange={(e) => onChange(options.find((o) => String(o.value) === e.target.value)!.value)}>
         {options.map((o) => (
           <option key={String(o.value)} value={String(o.value)}>{o.label}</option>
@@ -89,10 +92,14 @@ export function SelectControl<T extends string | number>({
 export function ToggleControl({ label, value, onChange, disabled }: ControlProps<boolean>) {
   const id = useId();
   return (
-    <div className="flex items-center justify-between">
-      <label htmlFor={id} className="text-sm text-slate-700">{label}</label>
-      <input id={id} type="checkbox" checked={value} disabled={disabled} onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" />
+    <div className="flex items-center justify-between gap-3">
+      <label htmlFor={id} className="text-[13px] text-ink-800">{label}</label>
+      <button
+        id={id} type="button" role="switch" aria-checked={value} disabled={disabled} onClick={() => onChange(!value)}
+        className={`relative h-[18px] w-[30px] shrink-0 rounded-full transition-colors duration-150 disabled:opacity-40 ${value ? "bg-ink-900" : "bg-ink-300"}`}
+      >
+        <span className={`absolute left-[2px] top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow-sm transition-transform duration-150 ${value ? "translate-x-3" : ""}`} />
+      </button>
     </div>
   );
 }

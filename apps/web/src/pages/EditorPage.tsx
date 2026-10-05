@@ -25,7 +25,7 @@ export default function EditorPage() {
   if (project.error || docQuery.error)
     return <div className="p-8 text-red-600">Could not open this site.</div>;
   if (!project.data || !meta.data || loadedFor !== projectId)
-    return <div className="p-8 text-slate-500">Loading editor…</div>;
+    return <div className="p-8 text-ink-500">Loading editor…</div>;
 
   return <EditorShell projectId={projectId} project={project.data} meta={meta.data} />;
 }
@@ -50,9 +50,9 @@ function EditorShell({
   useShortcuts();
 
   return (
-    <div className="grid h-screen grid-rows-[3.25rem_1fr]">
+    <div className="grid h-screen grid-rows-[2.75rem_1fr]">
       <TopBar project={project} meta={meta} />
-      <div className="grid min-h-0 grid-cols-[260px_1fr_320px]">
+      <div className="grid min-h-0 grid-cols-[256px_1fr_312px]">
         <LeftRail meta={meta} />
         {view === "blog" ? (
           <PostWorkspace />

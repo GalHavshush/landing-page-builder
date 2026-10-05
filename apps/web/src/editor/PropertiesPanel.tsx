@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { EditorMeta, PropSchema, Section, SectionMeta } from "@/api/types";
 import { setVariant, setTranslation, updateProps, updateStyle } from "./commands";
+import { SectionIcon } from "@/components/icons";
 import { SegmentedControl } from "./controls/basic";
 import { Control, type Env } from "./controls/registry";
 import { SettingsPanel } from "./SettingsPanel";
@@ -49,10 +50,10 @@ function PropField({ name, schema, ctx, env }: { name: string; schema: PropSchem
     return (
       <div className="space-y-1">
         <Control name={name} schema={schema} env={env} value={override ?? base} onChange={write} />
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-ink-400">
           {override === undefined ? "Using the default language." : "Translated."}
           {override !== undefined && (
-            <button className="ml-2 text-indigo-600 hover:underline" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
+            <button className="ml-2 text-accent-600 hover:underline" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
               Reset to default
             </button>
           )}
@@ -107,14 +108,17 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
   const translating = lang !== defaultLang;
 
   return (
-    <aside className="flex min-h-0 flex-col border-l border-slate-200 bg-white">
-      <div className="border-b border-slate-200 px-4 pt-3">
-        <h2 className="text-sm font-semibold">{sectionMeta?.label ?? section.type}</h2>
-        {translating && <p className="mt-0.5 text-xs text-indigo-600">Translating to {meta.languages[lang] ?? lang}</p>}
-        <div role="tablist" className="mt-2 flex gap-4">
+    <aside className="flex min-h-0 flex-col border-l border-ink-200 bg-white">
+      <div className="border-b border-ink-200 px-4 pt-3.5">
+        <h2 className="flex items-center gap-2 text-[13px] font-semibold tracking-tight">
+          <span className="grid h-5 w-5 place-items-center rounded bg-ink-100 text-ink-700"><SectionIcon type={section.type} size={12} /></span>
+          {sectionMeta?.label ?? section.type}
+        </h2>
+        {translating && <p className="mt-0.5 text-xs text-accent-600">Translating to {meta.languages[lang] ?? lang}</p>}
+        <div role="tablist" className="mt-2.5 flex gap-4">
           {(canEdit ? (["content", "design"] as const) : (["content"] as const)).map((t) => (
             <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
-              className={`-mb-px border-b-2 pb-2 text-sm capitalize ${tab === t ? "border-indigo-600 font-medium text-indigo-700" : "border-transparent text-slate-500 hover:text-slate-800"}`}>
+              className={`-mb-px border-b-[1.5px] py-2 text-[13px] font-medium capitalize transition ${tab === t ? "border-ink-900 text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"}`}>
               {t}
             </button>
           ))}
@@ -124,7 +128,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
         {tab === "content" && content.map(([name, schema]) => <PropField key={`${section.id}.${name}`} name={name} schema={schema} ctx={ctx} env={env} />)}
         {tab === "design" &&
           (translating ? (
-            <p className="text-sm text-slate-500">Design is shared by all languages. Switch back to the default language to change it.</p>
+            <p className="text-sm text-ink-500">Design is shared by all languages. Switch back to the default language to change it.</p>
           ) : (
             <>
               {sectionMeta && sectionMeta.variants.length > 1 && (

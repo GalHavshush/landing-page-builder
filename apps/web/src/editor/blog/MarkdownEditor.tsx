@@ -29,20 +29,20 @@ export function MarkdownEditor({ value, onChange }: Props) {
     dialog.current?.close();
   };
 
-  const btn = "rounded px-2 py-1 text-sm text-slate-600 hover:bg-slate-100";
+  const btn = "rounded px-2 py-1 text-[12px] font-medium text-ink-600 transition hover:bg-ink-100 hover:text-ink-900";
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div role="toolbar" aria-label="Formatting" className="flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-white px-2 py-1">
+      <div role="toolbar" aria-label="Formatting" className="flex flex-wrap items-center gap-0.5 border-b border-ink-200 bg-white px-2 py-1">
         <button className={`${btn} font-bold`} title="Bold" aria-label="Bold" onClick={() => run((t, s, e) => wrap(t, s, e, "**"))}>B</button>
         <button className={`${btn} italic`} title="Italic" aria-label="Italic" onClick={() => run((t, s, e) => wrap(t, s, e, "*"))}>I</button>
-        <span className="mx-1 h-4 w-px bg-slate-200" />
+        <span className="mx-1 h-4 w-px bg-ink-200" />
         <button className={btn} title="Heading" aria-label="Heading" onClick={() => run((t, s, e) => prefixLines(t, s, e, "## "))}>H2</button>
         <button className={btn} title="Subheading" aria-label="Subheading" onClick={() => run((t, s, e) => prefixLines(t, s, e, "### "))}>H3</button>
-        <span className="mx-1 h-4 w-px bg-slate-200" />
-        <button className={btn} title="Bulleted list" aria-label="Bulleted list" onClick={() => run((t, s, e) => prefixLines(t, s, e, "- "))}>• List</button>
-        <button className={btn} title="Numbered list" aria-label="Numbered list" onClick={() => run((t, s, e) => prefixLines(t, s, e, (i) => `${i + 1}. `))}>1. List</button>
-        <button className={btn} title="Quote" aria-label="Quote" onClick={() => run((t, s, e) => prefixLines(t, s, e, "> "))}>“ Quote</button>
-        <span className="mx-1 h-4 w-px bg-slate-200" />
+        <span className="mx-1 h-4 w-px bg-ink-200" />
+        <button className={btn} title="Bulleted list" aria-label="Bulleted list" onClick={() => run((t, s, e) => prefixLines(t, s, e, "- "))}>Bullets</button>
+        <button className={btn} title="Numbered list" aria-label="Numbered list" onClick={() => run((t, s, e) => prefixLines(t, s, e, (i) => `${i + 1}. `))}>Numbered</button>
+        <button className={btn} title="Quote" aria-label="Quote" onClick={() => run((t, s, e) => prefixLines(t, s, e, "> "))}>Quote</button>
+        <span className="mx-1 h-4 w-px bg-ink-200" />
         <button className={btn} title="Link" aria-label="Link" onClick={() => run((t, s, e) => makeLink(t, s, e))}>Link</button>
         <button className={btn} title="Insert image" aria-label="Insert image" onClick={() => dialog.current?.showModal()}>Image</button>
       </div>
@@ -53,7 +53,7 @@ export function MarkdownEditor({ value, onChange }: Props) {
         aria-label="Post text"
         spellCheck
         placeholder="Write your post here. Use the toolbar for headings, lists, links and images."
-        className="min-h-0 flex-1 resize-none bg-white p-4 font-mono text-sm leading-relaxed focus:outline-none"
+        className="min-h-0 flex-1 resize-none bg-white p-4 font-mono text-[13px] leading-[1.7] focus:outline-none"
       />
       <AssetPicker dialogRef={dialog} projectId={projectId} onPick={insertImage} />
     </div>

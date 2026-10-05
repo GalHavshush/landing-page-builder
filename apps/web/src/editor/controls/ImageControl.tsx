@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useAssets, useDeleteAsset, useUploadAsset } from "@/api/hooks";
 import type { Asset } from "@/api/types";
+import { IconClose } from "@/components/icons";
 import { Button } from "@/components/ui";
 import { useEditor } from "../store";
 import { FieldShell, type ControlProps } from "./basic";
@@ -23,14 +24,14 @@ export function ImageControl({
     <FieldShell label={label}>
       <div className="mt-1 space-y-2">
         {value && (
-          <div className="flex items-center gap-2 rounded-md border border-slate-200 p-1.5">
+          <div className="flex items-center gap-2 rounded-md border border-ink-200 p-1.5">
             {current ? (
               <img src={current.thumb_url} alt="" className="h-14 w-14 rounded object-cover" />
             ) : (
-              <div className="grid h-14 w-14 place-items-center rounded bg-slate-100 text-xs text-slate-400">?</div>
+              <div className="grid h-14 w-14 place-items-center rounded bg-ink-100 text-xs text-ink-400">?</div>
             )}
-            <div className="min-w-0 flex-1 truncate text-xs text-slate-500">{current?.filename ?? "Image missing from library"}</div>
-            <button type="button" onClick={() => onChange(null)} className="px-1 text-xs text-slate-500 hover:text-red-600" aria-label={`Remove ${label}`}>
+            <div className="min-w-0 flex-1 truncate text-xs text-ink-500">{current?.filename ?? "Image missing from library"}</div>
+            <button type="button" onClick={() => onChange(null)} className="px-1 text-xs text-ink-500 hover:text-red-600" aria-label={`Remove ${label}`}>
               Remove
             </button>
           </div>
@@ -40,12 +41,12 @@ export function ImageControl({
         </Button>
         {value && !hideAlt && (
           <div>
-            <label className="block text-xs text-slate-500" htmlFor={`${label}-alt`}>
+            <label className="block text-xs text-ink-500" htmlFor={`${label}-alt`}>
               Description for screen readers (alt text)
             </label>
             <input id={`${label}-alt`} value={value.alt} placeholder="e.g. Fresh loaves on a wooden table"
               onChange={(e) => onChange({ ...value, alt: e.target.value }, true)}
-              className="mt-1 block w-full rounded-md border border-slate-300 px-2.5 py-1.5 text-sm" />
+              className="mt-1 block w-full rounded-md border border-ink-300 px-2.5 py-1.5 text-sm" />
           </div>
         )}
       </div>
@@ -83,34 +84,34 @@ export function AssetPicker({
   const error = (upload.error ?? remove.error)?.message;
 
   return (
-    <dialog ref={dialogRef} className="m-auto w-[min(44rem,94vw)] rounded-xl p-0 shadow-2xl backdrop:bg-slate-900/40"
+    <dialog ref={dialogRef} className="m-auto w-[min(44rem,94vw)] rounded-2xl bg-white p-0"
       onClick={(e) => e.target === dialogRef.current && dialogRef.current?.close()}>
       <div className="p-5" onDragOver={(e) => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)}
         onDrop={(e) => { e.preventDefault(); setDragging(false); send(e.dataTransfer.files); }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Images</h2>
+          <h2 className="text-[15px] font-semibold tracking-tight">Images</h2>
           <div className="flex items-center gap-2">
             <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden
               onChange={(e) => e.target.files && send(e.target.files)} />
             <Button type="button" onClick={() => input.current?.click()} disabled={upload.isPending}>
               {upload.isPending ? "Uploading…" : "Upload image"}
             </Button>
-            <button aria-label="Close" className="px-1 text-slate-500 hover:text-slate-900" onClick={() => dialogRef.current?.close()}>✕</button>
+            <button aria-label="Close" className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialogRef.current?.close()}><IconClose size={15} /></button>
           </div>
         </div>
         {error && <p role="alert" className="mb-3 text-sm text-red-600">{error}</p>}
-        <div className={`rounded-lg border-2 border-dashed p-3 ${dragging ? "border-indigo-500 bg-indigo-50" : "border-slate-200"}`}>
-          {assets.data?.length === 0 && <p className="py-8 text-center text-sm text-slate-500">Drop images here or use “Upload image”. JPEG, PNG or WebP, up to 10 MB.</p>}
+        <div className={`rounded-lg border-2 border-dashed p-3 ${dragging ? "border-accent-500 bg-accent-50" : "border-ink-200"}`}>
+          {assets.data?.length === 0 && <p className="py-8 text-center text-sm text-ink-500">Drop images here or use “Upload image”. JPEG, PNG or WebP, up to 10 MB.</p>}
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
             {assets.data?.map((a) => (
               <li key={a.id} className="group relative">
                 <button type="button" onClick={() => onPick(a)} aria-label={`Use ${a.filename}`}
-                  className={`block aspect-square w-full overflow-hidden rounded-md ring-2 ${a.id === selected ? "ring-indigo-500" : "ring-transparent hover:ring-indigo-300"}`}>
+                  className={`block aspect-square w-full overflow-hidden rounded-md ring-2 ${a.id === selected ? "ring-accent-500" : "ring-transparent hover:ring-accent-300"}`}>
                   <img src={a.thumb_url} alt={a.alt_default} className="h-full w-full object-cover" />
                 </button>
                 <button type="button" aria-label={`Delete ${a.filename}`} title="Delete from library"
                   onClick={() => window.confirm("Delete this image from the library?") && remove.mutate(a.id)}
-                  className="absolute right-1 top-1 rounded bg-white/90 px-1.5 text-xs text-slate-600 opacity-0 shadow hover:text-red-600 group-hover:opacity-100 focus:opacity-100">✕</button>
+                  className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded bg-white text-ink-600 opacity-0 shadow-sm ring-1 ring-ink-200 hover:bg-red-600 hover:text-white group-hover:opacity-100 focus:opacity-100"><IconClose size={12} /></button>
               </li>
             ))}
           </ul>

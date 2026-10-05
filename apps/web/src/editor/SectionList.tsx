@@ -15,6 +15,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { EditorMeta, Section } from "@/api/types";
+import { IconCopy, IconGrip, IconTrash, SectionIcon } from "@/components/icons";
 import { duplicateSection, moveSection, removeSection } from "./commands";
 import { useCanEditStructure, useEditor } from "./store";
 
@@ -29,49 +30,44 @@ function Item({ section, label }: { section: Section; label: string }) {
   const apply = useEditor((s) => s.apply);
   const canEdit = useCanEditStructure();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: section.id });
+  const tool = "grid h-6 w-6 place-items-center rounded text-ink-500 transition hover:bg-ink-200/70 hover:text-ink-900";
 
   return (
     <li
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`group flex items-stretch rounded-md border bg-white ${
-        selected ? "border-indigo-400 bg-indigo-50" : "border-slate-200 hover:border-slate-300"
-      } ${isDragging ? "z-10 shadow-lg" : ""}`}
+      className={`group relative flex items-center rounded-md transition-colors ${
+        selected ? "bg-ink-100" : "hover:bg-ink-100/70"
+      } ${isDragging ? "z-10 bg-white shadow-pop ring-1 ring-ink-200" : ""}`}
     >
+      {selected && <span className="absolute inset-y-1.5 left-0 w-[2px] rounded-full bg-accent-500" />}
       {canEdit ? (
-        <button
-          aria-label={`Drag ${label}`}
-          className="cursor-grab touch-none px-1.5 text-slate-400 hover:text-slate-700 active:cursor-grabbing"
-          {...attributes}
-          {...listeners}
-        >
-          ⋮⋮
+        <button aria-label={`Drag ${label}`} {...attributes} {...listeners}
+          className="grid h-8 w-5 shrink-0 cursor-grab touch-none place-items-center text-ink-300 transition hover:text-ink-600 active:cursor-grabbing group-hover:text-ink-500">
+          <IconGrip size={14} />
         </button>
       ) : (
         <span className="w-2" />
       )}
-      <button onClick={() => selectSection(section.id)} className="min-w-0 flex-1 py-2 pr-1 text-left">
-        <div className="text-sm font-medium">{label}</div>
-        <div className="truncate text-xs text-slate-500">{subtitle(section) || "—"}</div>
+      <button onClick={() => selectSection(section.id)} className="flex min-w-0 flex-1 items-center gap-2.5 py-1.5 pr-1 text-left">
+        <span className={`grid h-6 w-6 shrink-0 place-items-center rounded ${selected ? "bg-white text-ink-900 ring-1 ring-ink-200" : "text-ink-500"}`}>
+          <SectionIcon type={section.type} size={14} />
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-[13px] font-medium leading-tight">{label}</span>
+          <span className="block truncate text-[11.5px] leading-tight text-ink-500">{subtitle(section) || "Empty"}</span>
+        </span>
       </button>
-      {canEdit && <div className="flex items-center gap-0.5 pr-1 opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100">
-        <button
-          aria-label={`Duplicate ${label}`}
-          title="Duplicate"
-          className="rounded px-1.5 py-1 text-slate-500 hover:bg-slate-100"
-          onClick={() => apply(duplicateSection(section.id))}
-        >
-          ⧉
-        </button>
-        <button
-          aria-label={`Delete ${label}`}
-          title="Delete (you can undo)"
-          className="rounded px-1.5 py-1 text-slate-500 hover:bg-red-50 hover:text-red-600"
-          onClick={() => apply(removeSection(section.id))}
-        >
-          ✕
-        </button>
-      </div>}
+      {canEdit && (
+        <div className="mr-1 flex items-center opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100">
+          <button aria-label={`Duplicate ${label}`} title="Duplicate" className={tool} onClick={() => apply(duplicateSection(section.id))}>
+            <IconCopy size={13} />
+          </button>
+          <button aria-label={`Delete ${label}`} title="Delete (you can undo)" className={`${tool} hover:!bg-red-600 hover:!text-white`} onClick={() => apply(removeSection(section.id))}>
+            <IconTrash size={13} />
+          </button>
+        </div>
+      )}
     </li>
   );
 }
@@ -93,7 +89,7 @@ export function SectionList({ sections, meta }: { sections: Section[]; meta: Edi
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
       <SortableContext items={sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
-        <ul className="space-y-1">
+        <ul>
           {sections.map((s) => (
             <Item key={s.id} section={s} label={label(s.type)} />
           ))}

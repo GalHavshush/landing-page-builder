@@ -8,7 +8,7 @@ import Login from "@/pages/Login";
 function RequireAuth() {
   const me = useMe();
   const location = useLocation();
-  if (me.isPending) return <div className="p-8 text-slate-500">Loading…</div>;
+  if (me.isPending) return <div className="p-8 text-ink-500">Loading…</div>;
   if (!me.data) return <Navigate to={`/login?next=${encodeURIComponent(location.pathname)}`} replace />;
   return <Outlet />;
 }

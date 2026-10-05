@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IconChevronRight, IconClose } from "@/components/icons";
 import { itemTitle } from "./schema";
 
 /**
@@ -30,27 +31,27 @@ export function Repeater<T extends object>({
 
   return (
     <div>
-      <div className="text-xs font-medium text-slate-600">{label}</div>
+      <div className="field-label">{label}</div>
       <ul className="mt-1 space-y-1.5">
         {items.map((item, i) => (
-          <li key={i} className="rounded-md border border-slate-200 bg-slate-50/60">
+          <li key={i} className="rounded-md border border-ink-200 bg-white">
             <div className="flex items-center">
               <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}
-                className="min-w-0 flex-1 truncate px-2.5 py-2 text-left text-sm font-medium">
-                <span className="mr-1.5 text-slate-400">{open === i ? "▾" : "▸"}</span>
+                className="flex min-w-0 flex-1 items-center truncate px-2 py-2 text-left text-[13px] font-medium">
+                <IconChevronRight size={13} className={`mr-1 shrink-0 text-ink-400 transition-transform duration-150 ${open === i ? "rotate-90" : ""}`} />
                 {itemTitle(item as Record<string, unknown>, i)}
               </button>
-              <div className="flex gap-0.5 pr-1 text-slate-500">
+              <div className="flex gap-0.5 pr-1 text-ink-500">
                 <button type="button" aria-label={`Move ${itemTitle(item as Record<string, unknown>, i)} up`} disabled={i === 0} onClick={() => move(i, -1)}
-                  className="rounded px-1.5 py-1 hover:bg-slate-200 disabled:opacity-25">↑</button>
+                  className="grid h-6 w-6 place-items-center rounded hover:bg-ink-200 disabled:opacity-25"><IconChevronRight size={13} className="-rotate-90" /></button>
                 <button type="button" aria-label={`Move ${itemTitle(item as Record<string, unknown>, i)} down`} disabled={i === items.length - 1} onClick={() => move(i, 1)}
-                  className="rounded px-1.5 py-1 hover:bg-slate-200 disabled:opacity-25">↓</button>
+                  className="grid h-6 w-6 place-items-center rounded hover:bg-ink-200 disabled:opacity-25"><IconChevronRight size={13} className="rotate-90" /></button>
                 <button type="button" aria-label={`Remove ${itemTitle(item as Record<string, unknown>, i)}`} onClick={() => remove(i)}
-                  className="rounded px-1.5 py-1 hover:bg-red-50 hover:text-red-600">✕</button>
+                  className="grid h-6 w-6 place-items-center rounded hover:bg-red-600 hover:text-white"><IconClose size={13} /></button>
               </div>
             </div>
             {open === i && (
-              <div className="space-y-3 border-t border-slate-200 p-2.5">
+              <div className="space-y-3 border-t border-ink-200 bg-ink-50/60 p-3">
                 {renderItem(item, (next, typing) => onChange(items.map((x, j) => (j === i ? next : x)), typing), i)}
               </div>
             )}
@@ -58,7 +59,7 @@ export function Repeater<T extends object>({
         ))}
       </ul>
       <button type="button" onClick={() => { onChange([...items, makeBlank()]); setOpen(items.length); }}
-        className="mt-2 w-full rounded-md border border-dashed border-slate-300 py-1.5 text-sm text-slate-600 hover:border-indigo-400 hover:text-indigo-700">
+        className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-ink-300 py-1.5 text-[13px] text-ink-600 transition hover:border-ink-900 hover:text-ink-900">
         + {addLabel}
       </button>
     </div>

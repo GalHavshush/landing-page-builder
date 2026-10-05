@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { EditorMeta, SectionMeta } from "@/api/types";
-import { Button } from "@/components/ui";
+import { IconClose, IconPlus, SectionIcon } from "@/components/icons";
 import { addSection, newId } from "./commands";
 import { currentPage, useEditor } from "./store";
 
@@ -23,30 +23,39 @@ export function AddSection({ meta }: { meta: EditorMeta }) {
 
   return (
     <>
-      <Button variant="ghost" className="w-full" onClick={() => dialog.current?.showModal()}>
-        + Add section
-      </Button>
+      <button onClick={() => dialog.current?.showModal()}
+        className="flex w-full items-center gap-2 rounded-md border border-dashed border-ink-300 px-2.5 py-2 text-[13px] text-ink-600 transition hover:border-ink-900 hover:bg-white hover:text-ink-900">
+        <IconPlus size={14} /> Add section
+      </button>
       <dialog
         ref={dialog}
-        className="m-auto w-[min(40rem,92vw)] rounded-xl p-0 shadow-2xl backdrop:bg-slate-900/40"
+        className="m-auto w-[min(44rem,94vw)] rounded-2xl bg-white p-0"
         onClick={(e) => e.target === dialog.current && dialog.current?.close()}
       >
         <div className="p-5">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Add a section</h2>
-            <button aria-label="Close" className="text-slate-500 hover:text-slate-900" onClick={() => dialog.current?.close()}>
-              ✕
+            <div>
+              <h2 className="text-[15px] font-semibold tracking-tight">Add a section</h2>
+              <p className="text-[13px] text-ink-500">Goes after the section you have selected.</p>
+            </div>
+            <button aria-label="Close" className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialog.current?.close()}>
+              <IconClose size={15} />
             </button>
           </div>
-          <ul className="grid gap-3 sm:grid-cols-2">
+          <ul className="grid gap-2 sm:grid-cols-2">
             {meta.sections.map((m) => (
               <li key={m.type}>
                 <button
                   onClick={() => add(m)}
-                  className="h-full w-full rounded-lg border border-slate-200 p-3 text-left transition hover:border-indigo-400 hover:bg-indigo-50"
+                  className="group flex h-full w-full items-start gap-3 rounded-lg border border-ink-200 p-3 text-left transition hover:border-ink-900 hover:bg-ink-50"
                 >
-                  <div className="font-medium">{m.label}</div>
-                  <div className="mt-0.5 text-xs text-slate-500">{m.description}</div>
+                  <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md bg-ink-100 text-ink-700 transition group-hover:bg-ink-900 group-hover:text-white">
+                    <SectionIcon type={m.type} size={16} />
+                  </span>
+                  <span>
+                    <span className="block text-[13px] font-medium">{m.label}</span>
+                    <span className="mt-0.5 block text-[12px] leading-snug text-ink-500">{m.description}</span>
+                  </span>
                 </button>
               </li>
             ))}

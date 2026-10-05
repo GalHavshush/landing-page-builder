@@ -84,10 +84,10 @@ export function Preview({ html }: { html: string | undefined }) {
   }, [selectedId, active]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="flex h-full justify-center overflow-hidden bg-slate-200 p-4">
+    <div className="flex h-full justify-center overflow-hidden bg-ink-100 p-5">
       <div
-        className={`relative h-full overflow-hidden bg-white shadow-lg ring-1 ring-slate-300 transition-[width] duration-200 ${
-          device === "mobile" ? "w-[390px] rounded-2xl" : "w-full rounded-lg"
+        className={`relative h-full overflow-hidden bg-white shadow-[0_0_0_1px_rgb(27_26_23/0.08),0_12px_32px_-12px_rgb(27_26_23/0.22)] transition-[width,border-radius] duration-300 ease-[var(--ease-out-quart)] ${
+          device === "mobile" ? "w-[390px] rounded-[22px]" : "w-full rounded-lg"
         }`}
       >
         {[0, 1].map((i) => (

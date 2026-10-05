@@ -29,7 +29,7 @@ export function PostWorkspace() {
 }
 
 function Empty({ text }: { text: string }) {
-  return <div className="col-span-2 grid place-items-center bg-slate-100 text-slate-500">{text}</div>;
+  return <div className="col-span-2 grid place-items-center bg-ink-100 text-ink-500">{text}</div>;
 }
 
 function Editor({ post }: { post: PostOut }) {
@@ -98,11 +98,11 @@ function Editor({ post }: { post: PostOut }) {
   return (
     <div className="col-span-2 grid min-h-0 grid-cols-[1fr_320px]">
       <div className="grid min-h-0 grid-cols-2">
-        <section className="flex min-h-0 flex-col border-r border-slate-200 bg-white">
-          <div className="border-b border-slate-200 px-4 pt-3">
+        <section className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
+          <div className="border-b border-ink-200 px-4 pt-3">
             <input aria-label="Post title" value={draft.title} onChange={(e) => update({ title: e.target.value })}
               placeholder="Post title" className="w-full text-xl font-semibold focus:outline-none" />
-            <div role="status" className={`pb-2 text-xs ${valid && state !== "error" ? "text-slate-400" : "text-red-600"}`}>
+            <div role="status" className={`pb-2 text-xs ${valid && state !== "error" ? "text-ink-400" : "text-red-600"}`}>
               {statusText}{error ? `: ${error}` : ""}
             </div>
           </div>

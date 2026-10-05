@@ -33,11 +33,11 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-xs font-medium text-slate-600">Color schemes</div>
+        <div className="text-xs font-medium text-ink-600">Color schemes</div>
         <div className="mt-1.5 grid grid-cols-3 gap-2">
           {Object.entries(PALETTES).map(([name, p]) => (
             <button key={name} type="button" onClick={() => apply(updateTheme({ palette: { ...p } }))}
-              className="rounded-md border border-slate-200 p-1.5 text-left text-xs hover:border-indigo-400">
+              className="rounded-md border border-ink-200 p-1.5 text-left text-xs hover:border-accent-400">
               <div className="mb-1 flex h-5 overflow-hidden rounded">
                 {[p.primary, p.accent, p.background, p.surface, p.text].map((c, i) => (
                   <span key={i} className="flex-1" style={{ background: c }} />
@@ -54,7 +54,7 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
       {warnings.map((w) => (
         <p key={w} role="alert" className="rounded bg-amber-50 px-2 py-1.5 text-xs text-amber-800">{w}</p>
       ))}
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Style</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Style</h3>
       {(["heading", "body"] as const).map((role) => (
         <SelectControl key={role} label={`${role === "heading" ? "Heading" : "Body"} font`} value={theme.fonts[role]}
           options={meta.fonts.map((f) => ({ value: f, label: f }))}

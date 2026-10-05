@@ -29,21 +29,21 @@ export function PostSettings({
   const date = (draft.published_at ?? "").slice(0, 10);
 
   return (
-    <aside className="min-h-0 space-y-5 overflow-y-auto border-l border-slate-200 bg-white p-4">
+    <aside className="min-h-0 space-y-5 overflow-y-auto border-l border-ink-200 bg-white p-4">
       <h2 className="text-sm font-semibold">Post settings</h2>
       <SegmentedControl label="Status" value={draft.status} options={[{ value: "draft", label: "Draft" }, { value: "published", label: "Published" }]}
         onChange={(v) => update({ status: v as PostIn["status"] })} />
-      {draft.status === "draft" && <p className="-mt-3 text-xs text-slate-400">Drafts are never part of the site or its export.</p>}
+      {draft.status === "draft" && <p className="-mt-3 text-xs text-ink-400">Drafts are never part of the site or its export.</p>}
       <div>
-        <label htmlFor="post-date" className="block text-xs font-medium text-slate-600">Publish date</label>
+        <label htmlFor="post-date" className="block text-xs font-medium text-ink-600">Publish date</label>
         <input id="post-date" type="date" value={date} onChange={(e) => update({ published_at: e.target.value ? `${e.target.value}T12:00:00Z` : null })}
-          className="mt-1 block w-full rounded-md border border-slate-300 px-2.5 py-1.5 text-sm" />
-        <p className="mt-1 text-xs text-slate-400">Empty: set automatically when you publish.</p>
+          className="mt-1 block w-full rounded-md border border-ink-300 px-2.5 py-1.5 text-sm" />
+        <p className="mt-1 text-xs text-ink-400">Empty: set automatically when you publish.</p>
       </div>
       <div>
-        <label htmlFor="post-slug" className="block text-xs font-medium text-slate-600">URL name</label>
-        <div className="mt-1 flex items-center rounded-md border border-slate-300 text-sm">
-          <span className="pl-2.5 text-slate-400">/blog/</span>
+        <label htmlFor="post-slug" className="block text-xs font-medium text-ink-600">URL name</label>
+        <div className="mt-1 flex items-center rounded-md border border-ink-300 text-sm">
+          <span className="pl-2.5 text-ink-400">/blog/</span>
           <input id="post-slug" value={slug} aria-invalid={Boolean(slugProblem)} spellCheck={false}
             onChange={(e) => { const v = e.target.value.toLowerCase(); setSlug(v); if (v) update({ slug: v }); }}
             className="w-full rounded-md bg-transparent px-1 py-1.5 focus:outline-none" />
@@ -56,25 +56,25 @@ export function PostSettings({
         onChange={(v) => update({ cover_asset_id: v?.asset ?? null })} />
       {doc.site.languages.length > 1 && (
         <div>
-          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">Translations</h3>
+          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-ink-500">Translations</h3>
           <ul className="space-y-1 text-sm">
-            <li className="text-slate-500">This post: <strong>{draft.lang}</strong></li>
+            <li className="text-ink-500">This post: <strong>{draft.lang}</strong></li>
             {siblings.map((s) => (
-              <li key={s.id}><button className="text-indigo-600 hover:underline" onClick={() => openPost(s.id)}>Edit {s.lang} version</button></li>
+              <li key={s.id}><button className="text-accent-600 hover:underline" onClick={() => openPost(s.id)}>Edit {s.lang} version</button></li>
             ))}
             {missing.map((l) => (
               <li key={l}>
-                <button className="text-indigo-600 hover:underline" disabled={translate.isPending}
+                <button className="text-accent-600 hover:underline" disabled={translate.isPending}
                   onClick={() => translate.mutate({ id: post.id, lang: l }, { onSuccess: (p) => openPost(p.id) })}>
                   Translate to {l}
                 </button>
               </li>
             ))}
           </ul>
-          <p className="mt-1 text-xs text-slate-400">Translating copies the text as a new draft to start from.</p>
+          <p className="mt-1 text-xs text-ink-400">Translating copies the text as a new draft to start from.</p>
         </div>
       )}
-      <div className="border-t border-slate-200 pt-4">
+      <div className="border-t border-ink-200 pt-4">
         <Button variant="danger" className="w-full"
           onClick={() => window.confirm("Delete this post permanently?") && remove.mutate(post.id, { onSuccess: () => openPost(null) })}>
           Delete post

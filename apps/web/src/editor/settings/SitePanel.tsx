@@ -18,7 +18,7 @@ function BaseUrl({ value, onChange }: { value: string; onChange: (v: string, typ
     <FieldShell label="Website address" htmlFor={id} hint="The final address, e.g. https://example.com. Needed for sitemap, social previews and search engines.">
       <input id={id} value={draft} placeholder="https://example.com" aria-invalid={bad} spellCheck={false}
         onChange={(e) => { setDraft(e.target.value); if (e.target.value === "" || /^https?:\/\//.test(e.target.value)) onChange(e.target.value, true); }}
-        className={`mt-1 block w-full rounded-md border px-2.5 py-1.5 text-sm ${bad ? "border-red-400" : "border-slate-300"}`} />
+        className={`mt-1 block w-full rounded-md border px-2.5 py-1.5 text-sm ${bad ? "border-red-400" : "border-ink-300"}`} />
       {bad && <p className="mt-1 text-xs text-red-600">Must start with https://</p>}
     </FieldShell>
   );
@@ -66,13 +66,13 @@ export function SitePanel() {
 
   return (
     <div className="space-y-4">
-      {translating && <p className="text-xs text-indigo-600">Translating site text. Phone, email, hours and web address are shared.</p>}
+      {translating && <p className="text-xs text-accent-600">Translating site text. Phone, email, hours and web address are shared.</p>}
       {canEdit && field("name", "Site name")}
       {field("tagline", "Tagline")}
       {field("description", "Default description", true, "Used in search results when a page has none.")}
       {canEdit && !translating && <BaseUrl value={site.base_url} onChange={(v, t) => apply(updateSite({ base_url: v }), { coalesceKey: t ? "site.base_url" : undefined })} />}
 
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Business info</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Business info</h3>
       {!translating && business("phone")}
       {!translating && business("email")}
       {field("address", "Address", true)}
@@ -98,7 +98,7 @@ export function SitePanel() {
         />
       )}
 
-      {canEdit && <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Menu</h3>}
+      {canEdit && <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Menu</h3>}
       {!canEdit ? null : translating ? (
         <div className="space-y-3">
           {site.nav.map((item, i) => (
@@ -125,7 +125,7 @@ export function SitePanel() {
         />
       )}
 
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Footer</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Footer</h3>
       {field("footer_text", "Footer text", true)}
       {canEdit && !translating && (
         <ToggleControl label="Show business info in footer" value={site.footer.show_business_info}

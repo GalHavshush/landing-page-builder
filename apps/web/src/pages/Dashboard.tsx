@@ -1,52 +1,96 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateProject, useDeleteProject, useLogout, useMe, useProjects, useTemplates } from "@/api/hooks";
+import { IconClose, IconPlus } from "@/components/icons";
 import { Button, ErrorText, Field } from "@/components/ui";
+
+const ROLE_LABEL: Record<string, string> = { owner: "Owner", designer: "Designer", editor: "Client access" };
+
+// A tiny stand-in for each starter's look, drawn from its palette (no screenshots needed).
+const TEMPLATE_SWATCH: Record<string, string[]> = {
+  clean: ["#2563EB", "#F59E0B", "#FFFFFF", "#F3F4F6", "#111827"],
+  warm: ["#B4532A", "#E0A458", "#FFFBF5", "#F6EEE3", "#2B2118"],
+  minimal: ["#111827", "#9CA3AF", "#FFFFFF", "#F5F5F5", "#111827"],
+};
+
+function Swatches({ id }: { id: string }) {
+  const c = TEMPLATE_SWATCH[id] ?? TEMPLATE_SWATCH.clean;
+  return (
+    <div className="flex h-9 overflow-hidden rounded-md ring-1 ring-inset ring-black/10" aria-hidden>
+      <div className="flex-[3]" style={{ background: c[3] }}><div className="m-2 h-1.5 w-8 rounded-full" style={{ background: c[4] }} /><div className="mx-2 h-1 w-12 rounded-full opacity-40" style={{ background: c[4] }} /></div>
+      <div className="flex-1" style={{ background: c[0] }} />
+      <div className="flex-1" style={{ background: c[1] }} />
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const me = useMe();
   const projects = useProjects();
   const logout = useLogout();
   const del = useDeleteProject();
+  const [creating, setCreating] = useState(false);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <header className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Your sites</h1>
-        <div className="flex items-center gap-3 text-sm text-slate-600">
-          <span>{me.data?.email}</span>
-          <Button variant="ghost" onClick={() => logout.mutate()}>Sign out</Button>
+    <div className="min-h-screen">
+      <header className="border-b border-ink-200 bg-white">
+        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-6">
+          <div className="flex items-center gap-2 text-[13px] font-semibold tracking-tight">
+            <span className="grid h-5 w-5 place-items-center rounded-[4px] bg-ink-900 font-mono text-[10px] text-white">S</span>
+            Sitebook
+          </div>
+          <div className="flex items-center gap-3 text-[13px] text-ink-600">
+            <span>{me.data?.email}</span>
+            <Button variant="quiet" onClick={() => logout.mutate()}>Sign out</Button>
+          </div>
         </div>
       </header>
-      <NewProject />
-      <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.data?.map((p) => (
-          <li key={p.id} className="group relative">
-            <Link to={`/projects/${p.id}`} className="block rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:ring-indigo-400">
-              <h2 className="font-medium">{p.name}</h2>
-              <p className="mt-1 text-xs text-slate-500">
-                {p.role === "owner" ? "Owner" : p.role === "editor" ? "Client access" : "Designer"} · {p.template_id}
-              </p>
-            </Link>
-            {p.role === "owner" && (
-              <button
-                aria-label={`Delete ${p.name}`}
-                title="Delete site"
-                onClick={() => window.confirm(`Delete "${p.name}" and everything in it? This cannot be undone.`) && del.mutate(p.id)}
-                className="absolute right-3 top-3 rounded px-1.5 text-slate-400 opacity-0 hover:text-red-600 focus:opacity-100 group-hover:opacity-100"
-              >
-                ✕
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
-      {projects.data?.length === 0 && <p className="mt-8 text-slate-500">No sites yet. Create your first one above.</p>}
+
+      <main className="mx-auto max-w-6xl px-6 py-10">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <h1 className="text-[26px] font-semibold tracking-[-0.025em]">Your sites</h1>
+            <p className="mt-1 text-[13px] text-ink-500">{projects.data ? `${projects.data.length} ${projects.data.length === 1 ? "site" : "sites"}` : " "}</p>
+          </div>
+          {!creating && <Button onClick={() => setCreating(true)}><IconPlus size={14} />New site</Button>}
+        </div>
+
+        {creating && <NewProject onDone={() => setCreating(false)} />}
+
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.data?.map((p) => (
+            <li key={p.id} className="group relative">
+              <Link to={`/projects/${p.id}`}
+                className="block rounded-xl border border-ink-200 bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-[0_8px_24px_-12px_rgb(27_26_23/0.25)]">
+                <Swatches id={p.template_id} />
+                <h2 className="mt-4 truncate text-[15px] font-semibold tracking-tight">{p.name}</h2>
+                <p className="mt-0.5 flex items-center gap-1.5 text-[12px] text-ink-500">
+                  {ROLE_LABEL[p.role] ?? p.role}<span className="text-ink-300">/</span><span className="font-mono">{p.slug}</span>
+                </p>
+              </Link>
+              {p.role === "owner" && (
+                <button aria-label={`Delete ${p.name}`} title="Delete site"
+                  onClick={() => window.confirm(`Delete "${p.name}" and everything in it? This cannot be undone.`) && del.mutate(p.id)}
+                  className="absolute right-3 top-3 grid h-6 w-6 place-items-center rounded-md bg-white/90 text-ink-500 opacity-0 shadow-sm ring-1 ring-ink-200 transition hover:bg-red-600 hover:text-white hover:ring-red-600 focus:opacity-100 group-hover:opacity-100">
+                  <IconClose size={13} />
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+        {projects.data?.length === 0 && !creating && (
+          <div className="rounded-xl border border-dashed border-ink-300 p-12 text-center">
+            <p className="text-[15px] font-medium">No sites yet</p>
+            <p className="mt-1 text-[13px] text-ink-500">Pick a starting point and you'll be editing in seconds.</p>
+            <Button className="mt-4" onClick={() => setCreating(true)}><IconPlus size={14} />New site</Button>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
 
-function NewProject() {
+function NewProject({ onDone }: { onDone: () => void }) {
   const templates = useTemplates();
   const create = useCreateProject();
   const navigate = useNavigate();
@@ -59,22 +103,26 @@ function NewProject() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-      <Field label="New site name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Rosa's Bakery" />
-      <fieldset>
-        <legend className="mb-2 text-sm font-medium text-slate-700">Starting point</legend>
+    <form onSubmit={submit} className="mb-8 rounded-xl border border-ink-200 bg-white p-5">
+      <div className="max-w-sm">
+        <Field label="Site name" required autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="Rosa's Bakery" />
+      </div>
+      <fieldset className="mt-5">
+        <legend className="field-label mb-2">Starting point</legend>
         <div className="grid gap-3 sm:grid-cols-3">
           {(templates.data ?? []).map((t) => (
-            <label key={t.id} className={`cursor-pointer rounded-lg border p-3 text-sm transition ${template === t.id ? "border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500" : "border-slate-200 hover:border-slate-300"}`}>
+            <label key={t.id} className={`cursor-pointer rounded-lg border p-3 transition ${template === t.id ? "border-ink-900 shadow-[0_0_0_1px_var(--color-ink-900)]" : "border-ink-200 hover:border-ink-400"}`}>
               <input type="radio" name="template" value={t.id} checked={template === t.id} onChange={() => setTemplate(t.id)} className="sr-only" />
-              <div className="font-medium">{t.label}</div>
-              <div className="mt-0.5 text-xs text-slate-500">{t.description}</div>
+              <Swatches id={t.id} />
+              <div className="mt-3 text-[13px] font-medium">{t.label}</div>
+              <div className="mt-0.5 text-[12px] leading-snug text-ink-500">{t.description}</div>
             </label>
           ))}
         </div>
       </fieldset>
-      <div className="flex items-center gap-3">
+      <div className="mt-5 flex items-center gap-2">
         <Button type="submit" disabled={create.isPending}>Create site</Button>
+        <Button type="button" variant="quiet" onClick={onDone}>Cancel</Button>
         <ErrorText>{create.error?.message}</ErrorText>
       </div>
     </form>

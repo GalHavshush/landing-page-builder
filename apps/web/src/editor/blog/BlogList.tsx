@@ -7,7 +7,7 @@ import { useEditor } from "../store";
 
 const STATUS_STYLE: Record<string, string> = {
   published: "bg-emerald-50 text-emerald-700",
-  draft: "bg-slate-100 text-slate-600",
+  draft: "bg-ink-100 text-ink-600",
 };
 
 /** Left rail in Blog view: every post of the site, plus "new post". */
@@ -42,21 +42,21 @@ export function BlogList() {
   };
 
   return (
-    <aside className="flex min-h-0 flex-col border-r border-slate-200 bg-white">
+    <aside className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
       <div className="flex-1 overflow-y-auto p-3">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Posts</h2>
-          <button className="text-xs text-indigo-600 hover:underline" onClick={() => setAdding(!adding)}>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-500">Posts</h2>
+          <button className="text-xs text-accent-600 hover:underline" onClick={() => setAdding(!adding)}>
             {adding ? "Cancel" : "+ New post"}
           </button>
         </div>
         {adding && (
-          <form onSubmit={submit} className="mb-3 space-y-2 rounded-md border border-slate-200 p-2">
+          <form onSubmit={submit} className="mb-3 space-y-2 rounded-md border border-ink-200 p-2">
             <input autoFocus required aria-label="Post title" value={title} onChange={(e) => setTitle(e.target.value)}
-              placeholder="Post title" className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm" />
+              placeholder="Post title" className="w-full rounded-md border border-ink-300 px-2 py-1 text-sm" />
             {doc.site.languages.length > 1 && (
               <select aria-label="Post language" value={lang} onChange={(e) => setLang(e.target.value)}
-                className="w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-sm">
+                className="w-full rounded-md border border-ink-300 bg-white px-2 py-1 text-sm">
                 {doc.site.languages.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
             )}
@@ -68,18 +68,18 @@ export function BlogList() {
           {posts.data?.map((p) => (
             <li key={p.id}>
               <button onClick={() => openPost(p.id)}
-                className={`w-full rounded-md border px-2.5 py-2 text-left ${p.id === postId ? "border-indigo-400 bg-indigo-50" : "border-slate-200 hover:border-slate-300"}`}>
+                className={`w-full rounded-md border px-2.5 py-2 text-left ${p.id === postId ? "border-accent-400 bg-accent-50" : "border-ink-200 hover:border-ink-300"}`}>
                 <div className="truncate text-sm font-medium">{p.title}</div>
                 <div className="mt-0.5 flex items-center gap-1.5 text-xs">
                   <span className={`rounded px-1.5 py-0.5 ${STATUS_STYLE[p.status]}`}>{p.status}</span>
-                  {doc.site.languages.length > 1 && <span className="text-slate-400">{p.lang}</span>}
+                  {doc.site.languages.length > 1 && <span className="text-ink-400">{p.lang}</span>}
                 </div>
               </button>
             </li>
           ))}
         </ul>
-        {posts.data?.length === 0 && !adding && <p className="text-sm text-slate-500">No posts yet. Write your first one!</p>}
-        <p className="mt-4 text-xs text-slate-400">
+        {posts.data?.length === 0 && !adding && <p className="text-sm text-ink-500">No posts yet. Write your first one!</p>}
+        <p className="mt-4 text-xs text-ink-400">
           Show your posts on a page by adding a “Blog posts” section there. Only published posts appear on the site.
         </p>
       </div>

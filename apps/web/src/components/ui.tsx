@@ -1,41 +1,38 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 
+type Variant = "primary" | "ghost" | "danger" | "quiet";
+
+const BASE =
+  "inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-[13px] font-medium transition duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-40";
+const VARIANTS: Record<Variant, string> = {
+  primary: "bg-ink-900 text-white hover:bg-ink-700 shadow-[inset_0_1px_0_rgb(255_255_255/0.12)]",
+  ghost: "border border-ink-300 bg-white text-ink-800 hover:border-ink-400 hover:bg-ink-50",
+  quiet: "text-ink-600 hover:bg-ink-100 hover:text-ink-900",
+  danger: "border border-red-600/30 bg-white text-red-600 hover:bg-red-600 hover:text-white",
+};
+
 export function Button({
   variant = "primary",
   className = "",
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "ghost" | "danger" }) {
-  const styles = {
-    primary: "bg-indigo-600 text-white hover:bg-indigo-500 disabled:bg-indigo-300",
-    ghost: "bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 disabled:opacity-50",
-    danger: "bg-red-600 text-white hover:bg-red-500",
-  }[variant];
-  return (
-    <button
-      {...props}
-      className={`inline-flex items-center justify-center rounded-md px-3.5 py-2 text-sm font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 ${styles} ${className}`}
-    />
-  );
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
+  return <button {...props} className={`${BASE} h-8 px-3 ${VARIANTS[variant]} ${className}`} />;
 }
 
-export function Field({
-  label,
-  ...props
-}: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+export const linkButton = `${BASE} h-8 px-3 ${VARIANTS.primary}`;
+
+export function Field({ label, ...props }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
-    <label className="block text-sm font-medium text-slate-700">
-      {label}
-      <input
-        {...props}
-        className="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-      />
+    <label className="block">
+      <span className="field-label">{label}</span>
+      <input {...props} className="field-input mt-1" />
     </label>
   );
 }
 
 export function ErrorText({ children }: { children?: React.ReactNode }) {
   return children ? (
-    <p role="alert" className="text-sm text-red-600">
+    <p role="alert" className="text-[13px] text-red-600">
       {children}
     </p>
   ) : null;

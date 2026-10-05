@@ -1,26 +1,32 @@
 import { Link } from "react-router-dom";
 import type { EditorMeta, Project } from "@/api/types";
+import { IconBack, IconDesktop, IconMobile, IconRedo, IconUndo } from "@/components/icons";
 import { ExportDialog } from "./ExportDialog";
 import { ShareDialog } from "./ShareDialog";
 import { useEditor, type SaveStatus } from "./store";
 
-const STATUS: Record<SaveStatus, { text: string; cls: string }> = {
-  saved: { text: "All changes saved", cls: "text-slate-500" },
-  dirty: { text: "Unsaved changes…", cls: "text-slate-500" },
-  saving: { text: "Saving…", cls: "text-slate-500" },
-  error: { text: "Offline? Retrying…", cls: "text-amber-600" },
-  invalid: { text: "Can't save these changes", cls: "text-red-600" },
-  conflict: { text: "Out of date", cls: "text-red-600" },
+const STATUS: Record<SaveStatus, { text: string; dot: string }> = {
+  saved: { text: "Saved", dot: "bg-emerald-700" },
+  dirty: { text: "Editing", dot: "bg-ink-400" },
+  saving: { text: "Saving", dot: "bg-accent-500 animate-pulse" },
+  error: { text: "Offline, retrying", dot: "bg-accent-500" },
+  invalid: { text: "Can't save", dot: "bg-red-600" },
+  conflict: { text: "Out of date", dot: "bg-red-600" },
 };
 
 function SaveIndicator() {
   const status = useEditor((s) => s.saveStatus);
+  const s = STATUS[status];
   return (
-    <span role="status" className={`text-xs ${STATUS[status].cls}`}>
-      {STATUS[status].text}
+    <span role="status" className="flex items-center gap-1.5 text-[12px] text-ink-500">
+      <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
+      {s.text}
     </span>
   );
 }
+
+const iconBtn =
+  "grid h-7 w-7 place-items-center rounded-md text-ink-600 transition hover:bg-ink-100 hover:text-ink-900 disabled:pointer-events-none disabled:opacity-30";
 
 export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }) {
   const device = useEditor((s) => s.device);
@@ -34,39 +40,41 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
   const redo = useEditor((s) => s.redo);
 
   return (
-    <header className="flex h-13 items-center justify-between border-b border-slate-200 bg-white px-4">
-      <div className="flex items-center gap-3">
-        <Link to="/" className="text-sm text-slate-500 hover:text-slate-800">
-          ← Sites
+    <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center border-b border-ink-200 bg-white px-3">
+      <div className="flex min-w-0 items-center gap-1">
+        <Link to="/" aria-label="All sites" title="All sites" className={iconBtn}>
+          <IconBack size={15} />
         </Link>
-        <h1 className="text-sm font-semibold">{project.name}</h1>
-        <div className="ml-2 flex gap-1">
-          <button aria-label="Undo" title="Undo (Ctrl+Z)" disabled={!canUndo} onClick={undo}
-            className="rounded px-2 py-1 text-slate-600 hover:bg-slate-100 disabled:opacity-30">↶</button>
-          <button aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled={!canRedo} onClick={redo}
-            className="rounded px-2 py-1 text-slate-600 hover:bg-slate-100 disabled:opacity-30">↷</button>
-        </div>
-        <SaveIndicator />
+        <span className="mx-1 h-4 w-px bg-ink-200" />
+        <h1 className="truncate px-1 text-[13px] font-semibold tracking-tight">{project.name}</h1>
+        <span className="mx-1 h-4 w-px bg-ink-200" />
+        <button aria-label="Undo" title="Undo  Ctrl+Z" disabled={!canUndo} onClick={undo} className={iconBtn}><IconUndo size={15} /></button>
+        <button aria-label="Redo" title="Redo  Ctrl+Shift+Z" disabled={!canRedo} onClick={redo} className={iconBtn}><IconRedo size={15} /></button>
+        <span className="ml-2"><SaveIndicator /></span>
       </div>
-      <div className="flex items-center gap-3">
+
+      <div className="flex items-center gap-2">
         {doc.site.languages.length > 1 && (
           <select aria-label="Language" value={lang ?? ""} onChange={(e) => setLang(e.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm">
+            className="h-7 rounded-md border border-ink-300 bg-white px-2 text-[12px] font-medium">
             {doc.site.languages.map((l) => (
               <option key={l} value={l}>{meta.languages[l] ?? l}</option>
             ))}
           </select>
         )}
-        <div className="inline-flex overflow-hidden rounded-md border border-slate-300 text-sm" role="group" aria-label="Preview size">
+        <div className="flex gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200" role="group" aria-label="Preview size">
           {(["desktop", "mobile"] as const).map((d) => (
-            <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d}
-              className={`px-3 py-1 capitalize ${device === d ? "bg-slate-900 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}>
-              {d}
+            <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? "Desktop" : "Mobile"} title={d === "desktop" ? "Desktop" : "Mobile"}
+              className={`grid h-6 w-8 place-items-center rounded-[5px] transition ${device === d ? "bg-white text-ink-900 shadow-[0_1px_2px_rgb(27_26_23/0.12),0_0_0_1px_rgb(27_26_23/0.06)]" : "text-ink-500 hover:text-ink-900"}`}>
+              {d === "desktop" ? <IconDesktop size={14} /> : <IconMobile size={14} />}
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="flex items-center justify-end gap-2">
+        {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">Content editing</span>}
         {project.role === "owner" && <ShareDialog projectId={project.id} />}
-        {project.role === "editor" && <span className="rounded bg-amber-50 px-2 py-1 text-xs text-amber-800">Content editing</span>}
         <ExportDialog projectId={project.id} />
       </div>
     </header>

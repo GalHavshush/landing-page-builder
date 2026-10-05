@@ -13,13 +13,13 @@ export function ColorControl({ label, value, onChange }: ControlProps<string>) {
       <div className="mt-1 flex items-center gap-2">
         <input type="color" aria-label={`${label} picker`} value={isHex(value) ? value.toLowerCase() : "#000000"}
           onChange={(e) => onChange(e.target.value.toUpperCase(), true)}
-          className="h-8 w-10 cursor-pointer rounded border border-slate-300 bg-white p-0.5" />
+          className="h-8 w-10 cursor-pointer rounded border border-ink-300 bg-white p-0.5" />
         <input id={id} value={draft} aria-invalid={invalid} spellCheck={false}
           onChange={(e) => {
             setDraft(e.target.value);
             if (isHex(e.target.value)) onChange(e.target.value.toUpperCase(), true);
           }}
-          className={`w-28 rounded-md border px-2 py-1.5 font-mono text-sm ${invalid ? "border-red-400" : "border-slate-300"}`} />
+          className={`w-28 rounded-md border px-2 py-1.5 font-mono text-sm ${invalid ? "border-red-400" : "border-ink-300"}`} />
       </div>
     </FieldShell>
   );

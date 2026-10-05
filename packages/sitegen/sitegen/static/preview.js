@@ -4,8 +4,8 @@
   var style = document.createElement("style");
   style.textContent =
     "[data-section-id]{position:relative}" +
-    "[data-section-id].pv-hover{outline:2px dashed #6366f1;outline-offset:-2px;cursor:pointer}" +
-    "[data-section-id].pv-selected{outline:3px solid #6366f1;outline-offset:-3px}";
+    "[data-section-id].pv-hover{outline:2px dashed #f2600f;outline-offset:-2px;cursor:pointer}" +
+    "[data-section-id].pv-selected{outline:3px solid #f2600f;outline-offset:-3px}";
   document.head.appendChild(style);
 
   function sectionOf(el) { return el.closest && el.closest("[data-section-id]"); }

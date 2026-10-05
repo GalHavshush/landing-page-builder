@@ -86,5 +86,5 @@ export function Control({ name, schema, value, onChange, env, placeholder, hint,
   // no hint: fall back on the JSON type
   if (resolved.type === "boolean") return <ToggleControl label={text} value={Boolean(value)} onChange={(v) => onChange(v)} />;
   if (resolved.type === "string") return <TextControl label={text} value={(value as string) ?? ""} onChange={onChange} />;
-  return <p className="rounded bg-slate-50 px-2 py-1.5 text-xs text-slate-500">{text}: no editor for this field yet.</p>;
+  return <p className="rounded bg-ink-50 px-2 py-1.5 text-xs text-ink-500">{text}: no editor for this field yet.</p>;
 }
