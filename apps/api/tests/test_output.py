@@ -84,3 +84,11 @@ def test_preview_points_fonts_at_the_api_fonts_route(client):
         f"/projects/{p['id']}/preview", json={"doc": doc, "page_id": "pg_home"}
     ).json()["html"]
     assert "url(/api/fonts/fraunces/latin.woff2)" in html
+
+
+def test_live_preview_renders_the_saved_draft_interactively(client):
+    signup(client)
+    p = make_project(client)
+    r = client.get(f"/projects/{p['id']}/live")
+    assert r.status_code == 200 and 'type: "navigate"' in r.json()["html"]
+    assert client.get(f"/projects/{p['id']}/live", params={"page_id": "nope"}).status_code == 404

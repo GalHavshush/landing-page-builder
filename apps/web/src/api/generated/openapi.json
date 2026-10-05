@@ -546,6 +546,81 @@
         }
       }
     },
+    "/projects/{project_id}/live": {
+      "get": {
+        "tags": [
+          "output"
+        ],
+        "summary": "Live",
+        "description": "Interactive preview of the saved draft (the dashboard's thumbnails and quick preview).",
+        "operationId": "live_projects__project_id__live_get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "page_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Id"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lang"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects/{project_id}/assets": {
       "post": {
         "tags": [
@@ -2345,6 +2420,11 @@
               }
             ],
             "title": "Lang"
+          },
+          "interactive": {
+            "type": "boolean",
+            "title": "Interactive",
+            "default": false
           }
         },
         "type": "object",

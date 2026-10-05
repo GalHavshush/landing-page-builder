@@ -3,7 +3,7 @@ import {
   ArrowLeft, ArrowUpRight, Check, ChevronDown, ChevronRight, Copy, Download, FileText, GripVertical, Image as ImageIcon,
   LayoutGrid, Link as LinkIcon, List, Map as MapIcon, Megaphone, Monitor, MessageSquareQuote, Newspaper, Play, Plus, Quote,
   Redo2, Smartphone, Sparkles, Tags, Trash2, Type, Undo2, X, Users, HelpCircle, Mail, Rows3, Share2, Globe,
-  Clock, Settings, BarChart3, Building2, ListOrdered, MousePointerClick, MoveHorizontal,
+  Clock, Eye, Settings, BarChart3, Building2, ListOrdered, MousePointerClick, MoveHorizontal,
 } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 
@@ -30,6 +30,7 @@ export const IconShare = wrap(Share2);
 export const IconExternal = wrap(ArrowUpRight);
 export const IconGlobe = wrap(Globe);
 export const IconSettings = wrap(Settings);
+export const IconEye = wrap(Eye);
 
 /** An icon for each section type, used in the section list and the "add section" picker. */
 const SECTION_ICONS: Record<string, React.ComponentType<LucideProps>> = {

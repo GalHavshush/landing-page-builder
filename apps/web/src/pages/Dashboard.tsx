@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { api } from "@/api/client";
 import { useCreateProject, useDeleteProject, useEditorMeta, useLogout, useMe, useProjects, useTemplates } from "@/api/hooks";
-import { IconClose, IconPlus, IconSettings } from "@/components/icons";
+import { IconClose, IconEye, IconPlus, IconSettings } from "@/components/icons";
+import { LivePreview } from "@/components/LivePreview";
 import { Button, ErrorText, Field } from "@/components/ui";
 import { t } from "@/i18n";
 
@@ -18,6 +22,30 @@ function Swatches({ palette }: { palette: Record<string, string> }) {
   );
 }
 
+const THUMB_W = 1280; // the page is laid out as on a laptop, then scaled down to the card
+
+/** A small, live picture of the site's first page (falls back to the colour swatches). */
+function SiteThumb({ projectId, palette }: { projectId: number; palette: Record<string, string> }) {
+  const html = useQuery({ queryKey: ["live", projectId], queryFn: () => api<{ html: string }>(`/projects/${projectId}/live`), retry: false });
+  const box = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.25);
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setScale(el.clientWidth / THUMB_W));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [html.data]);
+  if (!html.data) return <Swatches palette={palette} />;
+  return (
+    <div ref={box} aria-hidden className="relative aspect-[16/10] overflow-hidden rounded-md bg-white ring-1 ring-inset ring-black/10">
+      <iframe title="" tabIndex={-1} srcDoc={html.data.html} sandbox="allow-scripts"
+        className="pointer-events-none absolute left-0 top-0 origin-top-left border-0"
+        style={{ width: THUMB_W, height: THUMB_W * 0.625, transform: `scale(${scale})` }} />
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const me = useMe();
   const projects = useProjects();
@@ -25,6 +53,7 @@ export default function Dashboard() {
   const logout = useLogout();
   const del = useDeleteProject();
   const [creating, setCreating] = useState(false);
+  const [previewing, setPreviewing] = useState<{ id: number; name: string } | null>(null);
 
   return (
     <div className="min-h-screen">
@@ -52,18 +81,32 @@ export default function Dashboard() {
         </div>
 
         {creating && <NewProject onDone={() => setCreating(false)} />}
+        {previewing && (
+          <LivePreview title={previewing.name} onClose={() => setPreviewing(null)}
+            load={async (to, signal) => {
+              const q = new URLSearchParams();
+              if (to.page) q.set("page_id", to.page);
+              if (to.lang) q.set("lang", to.lang);
+              return (await api<{ html: string }>(`/projects/${previewing.id}/live?${q}`, { signal })).html;
+            }}
+          />
+        )}
 
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {projects.data?.map((p) => (
             <li key={p.id} className="group relative">
               <Link to={`/projects/${p.id}`}
                 className="block rounded-xl border border-ink-200 bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-[0_8px_24px_-12px_rgb(27_26_23/0.25)]">
-                <Swatches palette={allTemplates.data?.find((x) => x.id === p.template_id)?.theme.palette ?? { background: "#fff", text: "#111", primary: "#2563EB", accent: "#F59E0B" }} />
+                <SiteThumb projectId={p.id} palette={allTemplates.data?.find((x) => x.id === p.template_id)?.theme.palette ?? { background: "#fff", text: "#111", primary: "#2563EB", accent: "#F59E0B" }} />
                 <h2 className="mt-4 truncate text-[15px] font-semibold tracking-tight">{p.name}</h2>
                 <p className="mt-0.5 flex items-center gap-1.5 text-[12px] text-ink-500">
                   {t(ROLE_LABEL[p.role] ?? p.role)}<span className="text-ink-300">/</span><span className="font-mono">{p.slug}</span>
                 </p>
               </Link>
+              <button aria-label={t("Preview {name}", { name: p.name })} title={t("Preview")} onClick={() => setPreviewing(p)}
+                className="absolute start-3 top-3 grid h-6 w-6 place-items-center rounded-md bg-white/90 text-ink-500 opacity-0 shadow-sm ring-1 ring-ink-200 transition hover:bg-ink-900 hover:text-white hover:ring-ink-900 focus:opacity-100 group-hover:opacity-100">
+                <IconEye size={13} />
+              </button>
               {p.role === "owner" && (
                 <button aria-label={t("Delete {name}", { name: p.name })} title={t("Delete site")}
                   onClick={() => window.confirm(t("Delete \"{name}\" and everything in it? This cannot be undone.", { name: p.name })) && del.mutate(p.id)}

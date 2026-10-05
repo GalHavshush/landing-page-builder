@@ -53,3 +53,12 @@ def test_editor_meta_describes_every_section_with_field_hints():
 
 def test_assetfile_still_exported():
     assert AssetFile("a.png", b"x").filename == "a.png"
+
+
+def test_interactive_preview_behaves_like_the_site_but_reports_page_links():
+    doc = load_starter("clean")
+    editing = render_preview(doc, "pg_home").html
+    live = render_preview(doc, "pg_home", interactive=True).html
+    assert 'data-section-id="' in editing and 'data-section-id="' not in live  # animations can run
+    assert 'type: "navigate"' in live and "section-click" not in live
+    assert 'href="#pg:' in live  # menu and buttons name the page they lead to

@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { api } from "@/api/client";
 import type { EditorMeta, Project } from "@/api/types";
-import { IconBack, IconDesktop, IconMobile, IconRedo, IconSettings, IconUndo } from "@/components/icons";
+import { IconBack, IconDesktop, IconEye, IconMobile, IconRedo, IconSettings, IconUndo } from "@/components/icons";
+import { LivePreview } from "@/components/LivePreview";
+import { Button } from "@/components/ui";
 import { ExportDialog } from "./ExportDialog";
 import { ShareDialog } from "./ShareDialog";
 import { useEditor, type SaveStatus } from "./store";
@@ -39,6 +43,12 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
   const canRedo = useEditor((s) => s.redoStack.length > 0);
   const undo = useEditor((s) => s.undo);
   const redo = useEditor((s) => s.redo);
+  // the preview shows the document as it is when opened, saved or not
+  const [live, setLive] = useState<{ doc: typeof doc; page: string; lang: string } | null>(null);
+  const openLive = () => {
+    const s = useEditor.getState();
+    if (s.doc && s.pageId) setLive({ doc: s.doc, page: s.pageId, lang: s.lang ?? s.doc.site.default_language });
+  };
 
   return (
     <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center border-b border-ink-200 bg-white px-3">
@@ -75,10 +85,20 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
 
       <div className="flex items-center justify-end gap-2">
         {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">{t("Content editing")}</span>}
+        <Button variant="ghost" onClick={openLive}><IconEye size={14} />{t("Preview")}</Button>
         <Link to="/settings" aria-label={t("Settings")} title={t("Settings")} className={iconBtn}><IconSettings size={15} /></Link>
         {project.role === "owner" && <ShareDialog projectId={project.id} />}
         <ExportDialog projectId={project.id} />
       </div>
+      {live && (
+        <LivePreview title={project.name} onClose={() => setLive(null)}
+          load={async (to, signal) =>
+            (await api<{ html: string }>(`/projects/${project.id}/preview`, {
+              method: "POST", signal,
+              body: { doc: live.doc, page_id: to.page ?? live.page, lang: to.lang ?? live.lang, interactive: true },
+            })).html}
+        />
+      )}
     </header>
   );
 }

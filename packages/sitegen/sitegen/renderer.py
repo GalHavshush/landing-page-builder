@@ -49,6 +49,9 @@ class PreviewOptions:
 
     asset_url: Callable[[str], str]  # asset id -> URL the editor's iframe can load
     font_base: str = "/fonts/"  # where the editor's iframe can load bundled fonts from
+    # A try-it-out preview: no click-to-select markup, so animations, the gallery lightbox and the
+    # menu behave as on the real site; internal links report the page they lead to.
+    interactive: bool = False
 
 
 @dataclass
@@ -117,8 +120,17 @@ class RenderContext:
         self.preview = preview
         self.absolute = absolute  # root-relative URLs (needed for 404.html, served at any depth)
 
+    @property
+    def editing(self) -> bool:
+        """Editor preview with click-to-select (not a real build or an interactive preview)."""
+        return self.preview is not None and not self.preview.interactive
+
     def rel(self, target: str) -> str:
         if self.preview:
+            # "#pg:<page id>:<lang>" lets the editor switch to that page; "#" if it is not a page
+            for (page_id, lang), path in self.plan.items():
+                if path == target:
+                    return f"#pg:{page_id}:{lang}"
             return "#"
         return "/" + target if self.absolute else paths.relative(self.out_path, target)
 
@@ -356,7 +368,9 @@ def _render_layout(
             preview=preview is not None,
             inline_css=compose_css(doc, preview.font_base) if preview else None,
             inline_js=(STATIC / "site.js").read_text() if preview else None,
-            preview_js=(STATIC / "preview.js").read_text() if preview else None,
+            preview_js=(STATIC / ("live.js" if preview.interactive else "preview.js")).read_text()
+            if preview
+            else None,
         )
     )
 
@@ -406,7 +420,7 @@ def render_page(
             s=section,
             p=localized_props(section, lang, doc.site.default_language),
             ctx=ctx,
-            preview=preview is not None,
+            preview=ctx.editing,
         )
         for section in page.sections
     ]

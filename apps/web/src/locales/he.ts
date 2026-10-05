@@ -103,6 +103,10 @@ export const he: Record<string, string> = {
   "{name} theme": "ערכה: {name}",
 
   // ---- editor top bar ----
+  "Preview": "תצוגה מקדימה",
+  "Preview {name}": "תצוגה מקדימה של {name}",
+  "Preview of {name}": "תצוגה מקדימה של {name}",
+  "Close preview": "סגירת התצוגה המקדימה",
   "Preview size": "גודל תצוגה מקדימה",
   "Desktop": "מחשב",
   "Mobile": "נייד",

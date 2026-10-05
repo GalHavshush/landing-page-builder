@@ -43,6 +43,7 @@ class PreviewIn(BaseModel):
     doc: dict
     page_id: str
     lang: str | None = None
+    interactive: bool = False  # a try-it-out preview instead of the click-to-select one
 
 
 class PreviewOut(BaseModel):
