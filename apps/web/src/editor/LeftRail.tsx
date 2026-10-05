@@ -7,7 +7,7 @@ import { addPage, newId, removePage } from "./commands";
 import { SectionList } from "./SectionList";
 import { currentPage, useCanEditStructure, useEditor } from "./store";
 
-function PageList() {
+function PageList({ meta }: { meta: EditorMeta }) {
   const doc = useEditor((s) => s.doc)!;
   const pageId = useEditor((s) => s.pageId);
   const selectPage = useEditor((s) => s.selectPage);
@@ -16,11 +16,20 @@ function PageList() {
   const [title, setTitle] = useState("");
   const canEdit = useCanEditStructure();
 
+  const [recipe, setRecipe] = useState("blank");
+
+  const pick = (key: string) => {
+    setRecipe(key);
+    // suggest the recipe's name unless the person already typed their own
+    if (!title.trim() || Object.values(meta.page_recipes).some((r) => r.title === title)) setTitle(meta.page_recipes[key].title);
+  };
+
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
     const id = newId("pg");
-    apply(addPage(title.trim(), id));
+    apply(addPage(title.trim(), id, meta.page_recipes[recipe]?.sections ?? []));
+    setRecipe("blank");
     selectPage(id);
     setTitle("");
     setAdding(false);
@@ -41,6 +50,15 @@ function PageList() {
         <form onSubmit={submit} className="mb-1 px-1">
           <input autoFocus aria-label="New page title" value={title} onChange={(e) => setTitle(e.target.value)}
             placeholder="Page title, then Enter" className="field-input" />
+          <div role="radiogroup" aria-label="Page layout" className="mt-1.5 grid gap-1">
+            {Object.entries(meta.page_recipes).map(([key, r]) => (
+              <button key={key} type="button" role="radio" aria-checked={recipe === key} onClick={() => pick(key)}
+                className={`rounded-md border px-2 py-1 text-left text-xs transition ${recipe === key ? "border-accent-600 bg-ink-50" : "border-ink-200 hover:border-ink-400"}`}>
+                <span className="font-medium text-ink-900">{r.label}</span>
+                <span className="block text-[11px] text-ink-500">{r.description}</span>
+              </button>
+            ))}
+          </div>
         </form>
       )}
       <ul>
@@ -97,7 +115,7 @@ export function LeftRail({ meta }: { meta: EditorMeta }) {
   return (
     <aside className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
       <ViewTabs />
-      <PageList />
+      <PageList meta={meta} />
       <div className="min-h-0 flex-1 overflow-y-auto px-2 py-3">
         <h2 className="eyebrow-label mb-1 px-2">Sections</h2>
         {page && <SectionList sections={page.sections} meta={meta} />}

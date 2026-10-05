@@ -328,3 +328,19 @@ def test_fit_cols_avoids_empty_columns():
 
     assert [fit_cols(3, n) for n in (1, 2, 3, 4, 5, 6)] == [1, 2, 3, 2, 3, 3]
     assert fit_cols(4, 4) == 4 and fit_cols(2, 1) == 1
+
+
+def test_page_recipes_build_cleanly():
+    from sitegen.recipes import list_recipes
+
+    for key, recipe in list_recipes().items():
+        if key == "blank":
+            continue
+        doc = SiteDocument.model_validate(
+            {
+                "site": {"name": "T", "base_url": "https://x.test"},
+                "pages": [{"id": "pg", "title": recipe["title"], "sections": recipe["sections"]}],
+            }
+        )
+        issues = [i for i in build(doc).issues if i.level == "warning"]
+        assert not issues, (key, issues)

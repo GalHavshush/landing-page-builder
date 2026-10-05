@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Riverside Family Clinic",
+    "tagline": "Clear, caring healthcare for the whole family.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0190",
+      "email": "reception@example.com",
+      "address": "40 Riverside Drive, Madison",
+      "hours": [
+        {
+          "label": "Mon-Fri",
+          "open": "08:00",
+          "close": "18:00"
+        },
+        {
+          "label": "Sat",
+          "open": "09:00",
+          "close": "13:00"
+        },
+        {
+          "label": "Sun",
+          "closed": true
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Clear, caring healthcare for the whole family."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Services",
+        "page": "pg_services",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "columns"
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "props": {
+            "eyebrow": "New patients welcome",
+            "heading": "Healthcare that listens.",
+            "subheading": "Unhurried appointments with doctors who know your family.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Book an appointment",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "Our services",
+                "href": {
+                  "page": "pg_services",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_feat",
+          "type": "features",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Why families choose us",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "clock",
+                "title": "Longer visits",
+                "text": "Twenty-minute appointments as standard."
+              },
+              {
+                "icon": "heart",
+                "title": "Continuity of care",
+                "text": "See the same doctor each time."
+              },
+              {
+                "icon": "check",
+                "title": "Same-week access",
+                "text": "Urgent concerns seen within days."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_team",
+          "type": "team",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Meet the doctors",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "name": "Dr. Amira Hassan",
+                "role": "General practitioner",
+                "bio": "Special interest in women's health.",
+                "photo": null
+              },
+              {
+                "name": "Dr. Tom Whitfield",
+                "role": "General practitioner",
+                "bio": "Paediatrics and family medicine.",
+                "photo": null
+              },
+              {
+                "name": "Nina Cole, RN",
+                "role": "Practice nurse",
+                "bio": "Vaccinations and chronic care.",
+                "photo": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "When we are open",
+            "subheading": "",
+            "note": "For emergencies call 911.",
+            "show_contact": true,
+            "show_address": true
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Family healthcare in Madison. New patients welcome.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_services",
+      "slug": "services",
+      "title": "Services",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_s_svc",
+          "type": "services",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Our services",
+            "subheading": "",
+            "items": [
+              {
+                "title": "General care",
+                "description": "Checkups, illness and long-term conditions.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Vaccinations",
+                "description": "Childhood, travel and seasonal vaccines.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Women's health",
+                "description": "Screening, contraception and advice.",
+                "price": "",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_s_faq",
+          "type": "faq",
+          "variant": "accordion",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "New patient FAQ",
+            "subheading": "",
+            "items": [
+              {
+                "question": "How do I register?",
+                "answer": "Fill in the contact form or call reception. We will do the rest."
+              },
+              {
+                "question": "Do you accept insurance?",
+                "answer": "We accept most major plans. Call us to check yours."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Our clinical services.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Book an appointment",
+            "text": "Book an appointment or register as a new patient.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Book an appointment or register as a new patient.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "clinic",
+    "radius": "lg",
+    "button_style": "solid",
+    "spacing": "normal",
+    "palette": {
+      "primary": "#0E7490",
+      "accent": "#F59E0B",
+      "background": "#FFFFFF",
+      "surface": "#F0F7F9",
+      "text": "#12232B"
+    },
+    "fonts": {
+      "heading": "manrope",
+      "body": "manrope"
+    },
+    "card_style": "outlined",
+    "image_style": "rounded"
+  }
+}

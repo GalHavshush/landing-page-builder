@@ -24,6 +24,7 @@ pythonpath = ["apps/api", "apps/api/tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "packages/sitegen/sitegen/icons.py" = ["E501"]
+"packages/sitegen/scripts/make_starters.py" = ["E501"]
 "packages/sitegen/sitegen/strings.py" = ["E501", "E241"]
 
 [tool.ruff.lint.flake8-bugbear]

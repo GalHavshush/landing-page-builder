@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Greenway Gardens",
+    "tagline": "Garden design and care, done by people who love plants.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0155",
+      "email": "hello@example.com",
+      "address": "Serving Asheville and the valley",
+      "hours": [
+        {
+          "label": "Mon-Fri",
+          "open": "08:00",
+          "close": "17:00"
+        },
+        {
+          "label": "Sat",
+          "open": "09:00",
+          "close": "12:00"
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Garden design and care, done by people who love plants."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Services",
+        "page": "pg_services",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "columns"
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "props": {
+            "eyebrow": "Garden design & care",
+            "heading": "Outdoor spaces you will actually want to sit in.",
+            "subheading": "From a tidy-up to a full redesign, we make gardens that look good all year.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Request a visit",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "See our services",
+                "href": {
+                  "page": "pg_services",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_feat",
+          "type": "features",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Why Greenway",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "leaf",
+                "title": "Plants that suit your plot",
+                "text": "Chosen for your soil, light and climate."
+              },
+              {
+                "icon": "heart",
+                "title": "Small crew, big care",
+                "text": "The same two people on your garden every visit."
+              },
+              {
+                "icon": "check",
+                "title": "Fixed quotes",
+                "text": "No surprises on the invoice."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_compare",
+          "type": "compare",
+          "variant": "wide",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "The difference",
+            "subheading": "",
+            "before": null,
+            "after": null,
+            "before_label": "Before",
+            "after_label": "After",
+            "caption": "Backyard redesign, Weaverville"
+          }
+        },
+        {
+          "id": "sec_h_cta",
+          "type": "cta",
+          "variant": "card",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Let's look at your garden",
+            "text": "A free site visit and a written quote within a week.",
+            "buttons": [
+              {
+                "label": "Request a visit",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Garden design, planting and maintenance.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_services",
+      "slug": "services",
+      "title": "Services",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_s_list",
+          "type": "services",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "What we do",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Design & planting",
+                "description": "A plan drawn for your space, then built.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Regular maintenance",
+                "description": "Seasonal visits that keep it looking its best.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Lawns & hedges",
+                "description": "Cutting, feeding and shaping.",
+                "price": "",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_s_steps",
+          "type": "steps",
+          "variant": "timeline",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "How a project runs",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Visit",
+                "text": "We walk the garden with you."
+              },
+              {
+                "title": "Plan",
+                "text": "A drawing and a fixed quote."
+              },
+              {
+                "title": "Build",
+                "text": "Planted and finished, site left clean."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Garden services.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Request a visit",
+            "text": "Tell us about your garden and when would suit.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Tell us about your garden and when would suit.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "landscaping",
+    "radius": "lg",
+    "button_style": "solid",
+    "spacing": "normal",
+    "palette": {
+      "primary": "#3F6B3A",
+      "accent": "#D69E2E",
+      "background": "#FCFCF8",
+      "surface": "#EEF2E6",
+      "text": "#1C2B1A"
+    },
+    "fonts": {
+      "heading": "fraunces",
+      "body": "manrope"
+    },
+    "card_style": "elevated",
+    "image_style": "soft"
+  }
+}

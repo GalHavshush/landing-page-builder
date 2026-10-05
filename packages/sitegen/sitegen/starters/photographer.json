@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Elise Hart Photography",
+    "tagline": "Natural, unposed photographs of people and places.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "",
+      "email": "hello@example.com",
+      "address": "Based in Brooklyn, travelling worldwide",
+      "hours": [],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Natural, unposed photographs of people and places."
+    },
+    "nav": [
+      {
+        "label": "Work",
+        "page": "pg_work",
+        "labels": {}
+      },
+      {
+        "label": "About",
+        "page": "pg_about",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "minimal"
+    },
+    "header": {
+      "style": "centered",
+      "sticky": false,
+      "transparent": false
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "centered",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "spacious",
+            "align": "center"
+          },
+          "props": {
+            "eyebrow": "Portrait & wedding photography",
+            "heading": "Honest pictures of people being themselves.",
+            "subheading": "",
+            "image": null,
+            "buttons": [
+              {
+                "label": "View portfolio",
+                "href": {
+                  "page": "pg_work",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "link"
+              },
+              {
+                "label": "Enquire",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_gal",
+          "type": "gallery",
+          "variant": "mosaic",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_h_q",
+          "type": "testimonials",
+          "variant": "quote",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "center"
+          },
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [
+              {
+                "quote": "Elise made us forget the camera was there. The pictures are us.",
+                "author": "Hannah & Luis",
+                "role": "Wedding, Hudson Valley",
+                "avatar": null
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Portrait and wedding photography.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_work",
+      "slug": "work",
+      "title": "Portfolio",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_w_gal",
+          "type": "gallery",
+          "variant": "masonry",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Selected work",
+            "subheading": "",
+            "items": [],
+            "columns": 3
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Selected work.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_about",
+      "slug": "about",
+      "title": "About",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_a_text",
+          "type": "text",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "About",
+            "body": "I have photographed weddings and families for twelve years. I work quietly, in natural light, and I would rather catch a real moment than set up a perfect one.\n\nI take a limited number of commissions each year so every project gets full attention."
+          }
+        },
+        {
+          "id": "sec_a_steps",
+          "type": "steps",
+          "variant": "timeline",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Working together",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Say hello",
+                "text": "Tell me about your day or project."
+              },
+              {
+                "title": "Plan",
+                "text": "We talk through timing, places and what matters most."
+              },
+              {
+                "title": "Shoot",
+                "text": "I stay out of the way and make it easy."
+              },
+              {
+                "title": "Deliver",
+                "text": "A private gallery within three weeks."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "About Elise.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Enquire",
+            "text": "Tell me about your date, place and what you are after.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Tell me about your date, place and what you are after.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "photographer",
+    "radius": "none",
+    "button_style": "outline",
+    "spacing": "spacious",
+    "palette": {
+      "primary": "#111111",
+      "accent": "#B08968",
+      "background": "#FAFAF8",
+      "surface": "#EFEDE8",
+      "text": "#111111"
+    },
+    "fonts": {
+      "heading": "source-serif",
+      "body": "dm-sans"
+    },
+    "card_style": "flat",
+    "image_style": "square",
+    "heading_style": "light"
+  }
+}

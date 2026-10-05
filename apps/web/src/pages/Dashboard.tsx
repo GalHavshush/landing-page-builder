@@ -8,19 +8,12 @@ import { Button, ErrorText, Field } from "@/components/ui";
 const ROLE_LABEL: Record<string, string> = { owner: "Owner", designer: "Designer", editor: "Client access" };
 
 // A tiny stand-in for each starter's look, drawn from its palette (no screenshots needed).
-const TEMPLATE_SWATCH: Record<string, string[]> = {
-  clean: ["#2563EB", "#F59E0B", "#FFFFFF", "#F3F4F6", "#111827"],
-  warm: ["#B4532A", "#E0A458", "#FFFBF5", "#F6EEE3", "#2B2118"],
-  minimal: ["#111827", "#9CA3AF", "#FFFFFF", "#F5F5F5", "#111827"],
-};
-
-function Swatches({ id }: { id: string }) {
-  const c = TEMPLATE_SWATCH[id] ?? TEMPLATE_SWATCH.clean;
+function Swatches({ palette }: { palette: Record<string, string> }) {
   return (
     <div className="flex h-9 overflow-hidden rounded-md ring-1 ring-inset ring-black/10" aria-hidden>
-      <div className="flex-[3]" style={{ background: c[3] }}><div className="m-2 h-1.5 w-8 rounded-full" style={{ background: c[4] }} /><div className="mx-2 h-1 w-12 rounded-full opacity-40" style={{ background: c[4] }} /></div>
-      <div className="flex-1" style={{ background: c[0] }} />
-      <div className="flex-1" style={{ background: c[1] }} />
+      <div className="flex-[3]" style={{ background: palette.background }}><div className="m-2 h-1.5 w-8 rounded-full" style={{ background: palette.text }} /><div className="mx-2 h-1 w-12 rounded-full opacity-40" style={{ background: palette.text }} /></div>
+      <div className="flex-1" style={{ background: palette.primary }} />
+      <div className="flex-1" style={{ background: palette.accent }} />
     </div>
   );
 }
@@ -28,6 +21,7 @@ function Swatches({ id }: { id: string }) {
 export default function Dashboard() {
   const me = useMe();
   const projects = useProjects();
+  const allTemplates = useTemplates();
   const logout = useLogout();
   const del = useDeleteProject();
   const [creating, setCreating] = useState(false);
@@ -64,7 +58,7 @@ export default function Dashboard() {
             <li key={p.id} className="group relative">
               <Link to={`/projects/${p.id}`}
                 className="block rounded-xl border border-ink-200 bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-[0_8px_24px_-12px_rgb(27_26_23/0.25)]">
-                <Swatches id={p.template_id} />
+                <Swatches palette={allTemplates.data?.find((t) => t.id === p.template_id)?.theme.palette ?? { background: "#fff", text: "#111", primary: "#2563EB", accent: "#F59E0B" }} />
                 <h2 className="mt-4 truncate text-[15px] font-semibold tracking-tight">{p.name}</h2>
                 <p className="mt-0.5 flex items-center gap-1.5 text-[12px] text-ink-500">
                   {ROLE_LABEL[p.role] ?? p.role}<span className="text-ink-300">/</span><span className="font-mono">{p.slug}</span>
@@ -111,17 +105,22 @@ function NewProject({ onDone }: { onDone: () => void }) {
       </div>
       <fieldset className="mt-5">
         <legend className="field-label mb-2">Starting point</legend>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {(templates.data ?? []).map((t) => (
             <label key={t.id} className={`cursor-pointer rounded-lg border p-3 transition ${template === t.id ? "border-ink-900 shadow-[0_0_0_1px_var(--color-ink-900)]" : "border-ink-200 hover:border-ink-400"}`}>
               <input type="radio" name="template" value={t.id} checked={template === t.id} onChange={() => setTemplate(t.id)} className="sr-only" />
-              <Swatches id={t.id} />
+              <Swatches palette={t.theme.palette} />
               <div className="mt-3 text-[13px] font-medium">{t.label}</div>
               <div className="mt-0.5 text-[12px] leading-snug text-ink-500">{t.description}</div>
             </label>
           ))}
         </div>
       </fieldset>
+      {(templates.data?.find((t) => t.id === template)?.photo_hints ?? []).length > 0 && (
+        <p className="mt-3 text-[12px] text-ink-500">
+          Add photos for the best result: {templates.data!.find((t) => t.id === template)!.photo_hints.join(" · ")}.
+        </p>
+      )}
       <div className="mt-5 flex items-center gap-2">
         <Button type="submit" disabled={create.isPending}>Create site</Button>
         <Button type="button" variant="quiet" onClick={onDone}>Cancel</Button>

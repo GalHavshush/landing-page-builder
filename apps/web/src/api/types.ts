@@ -41,6 +41,7 @@ export interface EditorMeta {
   languages: Record<string, string>;
   rtl_languages: string[];
   starters: string[];
+  page_recipes: Record<string, { label: string; description: string; title: string; sections: Section[] }>;
   starter_info: { id: string; label: string; description: string; theme: SiteDocument["theme"] }[];
 }
 

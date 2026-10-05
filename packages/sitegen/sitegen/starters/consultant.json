@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Northfield Advisory",
+    "tagline": "Practical strategy for growing companies.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0123",
+      "email": "enquiries@example.com",
+      "address": "Chicago, Illinois",
+      "hours": [
+        {
+          "label": "Mon-Fri",
+          "open": "09:00",
+          "close": "17:30"
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Practical strategy for growing companies."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "About",
+        "page": "pg_about",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "columns"
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "banner",
+          "i18n": {},
+          "style": {
+            "background": "dark",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "props": {
+            "eyebrow": "Strategy & operations",
+            "heading": "Clear plans for companies that are growing faster than their systems.",
+            "subheading": "We work alongside leadership teams to fix what slows them down.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Book a call",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "How we work",
+                "href": {
+                  "page": "pg_about",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_logos",
+          "type": "logos",
+          "variant": "row",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Trusted by teams at",
+            "items": []
+          }
+        },
+        {
+          "id": "sec_h_svc",
+          "type": "services",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "How we help",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Growth strategy",
+                "description": "Where to play and how to win in the next three years.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Operating model",
+                "description": "Roles, rhythm and reporting that scale.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Interim leadership",
+                "description": "Experienced operators when you need them most.",
+                "price": "",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_stats",
+          "type": "stats",
+          "variant": "row",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [
+              {
+                "value": "120+",
+                "label": "Engagements"
+              },
+              {
+                "value": "18",
+                "label": "Industries"
+              },
+              {
+                "value": "92%",
+                "label": "Repeat clients"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_cta",
+          "type": "cta",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "primary",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Start with a conversation",
+            "text": "Thirty minutes, no slides. We will tell you honestly whether we can help.",
+            "buttons": [
+              {
+                "label": "Book a call",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Strategy and operations consulting for growing companies.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_about",
+      "slug": "about",
+      "title": "About",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_a_text",
+          "type": "text",
+          "variant": "lead",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Our approach",
+            "body": "We keep teams small and senior. You work with the people who do the thinking, not a layer of junior analysts.\n\nWe write things down, agree the outcome up front and measure it afterwards."
+          }
+        },
+        {
+          "id": "sec_a_steps",
+          "type": "steps",
+          "variant": "horizontal",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "A typical engagement",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Diagnose",
+                "text": "Two weeks of interviews and data."
+              },
+              {
+                "title": "Design",
+                "text": "A short, specific plan agreed with your team."
+              },
+              {
+                "title": "Deliver",
+                "text": "We stay until it works."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_a_team",
+          "type": "team",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Partners",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "name": "Dana Whitaker",
+                "role": "Managing partner",
+                "bio": "Former COO, two exits.",
+                "photo": null
+              },
+              {
+                "name": "Rahul Menon",
+                "role": "Partner",
+                "bio": "Operations and finance.",
+                "photo": null
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "How we work.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Book a call",
+            "text": "Tell us a little about your company and what you are trying to solve.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Tell us a little about your company and what you are trying to solve.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "consultant",
+    "radius": "sm",
+    "button_style": "solid",
+    "spacing": "normal",
+    "palette": {
+      "primary": "#1F3A5F",
+      "accent": "#C8963E",
+      "background": "#FFFFFF",
+      "surface": "#F3F5F8",
+      "text": "#14202E"
+    },
+    "fonts": {
+      "heading": "plus-jakarta",
+      "body": "dm-sans"
+    },
+    "card_style": "outlined",
+    "heading_style": "tight"
+  }
+}

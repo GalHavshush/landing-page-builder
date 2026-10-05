@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Mara Hair Studio",
+    "tagline": "Cuts, colour and care in a calm studio.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0177",
+      "email": "book@example.com",
+      "address": "21 Elm Street, Austin",
+      "hours": [
+        {
+          "label": "Tue-Fri",
+          "open": "10:00",
+          "close": "19:00"
+        },
+        {
+          "label": "Sat",
+          "open": "09:00",
+          "close": "16:00"
+        },
+        {
+          "label": "Sun-Mon",
+          "closed": true
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Cuts, colour and care in a calm studio."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Prices",
+        "page": "pg_prices",
+        "labels": {}
+      },
+      {
+        "label": "Book",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "centered"
+    },
+    "header": {
+      "style": "split",
+      "sticky": true,
+      "transparent": false
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "centered",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "spacious",
+            "align": "center"
+          },
+          "props": {
+            "eyebrow": "Hair studio",
+            "heading": "Hair that feels like you, only better.",
+            "subheading": "Considered cuts and colour, in an unhurried studio.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Book now",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_svc",
+          "type": "services",
+          "variant": "list",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Services",
+            "subheading": "Prices are a guide. We confirm after a short consultation.",
+            "items": [
+              {
+                "title": "Cut & finish",
+                "description": "Consultation, wash, cut and blow-dry.",
+                "price": "from $65",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Colour",
+                "description": "Root touch-up, all-over colour or gloss.",
+                "price": "from $90",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Balayage",
+                "description": "Hand-painted, soft and low maintenance.",
+                "price": "from $180",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Treatments",
+                "description": "Deep conditioning and scalp care.",
+                "price": "from $35",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_team",
+          "type": "team",
+          "variant": "round",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Your stylists",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "name": "Mara Ellis",
+                "role": "Founder, colour specialist",
+                "bio": "",
+                "photo": null
+              },
+              {
+                "name": "Jonah Reyes",
+                "role": "Senior stylist",
+                "bio": "",
+                "photo": null
+              },
+              {
+                "name": "Ines Park",
+                "role": "Stylist",
+                "bio": "",
+                "photo": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_q",
+          "type": "testimonials",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Kind words",
+            "subheading": "",
+            "items": [
+              {
+                "quote": "First time I have left a salon feeling exactly as I imagined.",
+                "author": "Claire B.",
+                "role": "",
+                "avatar": null
+              },
+              {
+                "quote": "Calm, thoughtful and brilliant at colour.",
+                "author": "Dana W.",
+                "role": "",
+                "avatar": null
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "A calm hair studio. Book your appointment.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_prices",
+      "slug": "prices",
+      "title": "Prices",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_p_price",
+          "type": "pricing",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Membership",
+            "subheading": "",
+            "plans": [
+              {
+                "name": "Trim club",
+                "price": "$45",
+                "period": "every 8 weeks",
+                "description": "",
+                "features": "Dry trim\nPriority booking",
+                "highlighted": false,
+                "cta_label": "Book",
+                "cta_link": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                }
+              },
+              {
+                "name": "Colour club",
+                "price": "$110",
+                "period": "every 8 weeks",
+                "description": "",
+                "features": "Colour refresh\nGloss and finish\nPriority booking",
+                "highlighted": true,
+                "cta_label": "Book",
+                "cta_link": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_p_faq",
+          "type": "faq",
+          "variant": "accordion",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Questions",
+            "subheading": "",
+            "items": [
+              {
+                "question": "Do I need a patch test?",
+                "answer": "For colour, yes, at least 48 hours before your first appointment."
+              },
+              {
+                "question": "What is your cancellation policy?",
+                "answer": "Please give us 24 hours notice."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Full price list.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Book an appointment",
+            "text": "Book an appointment or ask us anything.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Book an appointment or ask us anything.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "salon",
+    "radius": "full",
+    "button_style": "outline",
+    "spacing": "spacious",
+    "palette": {
+      "primary": "#3D3A36",
+      "accent": "#C98B6B",
+      "background": "#FFFFFF",
+      "surface": "#F6F1EC",
+      "text": "#26231F"
+    },
+    "fonts": {
+      "heading": "source-serif",
+      "body": "manrope"
+    },
+    "card_style": "flat",
+    "image_style": "soft",
+    "heading_style": "light"
+  }
+}

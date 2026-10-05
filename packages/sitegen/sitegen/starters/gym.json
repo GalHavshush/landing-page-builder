@@ -1,0 +1,441 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Forge Strength Club",
+    "tagline": "Small-group strength training that actually sticks.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0166",
+      "email": "join@example.com",
+      "address": "5 Foundry Lane, Denver",
+      "hours": [
+        {
+          "label": "Mon-Fri",
+          "open": "05:30",
+          "close": "21:00"
+        },
+        {
+          "label": "Sat-Sun",
+          "open": "07:00",
+          "close": "15:00"
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Small-group strength training that actually sticks."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Memberships",
+        "page": "pg_join",
+        "labels": {}
+      },
+      {
+        "label": "Coaches",
+        "page": "pg_team",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "columns"
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "banner",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "props": {
+            "eyebrow": "Strength club",
+            "heading": "Get strong. Stay consistent.",
+            "subheading": "Coached small-group sessions for every level. No mirrors, no ego.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Free trial class",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "See memberships",
+                "href": {
+                  "page": "pg_join",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_stats",
+          "type": "stats",
+          "variant": "row",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [
+              {
+                "value": "600+",
+                "label": "Members"
+              },
+              {
+                "value": "6",
+                "label": "Coaches"
+              },
+              {
+                "value": "42",
+                "label": "Classes a week"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_feat",
+          "type": "features",
+          "variant": "list",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "What you get",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "check",
+                "title": "Coached every rep",
+                "text": "Maximum eight people per class."
+              },
+              {
+                "icon": "clock",
+                "title": "Early and late",
+                "text": "Sessions from 5:30 am to 8 pm."
+              },
+              {
+                "icon": "heart",
+                "title": "A real community",
+                "text": "Members stay because they like each other."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_cta",
+          "type": "cta",
+          "variant": "banner",
+          "i18n": {},
+          "style": {
+            "background": "primary",
+            "spacing": "normal",
+            "align": "center"
+          },
+          "props": {
+            "heading": "Your first class is free",
+            "text": "Come once. See how it feels.",
+            "buttons": [
+              {
+                "label": "Book a free trial",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Small-group strength training. Book a free trial.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_join",
+      "slug": "join",
+      "title": "Memberships",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_j_price",
+          "type": "pricing",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Memberships",
+            "subheading": "No joining fee. Cancel any time.",
+            "plans": [
+              {
+                "name": "Drop-in",
+                "price": "$25",
+                "period": "per class",
+                "description": "",
+                "features": "Any class\nNo commitment",
+                "highlighted": false,
+                "cta_label": "Book",
+                "cta_link": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                }
+              },
+              {
+                "name": "Unlimited",
+                "price": "$129",
+                "period": "per month",
+                "description": "",
+                "features": "Unlimited classes\nFree body-composition check\nGuest passes",
+                "highlighted": true,
+                "cta_label": "Join",
+                "cta_link": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                }
+              },
+              {
+                "name": "Twice a week",
+                "price": "$89",
+                "period": "per month",
+                "description": "",
+                "features": "8 classes a month\nRollover for one month",
+                "highlighted": false,
+                "cta_label": "Join",
+                "cta_link": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_j_faq",
+          "type": "faq",
+          "variant": "accordion",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "FAQ",
+            "subheading": "",
+            "items": [
+              {
+                "question": "Do I need experience?",
+                "answer": "No. Coaches scale every session to you."
+              },
+              {
+                "question": "What should I bring?",
+                "answer": "Trainers and a water bottle. We have the rest."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Memberships and pricing.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_team",
+      "slug": "coaches",
+      "title": "Coaches",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_t_team",
+          "type": "team",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Coaches",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "name": "Jess Okafor",
+                "role": "Head coach",
+                "bio": "Powerlifter, ten years coaching.",
+                "photo": null
+              },
+              {
+                "name": "Mike Brandt",
+                "role": "Coach",
+                "bio": "Conditioning and mobility.",
+                "photo": null
+              },
+              {
+                "name": "Sofia Lindgren",
+                "role": "Coach",
+                "bio": "Beginners and returners.",
+                "photo": null
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Meet the coaches.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Book a free trial",
+            "text": "Pick a time for your free trial class.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Pick a time for your free trial class.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "gym",
+    "radius": "sm",
+    "button_style": "solid",
+    "spacing": "normal",
+    "palette": {
+      "primary": "#E4572E",
+      "accent": "#FFC857",
+      "background": "#0E0E10",
+      "surface": "#1A1A1E",
+      "text": "#F4F4F5"
+    },
+    "fonts": {
+      "heading": "rubik",
+      "body": "dm-sans"
+    },
+    "card_style": "flat",
+    "heading_style": "caps"
+  }
+}

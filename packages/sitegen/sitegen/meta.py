@@ -3,6 +3,7 @@
 from sitegen.fonts import manifest
 from sitegen.icons import ICONS
 from sitegen.models import SectionStyle
+from sitegen.recipes import list_recipes
 from sitegen.schema import RTL_LANGUAGES, Theme
 from sitegen.sections import REGISTRY
 from sitegen.starters import list_starters, starter_info
@@ -63,4 +64,5 @@ def editor_meta() -> dict:
         "rtl_languages": sorted(RTL_LANGUAGES),
         "starters": list_starters(),
         "starter_info": starter_info(),
+        "page_recipes": list_recipes(),
     }

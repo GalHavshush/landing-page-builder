@@ -87,13 +87,13 @@ export const setTranslation =
   };
 
 export const addPage =
-  (title: string, id: string = newId("pg")): Recipe =>
+  (title: string, id: string = newId("pg"), sections: Section[] = []): Recipe =>
   (doc) => {
     const taken = new Set(doc.pages.map((p) => p.slug));
     const base = slugify(title) || "page";
     let slug = base;
     for (let n = 2; taken.has(slug); n++) slug = `${base}-${n}`;
-    const page: Page = { id, slug, title, seo: { title: null, description: null, social_image: null, noindex: false }, sections: [], i18n: {} };
+    const page: Page = { id, slug, title, seo: { title: null, description: null, social_image: null, noindex: false }, sections: sections.map((s) => ({ ...structuredClone(s), id: newId("sec") })), i18n: {} };
     doc.pages.push(page as Draft<Page>);
     doc.site.nav.push({ label: title, page: id, labels: {} });
   };

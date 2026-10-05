@@ -1,0 +1,407 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Hartley Plumbing & Heating",
+    "tagline": "Fast, honest plumbing and heating repairs.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0110",
+      "email": "jobs@example.com",
+      "address": "Serving Dayton and surrounding areas",
+      "hours": [
+        {
+          "label": "Mon-Fri",
+          "open": "07:30",
+          "close": "18:00"
+        },
+        {
+          "label": "Sat",
+          "open": "08:00",
+          "close": "13:00"
+        },
+        {
+          "label": "Sun",
+          "closed": true
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Fast, honest plumbing and heating repairs."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Services",
+        "page": "pg_services",
+        "labels": {}
+      },
+      {
+        "label": "Contact",
+        "page": "pg_contact",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "columns"
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "props": {
+            "eyebrow": "Local and insured",
+            "heading": "Plumbing problems fixed properly, the first time.",
+            "subheading": "Leaks, boilers, bathrooms and emergencies. Upfront prices and a clear arrival window.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Call 555 0110",
+                "href": {
+                  "page": null,
+                  "url": "tel:+15550110",
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "Get a quote",
+                "href": {
+                  "page": "pg_contact",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_stats",
+          "type": "stats",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [
+              {
+                "value": "15+",
+                "label": "Years in business"
+              },
+              {
+                "value": "4,000",
+                "label": "Jobs completed"
+              },
+              {
+                "value": "60 min",
+                "label": "Emergency response"
+              },
+              {
+                "value": "4.9",
+                "label": "Average review"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_svc",
+          "type": "services",
+          "variant": "cards",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "What we do",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Emergency repairs",
+                "description": "Burst pipes, leaks and blocked drains, day or night.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Boilers & heating",
+                "description": "Servicing, repairs and full replacements.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Bathrooms",
+                "description": "Design, supply and installation, start to finish.",
+                "price": "",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_steps",
+          "type": "steps",
+          "variant": "horizontal",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "How it works",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Call or message",
+                "text": "Tell us what is wrong. We reply fast."
+              },
+              {
+                "title": "Fixed quote",
+                "text": "A clear price before any work starts."
+              },
+              {
+                "title": "Job done",
+                "text": "We tidy up and check everything works."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_cta",
+          "type": "cta",
+          "variant": "banner",
+          "i18n": {},
+          "style": {
+            "background": "primary",
+            "spacing": "normal",
+            "align": "center"
+          },
+          "props": {
+            "heading": "Need someone today?",
+            "text": "Call us now. We will give you an honest answer on the phone.",
+            "buttons": [
+              {
+                "label": "Call 555 0110",
+                "href": {
+                  "page": null,
+                  "url": "tel:+15550110",
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Local plumbers and heating engineers. Call for a quick quote.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_services",
+      "slug": "services",
+      "title": "Services",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_s_list",
+          "type": "services",
+          "variant": "alternating",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Services",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Leaks and repairs",
+                "description": "We find the cause, not just the symptom.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Heating and boilers",
+                "description": "Gas Safe registered engineers.",
+                "price": "",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Bathroom installs",
+                "description": "One team from rip-out to final sealant.",
+                "price": "",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_s_faq",
+          "type": "faq",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Common questions",
+            "subheading": "",
+            "items": [
+              {
+                "question": "Do you charge a call-out fee?",
+                "answer": "No. Quotes are free and the price you are given is the price you pay."
+              },
+              {
+                "question": "Are you insured?",
+                "answer": "Yes, fully insured and every job is guaranteed."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Plumbing and heating services.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_contact",
+      "slug": "contact",
+      "title": "Contact",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_ct_form",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Get a free quote",
+            "text": "Describe the job and we will come back with a price.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Send",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_ct_hours",
+          "type": "hours",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_ct_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Contact us. Describe the job and we will come back with a price.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "trades",
+    "radius": "md",
+    "button_style": "solid",
+    "spacing": "normal",
+    "palette": {
+      "primary": "#0B5FA5",
+      "accent": "#F5A524",
+      "background": "#FFFFFF",
+      "surface": "#EEF3F8",
+      "text": "#0F1B2A"
+    },
+    "fonts": {
+      "heading": "rubik",
+      "body": "dm-sans"
+    },
+    "card_style": "elevated",
+    "heading_style": "tight"
+  }
+}

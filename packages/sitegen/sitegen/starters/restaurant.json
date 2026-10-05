@@ -1,0 +1,412 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Olive & Ember",
+    "tagline": "Wood-fired cooking, seasonal and local.",
+    "default_language": "en",
+    "languages": [
+      "en"
+    ],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0142",
+      "email": "table@example.com",
+      "address": "8 Harbour Row, Portland",
+      "hours": [
+        {
+          "label": "Tue-Thu",
+          "open": "17:00",
+          "close": "22:00"
+        },
+        {
+          "label": "Fri-Sat",
+          "open": "17:00",
+          "close": "23:30"
+        },
+        {
+          "label": "Sun",
+          "open": "12:00",
+          "close": "21:00"
+        },
+        {
+          "label": "Mon",
+          "closed": true
+        }
+      ],
+      "social": {}
+    },
+    "seo": {
+      "title_template": "{page} | {site}",
+      "default_description": "Wood-fired cooking, seasonal and local."
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "page": "pg_home",
+        "labels": {}
+      },
+      {
+        "label": "Menu",
+        "page": "pg_menu",
+        "labels": {}
+      },
+      {
+        "label": "Visit",
+        "page": "pg_visit",
+        "labels": {}
+      }
+    ],
+    "footer": {
+      "text": "",
+      "show_business_info": true,
+      "style": "centered"
+    },
+    "header": {
+      "style": "centered",
+      "sticky": true,
+      "transparent": false
+    }
+  },
+  "pages": [
+    {
+      "id": "pg_home",
+      "slug": "",
+      "title": "Home",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_h_hero",
+          "type": "hero",
+          "variant": "banner",
+          "i18n": {},
+          "style": {
+            "background": "dark",
+            "spacing": "spacious",
+            "align": "start"
+          },
+          "props": {
+            "eyebrow": "Wood-fired kitchen",
+            "heading": "Dinner, cooked over open flame.",
+            "subheading": "A short seasonal menu built around what the farms bring us that week.",
+            "image": null,
+            "buttons": [
+              {
+                "label": "Book a table",
+                "href": {
+                  "page": "pg_visit",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              },
+              {
+                "label": "See the menu",
+                "href": {
+                  "page": "pg_menu",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "outline"
+              }
+            ],
+            "image_position": "end",
+            "video_url": "",
+            "overlay": "dark",
+            "height": "tall"
+          }
+        },
+        {
+          "id": "sec_h_feat",
+          "type": "features",
+          "variant": "numbered",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "How we cook",
+            "subheading": "",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "leaf",
+                "title": "Local first",
+                "text": "Most of our produce comes from farms within fifty miles."
+              },
+              {
+                "icon": "bolt",
+                "title": "Real fire",
+                "text": "Everything touches the oak-fired grill or the stone oven."
+              },
+              {
+                "icon": "heart",
+                "title": "Made in-house",
+                "text": "Bread, butter, ferments and sauces, every day."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_quote",
+          "type": "testimonials",
+          "variant": "quote",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "center"
+          },
+          "props": {
+            "heading": "",
+            "subheading": "",
+            "items": [
+              {
+                "quote": "The best meal we had all year. Simple, confident cooking.",
+                "author": "Maya R.",
+                "role": "Regular",
+                "avatar": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_h_cta",
+          "type": "cta",
+          "variant": "banner",
+          "i18n": {},
+          "style": {
+            "background": "primary",
+            "spacing": "normal",
+            "align": "center"
+          },
+          "props": {
+            "heading": "Tables fill up on weekends",
+            "text": "Book ahead for Friday and Saturday.",
+            "buttons": [
+              {
+                "label": "Reserve a table",
+                "href": {
+                  "page": "pg_visit",
+                  "url": null,
+                  "asset": null
+                },
+                "style": "primary"
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "A seasonal wood-fired kitchen. Book a table.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_menu",
+      "slug": "menu",
+      "title": "Menu",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_m_start",
+          "type": "services",
+          "variant": "list",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "To start",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Charred flatbread",
+                "description": "Whipped ricotta, honey, thyme.",
+                "price": "$9",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Smoked beet",
+                "description": "Goat curd, walnut, sorrel.",
+                "price": "$12",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Grilled prawns",
+                "description": "Garlic butter, lemon, chilli.",
+                "price": "$16",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_m_main",
+          "type": "services",
+          "variant": "list",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "To follow",
+            "subheading": "",
+            "items": [
+              {
+                "title": "Whole fish",
+                "description": "Today's catch, fennel, salsa verde.",
+                "price": "$34",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Oak-grilled ribeye",
+                "description": "Bone marrow butter, watercress.",
+                "price": "$42",
+                "image": null,
+                "link": null
+              },
+              {
+                "title": "Roasted cauliflower",
+                "description": "Tahini, pomegranate, dukkah.",
+                "price": "$22",
+                "image": null,
+                "link": null
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_m_faq",
+          "type": "faq",
+          "variant": "accordion",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Good to know",
+            "subheading": "",
+            "items": [
+              {
+                "question": "Do you cater for allergies?",
+                "answer": "Yes. Tell us when you book and the kitchen will plan around you."
+              },
+              {
+                "question": "Can I bring a large group?",
+                "answer": "We seat parties up to twelve. For more, get in touch."
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Our current dinner menu.",
+        "social_image": null,
+        "noindex": false
+      }
+    },
+    {
+      "id": "pg_visit",
+      "slug": "visit",
+      "title": "Visit",
+      "i18n": {},
+      "sections": [
+        {
+          "id": "sec_v_contact",
+          "type": "contact",
+          "variant": "split",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Book a table",
+            "text": "Tell us the date, time and party size and we will confirm within the day.",
+            "show_business_info": true,
+            "show_form": true,
+            "submit_label": "Request a table",
+            "form_endpoint": ""
+          }
+        },
+        {
+          "id": "sec_v_hours",
+          "type": "hours",
+          "variant": "card",
+          "i18n": {},
+          "style": {
+            "background": "alt",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Opening hours",
+            "subheading": "",
+            "note": "Kitchen closes thirty minutes before.",
+            "show_contact": false,
+            "show_address": true
+          }
+        },
+        {
+          "id": "sec_v_map",
+          "type": "map",
+          "variant": "embedded",
+          "i18n": {},
+          "style": {
+            "background": "default",
+            "spacing": "normal",
+            "align": "start"
+          },
+          "props": {
+            "heading": "Find us",
+            "subheading": "",
+            "query": "",
+            "height": "medium"
+          }
+        }
+      ],
+      "seo": {
+        "title": null,
+        "description": "Book a table and find us.",
+        "social_image": null,
+        "noindex": false
+      }
+    }
+  ],
+  "theme": {
+    "template": "restaurant",
+    "radius": "sm",
+    "button_style": "solid",
+    "spacing": "normal",
+    "palette": {
+      "primary": "#8C2F1B",
+      "accent": "#C9A25E",
+      "background": "#FBF7F0",
+      "surface": "#F1E9DB",
+      "text": "#241913"
+    },
+    "fonts": {
+      "heading": "fraunces",
+      "body": "dm-sans"
+    },
+    "card_style": "flat",
+    "image_style": "square",
+    "heading_style": "tight"
+  }
+}
