@@ -9,7 +9,11 @@ GOLDEN = Path(__file__).parent / "golden"
 
 def basic_doc_data() -> dict:
     return {
-        "site": {"name": "Rosa Bakery", "tagline": "Fresh bread daily"},
+        "site": {
+            "name": "Rosa Bakery",
+            "tagline": "Fresh bread daily",
+            "nav": [{"label": "Home", "page": "pg_home"}],
+        },
         "pages": [
             {
                 "id": "pg_home",

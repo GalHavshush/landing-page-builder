@@ -15,6 +15,8 @@ from sitegen.sections import REGISTRY
 from sitegen.sections.base import SECTIONS_DIR
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
+CSS_PATH = "css/site.css"
+JS_PATH = "js/site.js"
 
 
 @dataclass
@@ -104,6 +106,41 @@ class RenderContext:
             "height": asset.height,
         }
 
+    def site_view(self) -> dict:
+        """Site-level text for this language (translations override, defaults fall back)."""
+        site = self.doc.site
+        tr = site.i18n.get(self.lang) if self.lang != site.default_language else None
+
+        def pick(name: str, fallback):
+            value = getattr(tr, name, None) if tr else None
+            return fallback if value is None else value
+
+        return {
+            "name": pick("name", site.name),
+            "tagline": pick("tagline", site.tagline),
+            "description": pick("description", site.seo.default_description),
+            "phone": site.business.phone,
+            "email": site.business.email,
+            "address": pick("address", site.business.address),
+            "hours": pick("hours", site.business.hours),
+            "footer_text": pick("footer_text", site.footer.text),
+        }
+
+    def nav(self) -> list[dict]:
+        items = []
+        for item in self.doc.site.nav:
+            target = self.plan.get((item.page, self.lang))
+            if target is None:
+                continue
+            items.append(
+                {
+                    "label": item.labels.get(self.lang, item.label),
+                    "href": paths.relative(self.out_path, target),
+                    "current": target == self.out_path,
+                }
+            )
+        return items
+
     def md(self, source: str) -> Markup:
         return Markup(render_markdown(source))  # noqa: S704 - sanitised by nh3
 
@@ -137,10 +174,18 @@ def render_page(
         for section in page.sections
     ]
     tr = page.i18n.get(lang)
+    site = ctx.site_view()
+    home = paths.plan_pages(doc)[(doc.pages[0].id, lang)] if doc.pages else out_path
     return env.get_template("layout.html.j2").render(
         lang=lang,
         dir=language_dir(lang),
         title=(tr.title if tr and tr.title else page.title),
+        description=site["description"],
+        css_href=paths.relative(out_path, CSS_PATH),
+        js_href=paths.relative(out_path, JS_PATH),
+        home_href=paths.relative(out_path, home),
+        site=site,
+        nav=ctx.nav(),
         sections_html=sections_html,
         doc=doc,
         ctx=ctx,

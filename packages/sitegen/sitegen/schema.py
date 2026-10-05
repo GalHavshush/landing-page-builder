@@ -9,6 +9,7 @@ from sitegen.models import Strict, new_id
 from sitegen.sections import REGISTRY, Section
 
 SCHEMA_VERSION = 1
+FontName = Literal["sans", "serif", "humanist", "rounded"]
 _LANG = re.compile(r"^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$")
 _SLUG = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 RTL_LANGUAGES = {"ar", "he", "fa", "ur", "yi", "ps", "sd", "ckb", "dv"}
@@ -110,7 +111,7 @@ class Theme(Strict):
             "text": "#111827",
         }
     )
-    fonts: dict[Literal["heading", "body"], str] = Field(
+    fonts: dict[Literal["heading", "body"], FontName] = Field(
         default_factory=lambda: {"heading": "sans", "body": "sans"}
     )
     radius: Literal["none", "sm", "md", "lg", "full"] = "md"

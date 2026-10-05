@@ -4,10 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ title }}</title>
+{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+<link rel="stylesheet" href="{{ css_href }}">
+<script src="{{ js_href }}" defer></script>
 </head>
-<body>
-<main>
+<body class="tpl-{{ doc.theme.template }} btn-style-{{ doc.theme.button_style }}">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="{{ home_href }}">{{ site.name }}</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-label="Menu">&#9776;</button>
+    <nav class="nav" aria-label="Main">
+      {% for item in nav %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</header>
+<main id="main">
 {% for html in sections_html %}{{ html|safe }}
 {% endfor %}</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="cols">
+      <div><h3>{{ site.name }}</h3>{% if site.tagline %}<p>{{ site.tagline }}</p>{% endif %}</div>
+      {% if doc.site.footer.show_business_info %}
+      <div>
+        <h3>Contact</h3>
+        <ul>
+          {% if site.phone %}<li><a href="tel:{{ site.phone }}">{{ site.phone }}</a></li>{% endif %}
+          {% if site.email %}<li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>{% endif %}
+          {% if site.address %}<li>{{ site.address }}</li>{% endif %}
+        </ul>
+      </div>
+      {% if site.hours %}
+      <div>
+        <h3>Hours</h3>
+        <ul>{% for h in site.hours %}<li>{{ h.label }}: {% if h.closed %}Closed{% else %}{{ h.open }}&ndash;{{ h.close }}{% endif %}</li>{% endfor %}</ul>
+      </div>
+      {% endif %}
+      {% endif %}
+    </div>
+    {% if site.footer_text %}<div class="footer-note">{{ site.footer_text }}</div>{% endif %}
+  </div>
+</footer>
 </body>
 </html>
