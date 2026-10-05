@@ -224,7 +224,7 @@ def test_editor_can_use_media_posts_preview_and_export(client, project, editor):
         editor.post(f"/projects/{pid}/preview", json={"doc": doc, "page_id": "pg_home"}).status_code
         == 200
     )
-    assert editor.post(f"/projects/{pid}/export").status_code == 200
+    assert editor.post(f"/projects/{pid}/exports").status_code == 201
     assert editor.delete(f"/projects/{pid}/assets/{asset['id']}").status_code == 204
 
 

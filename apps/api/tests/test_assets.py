@@ -1,8 +1,5 @@
-import io
-import zipfile
-
 import pytest
-from helpers import image_bytes, make_project, signup, upload
+from helpers import export_zip, image_bytes, make_project, signup, upload
 from test_projects import other_client
 
 PNG = image_bytes("PNG", (64, 48))
@@ -96,7 +93,7 @@ def test_export_ships_used_images_only(client, project):
     used = upload(client, project["id"], PNG, name="used.png").json()
     upload(client, project["id"], PNG, name="unused.png")
     use_image(client, project["id"], used["id"])
-    z = zipfile.ZipFile(io.BytesIO(client.post(f"/projects/{project['id']}/export").content))
+    _, z = export_zip(client, project["id"])
     assets = [n for n in z.namelist() if n.startswith("assets/")]
     assert len(assets) == 1 and assets[0].endswith("used.webp")
     html = z.read("index.html").decode()

@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from app.assets.routes import router as assets_router
 from app.auth.routes import router as auth_router
 from app.config import get_settings
+from app.exports.routes import router as exports_router
 from app.members.routes import router as members_router
 from app.posts.routes import router as posts_router
 from app.projects.output import router as output_router
@@ -41,6 +42,7 @@ def create_app() -> FastAPI:
     app.include_router(assets_router)
     app.include_router(posts_router)
     app.include_router(members_router)
+    app.include_router(exports_router)
 
     @app.get("/health")
     def health() -> dict:

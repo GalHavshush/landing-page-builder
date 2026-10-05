@@ -1,7 +1,4 @@
-import io
-import zipfile
-
-from helpers import make_project, signup
+from helpers import export_zip, make_project, signup
 
 
 def test_editor_meta_requires_login_and_lists_sections(client):
@@ -45,11 +42,11 @@ def test_preview_errors(client):
 def test_export_returns_a_working_zip(client):
     signup(client)
     p = make_project(client, "Rosa Bakery")
-    r = client.post(f"/projects/{p['id']}/export")
-    assert r.status_code == 200
-    assert r.headers["content-type"] == "application/zip"
-    assert "rosa-bakery.zip" in r.headers["content-disposition"]
-    zf = zipfile.ZipFile(io.BytesIO(r.content))
+    export, zf = export_zip(client, p["id"])
+    assert export["file_count"] == len(zf.namelist()) - 2  # minus README.txt and export.json
+    dl = client.get(f"/projects/{p['id']}/exports/{export['id']}/download")
+    assert dl.headers["content-type"] == "application/zip"
+    assert "rosa-bakery-" in dl.headers["content-disposition"]
     assert {"index.html", "css/site.css", "export.json", "README.txt"} <= set(zf.namelist())
     assert b"Rosa Bakery" in zf.read("index.html")
 
@@ -61,4 +58,4 @@ def test_preview_and_export_are_denied_to_strangers(client, db_session):
     p = make_project(client)
     eve = other_client(db_session)
     signup(eve, email="eve@example.com")
-    assert eve.post(f"/projects/{p['id']}/export").status_code == 404
+    assert eve.post(f"/projects/{p['id']}/exports").status_code == 404

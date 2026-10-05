@@ -1,17 +1,13 @@
-import re
-
-from fastapi import APIRouter, Depends, HTTPException, Response
-from sitegen.export import make_zip
+from fastapi import APIRouter, Depends, HTTPException
 from sitegen.meta import editor_meta
 from sitegen.preview import render_preview
 from sqlalchemy.orm import Session
 
-from app.assets.storage import Storage, get_storage
 from app.auth.deps import get_current_user
 from app.auth.models import User
 from app.config import get_settings
 from app.db import get_db
-from app.projects.build import build_project, preview_assets, published_posts
+from app.projects.build import preview_assets, published_posts
 from app.projects.deps import VIEW, Access
 from app.projects.routes import parse_document
 from app.projects.schemas import PreviewIn, PreviewOut
@@ -50,22 +46,3 @@ def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db
     except KeyError as exc:
         raise HTTPException(404, f"Unknown page or language: {exc.args[0]}") from exc
     return PreviewOut(html=result.html, issues=[i.__dict__ for i in result.issues])
-
-
-@router.post("/projects/{project_id}/export")
-def export_zip(
-    access: Access = VIEW,
-    db: Session = Depends(get_db),
-    storage: Storage = Depends(get_storage),
-):
-    """Build the saved draft and return it as a ZIP: plain static files, deployable anywhere."""
-    project = access.project
-    doc = parse_document(project.draft_doc)
-    result, posts = build_project(db, project, doc, storage)
-    data = make_zip(result.files, doc, posts)
-    filename = re.sub(r"[^a-z0-9-]", "", project.slug) or "site"
-    return Response(
-        data,
-        media_type="application/zip",
-        headers={"Content-Disposition": f'attachment; filename="{filename}.zip"'},
-    )

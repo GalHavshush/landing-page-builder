@@ -1,8 +1,5 @@
-import io
-import zipfile
-
 import pytest
-from helpers import image_bytes, make_project, signup, upload
+from helpers import export_zip, image_bytes, make_project, signup, upload
 from test_projects import other_client
 
 
@@ -32,7 +29,7 @@ def publish(client, pid, post, **kw):
 
 
 def export_files(client, pid) -> dict[str, bytes]:
-    z = zipfile.ZipFile(io.BytesIO(client.post(f"/projects/{pid}/export").content))
+    _, z = export_zip(client, pid)
     return {n: z.read(n) for n in z.namelist()}
 
 

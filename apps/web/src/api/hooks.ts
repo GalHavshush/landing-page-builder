@@ -179,3 +179,28 @@ export function useAcceptInvite(token: string) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
   });
 }
+
+export interface SiteExport {
+  id: number;
+  doc_revision: number;
+  size_bytes: number;
+  file_count: number;
+  created_at: string;
+  created_by: string;
+  issues: { level: string; message: string; where: string }[];
+}
+
+export const useExports = (projectId: number, enabled = true) =>
+  useQuery({
+    queryKey: ["exports", projectId],
+    enabled,
+    queryFn: () => api<SiteExport[]>(`/projects/${projectId}/exports`),
+  });
+
+export function useCreateExport(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api<SiteExport>(`/projects/${projectId}/exports`, { method: "POST" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["exports", projectId] }),
+  });
+}

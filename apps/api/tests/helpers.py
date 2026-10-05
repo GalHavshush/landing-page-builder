@@ -31,3 +31,16 @@ def image_bytes(
 
 def upload(client, project_id, data, name="photo.png", content_type="image/png"):
     return client.post(f"/projects/{project_id}/assets", files={"file": (name, data, content_type)})
+
+
+def export_zip(client, project_id):
+    """Create an export and download it: returns (export json, zipfile.ZipFile)."""
+    import io
+    import zipfile
+
+    made = client.post(f"/projects/{project_id}/exports")
+    assert made.status_code == 201, made.text
+    export = made.json()
+    dl = client.get(f"/projects/{project_id}/exports/{export['id']}/download")
+    assert dl.status_code == 200
+    return export, zipfile.ZipFile(io.BytesIO(dl.content))
