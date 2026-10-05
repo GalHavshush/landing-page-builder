@@ -118,7 +118,13 @@ export interface paths {
         get: operations["get_project_projects__project_id__get"];
         put?: never;
         post?: never;
-        /** Delete Project */
+        /**
+         * Delete Project
+         * @description Delete a project with everything that belongs to it, including stored files.
+         *
+         *     Rows are removed explicitly (not only via ON DELETE CASCADE) so this behaves the same on
+         *     every database, and the uploaded images and export ZIPs are deleted from storage too.
+         */
         delete: operations["delete_project_projects__project_id__delete"];
         options?: never;
         head?: never;

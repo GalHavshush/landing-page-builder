@@ -308,6 +308,7 @@
           "projects"
         ],
         "summary": "Delete Project",
+        "description": "Delete a project with everything that belongs to it, including stored files.\n\nRows are removed explicitly (not only via ON DELETE CASCADE) so this behaves the same on\nevery database, and the uploaded images and export ZIPs are deleted from storage too.",
         "operationId": "delete_project_projects__project_id__delete",
         "parameters": [
           {
