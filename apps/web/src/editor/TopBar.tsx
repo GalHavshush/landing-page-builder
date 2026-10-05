@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { EditorMeta, Project } from "@/api/types";
 import { IconBack, IconDesktop, IconMobile, IconRedo, IconUndo } from "@/components/icons";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ExportDialog } from "./ExportDialog";
 import { ShareDialog } from "./ShareDialog";
 import { useEditor, type SaveStatus } from "./store";
@@ -65,7 +66,7 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
         <div className="flex gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200" role="group" aria-label="Preview size">
           {(["desktop", "mobile"] as const).map((d) => (
             <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? "Desktop" : "Mobile"} title={d === "desktop" ? "Desktop" : "Mobile"}
-              className={`grid h-6 w-8 place-items-center rounded-[5px] transition ${device === d ? "bg-white text-ink-900 shadow-[0_1px_2px_rgb(27_26_23/0.12),0_0_0_1px_rgb(27_26_23/0.06)]" : "text-ink-500 hover:text-ink-900"}`}>
+              className={`grid h-6 w-8 place-items-center rounded-[5px] transition ${device === d ? "bg-[var(--surface-raised)] text-ink-900 shadow-[0_1px_2px_rgb(0_0_0/0.18),0_0_0_1px_rgb(127_127_127/0.12)]" : "text-ink-500 hover:text-ink-900"}`}>
               {d === "desktop" ? <IconDesktop size={14} /> : <IconMobile size={14} />}
             </button>
           ))}
@@ -74,6 +75,7 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
 
       <div className="flex items-center justify-end gap-2">
         {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">Content editing</span>}
+        <ThemeToggle />
         {project.role === "owner" && <ShareDialog projectId={project.id} />}
         <ExportDialog projectId={project.id} />
       </div>

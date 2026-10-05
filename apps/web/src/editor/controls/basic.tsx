@@ -59,7 +59,7 @@ export function SegmentedControl<T extends string | number>({
               aria-pressed={on}
               onClick={() => onChange(o.value)}
               className={`flex-1 rounded-[5px] px-2 py-[5px] text-[12px] font-medium capitalize transition duration-150 disabled:opacity-50 ${
-                on ? "bg-white text-ink-900 shadow-[0_1px_2px_rgb(27_26_23/0.12),0_0_0_1px_rgb(27_26_23/0.06)]" : "text-ink-600 hover:text-ink-900"
+                on ? "bg-[var(--surface-raised)] text-ink-900 shadow-[0_1px_2px_rgb(0_0_0/0.18),0_0_0_1px_rgb(127_127_127/0.12)]" : "text-ink-600 hover:text-ink-900"
               }`}
             >
               {o.label}
@@ -98,7 +98,7 @@ export function ToggleControl({ label, value, onChange, disabled }: ControlProps
         id={id} type="button" role="switch" aria-checked={value} disabled={disabled} onClick={() => onChange(!value)}
         className={`relative h-[18px] w-[30px] shrink-0 rounded-full transition-colors duration-150 disabled:opacity-40 ${value ? "bg-ink-900" : "bg-ink-300"}`}
       >
-        <span className={`absolute left-[2px] top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow-sm transition-transform duration-150 ${value ? "translate-x-3" : ""}`} />
+        <span className={`absolute left-[2px] top-[2px] h-[14px] w-[14px] rounded-full bg-[#fff] shadow-sm transition-transform duration-150 ${value ? "translate-x-3" : ""}`} />
       </button>
     </div>
   );

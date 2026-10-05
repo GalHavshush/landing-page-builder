@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateProject, useDeleteProject, useLogout, useMe, useProjects, useTemplates } from "@/api/hooks";
 import { IconClose, IconPlus } from "@/components/icons";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button, ErrorText, Field } from "@/components/ui";
 
 const ROLE_LABEL: Record<string, string> = { owner: "Owner", designer: "Designer", editor: "Client access" };
@@ -40,6 +41,7 @@ export default function Dashboard() {
             Sitebook
           </div>
           <div className="flex items-center gap-3 text-[13px] text-ink-600">
+            <ThemeToggle />
             <span>{me.data?.email}</span>
             <Button variant="quiet" onClick={() => logout.mutate()}>Sign out</Button>
           </div>

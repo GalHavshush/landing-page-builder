@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthMutation, useMe } from "@/api/hooks";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button, ErrorText, Field } from "@/components/ui";
 
 /** A calm two-column sign-in: a typographic statement on the left, the form on the right. */
@@ -24,7 +25,7 @@ export default function Login() {
 
   return (
     <main className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
-      <section className="relative hidden flex-col justify-between overflow-hidden bg-ink-900 p-12 text-ink-50 lg:flex">
+      <section className="fixed-dark-panel relative hidden flex-col justify-between overflow-hidden bg-ink-900 p-12 text-ink-50 lg:flex">
         <div className="flex items-center gap-2 text-[13px] font-medium tracking-tight">
           <span className="grid h-6 w-6 place-items-center rounded-[5px] bg-ink-50 font-mono text-[11px] font-semibold text-ink-900">S</span>
           Sitebook
@@ -47,7 +48,8 @@ export default function Login() {
         </dl>
       </section>
 
-      <section className="flex items-center justify-center px-6 py-12">
+      <section className="relative flex items-center justify-center px-6 py-12">
+        <div className="absolute right-5 top-5"><ThemeToggle /></div>
         <div className="w-full max-w-[340px]">
           <h1 className="text-[22px] font-semibold tracking-[-0.02em]">{mode === "login" ? "Welcome back" : "Create your account"}</h1>
           <p className="mt-1 text-[13px] text-ink-500">{mode === "login" ? "Sign in to continue to your sites." : "Start with a template, finish in minutes."}</p>

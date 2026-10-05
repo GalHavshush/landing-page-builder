@@ -46,6 +46,59 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* surfaces that are not simply "white" in dark mode */
+:root {
+  --surface-raised: #ffffff;   /* the lifted thumb of a segmented control */
+  --surface-input: #ffffff;
+}
+
+/*
+  Dark mode: the same scale, reversed. ink-50 is the page, `white` is the panel colour, ink-900 is the
+  text. Because components only use these tokens, nothing else needs to know about the theme.
+*/
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-white: #1a1917;
+  --surface-raised: #3a3834;
+  --surface-input: #12110f;
+
+  --color-ink-50: #11100e;
+  --color-ink-100: #22211e;
+  --color-ink-200: #2f2d2a;
+  --color-ink-300: #403d39;
+  --color-ink-400: #6f6b62;
+  --color-ink-500: #918d82;
+  --color-ink-600: #adaa9f;
+  --color-ink-700: #c7c4ba;
+  --color-ink-800: #dfdcd3;
+  --color-ink-900: #f2f0e9;
+  --color-ink-950: #fbfaf6;
+
+  --color-accent-50: #2a170c;
+  --color-accent-100: #3a1e0e;
+  --color-accent-200: #6b3112;
+  --color-accent-500: #ff7a2e;
+  --color-accent-700: #ffa066;
+
+  --color-emerald-50: #10231a;
+  --color-emerald-200: #1f4a35;
+  --color-emerald-700: #5fcb98;
+  --color-amber-50: #2a2210;
+  --color-amber-800: #f0c458;
+  --color-red-600: #e0584d;
+  --color-red-500: #ea6a5f;
+
+  --shadow-pop: 0 1px 0 rgb(0 0 0 / 0.3), 0 12px 32px -8px rgb(0 0 0 / 0.65), 0 2px 8px rgb(0 0 0 / 0.4);
+}
+
+/* a region that must stay light/dark regardless of the theme (e.g. the sign-in brand panel) */
+.fixed-dark-panel {
+  --color-ink-50: #faf9f7; --color-ink-100: #f3f2ee; --color-ink-200: #e8e6e0; --color-ink-300: #d9d6cd;
+  --color-ink-400: #aaa69b; --color-ink-500: #7d796e; --color-ink-600: #5d5951; --color-ink-700: #403d37;
+  --color-ink-800: #2a2825; --color-ink-900: #1b1a17; --color-ink-950: #100f0d;
+  --color-accent-400: #ff8036;
+}
+
 @layer base {
   html { color-scheme: light; }
   body {
@@ -68,10 +121,11 @@
 
 @layer components {
   .field-input {
-    @apply block w-full rounded-md border border-ink-300 bg-white px-2.5 py-[7px] text-[13px] text-ink-900 placeholder:text-ink-400 transition-colors duration-150;
+    @apply block w-full rounded-md border border-ink-300 px-2.5 py-[7px] text-[13px] text-ink-900 placeholder:text-ink-400 transition-colors duration-150;
   }
+  .field-input { background-color: var(--surface-input); }
   .field-input:hover { border-color: var(--color-ink-400); }
-  .field-input:focus { border-color: var(--color-ink-900); box-shadow: 0 0 0 3px rgb(27 26 23 / 0.07); outline: none; }
+  .field-input:focus { border-color: var(--color-ink-900); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ink-900) 9%, transparent); outline: none; }
   .field-input:disabled { @apply bg-ink-100 text-ink-400; }
   .field-label { @apply block text-[12px] font-medium text-ink-600; }
   .eyebrow-label { @apply text-[11px] font-medium uppercase text-ink-500; letter-spacing: 0.08em; }
@@ -82,7 +136,7 @@
 /* native <dialog>: quick fade + rise, scrim without blur */
 dialog { color: inherit; border: 1px solid var(--color-ink-200); box-shadow: var(--shadow-pop); }
 dialog[open] { animation: dialog-in 180ms var(--ease-out-quart); }
-dialog::backdrop { background: rgb(16 15 13 / 0.38); animation: scrim-in 180ms ease-out; }
+dialog::backdrop { background: rgb(8 7 6 / 0.5); animation: scrim-in 180ms ease-out; }
 @keyframes dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.985); } to { opacity: 1; transform: none; } }
 @keyframes scrim-in { from { opacity: 0; } to { opacity: 1; } }
 

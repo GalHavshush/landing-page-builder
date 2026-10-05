@@ -6,6 +6,9 @@ import { queryClient } from "./api/queryClient";
 import App from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./index.css";
+import { initTheme } from "./theme";
+
+initTheme();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

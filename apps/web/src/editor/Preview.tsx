@@ -86,7 +86,7 @@ export function Preview({ html }: { html: string | undefined }) {
   return (
     <div className="flex h-full justify-center overflow-hidden bg-ink-100 p-5">
       <div
-        className={`relative h-full overflow-hidden bg-white shadow-[0_0_0_1px_rgb(27_26_23/0.08),0_12px_32px_-12px_rgb(27_26_23/0.22)] transition-[width,border-radius] duration-300 ease-[var(--ease-out-quart)] ${
+        className={`relative h-full overflow-hidden bg-[#fffefd] shadow-[0_0_0_1px_rgb(127_127_127/0.2),0_12px_32px_-12px_rgb(0_0_0/0.35)] transition-[width,border-radius] duration-300 ease-[var(--ease-out-quart)] ${
           device === "mobile" ? "w-[390px] rounded-[22px]" : "w-full rounded-lg"
         }`}
       >
