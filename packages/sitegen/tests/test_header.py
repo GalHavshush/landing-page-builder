@@ -117,3 +117,24 @@ def test_footer_styles(style):
 def test_logo_silhouette_rule_exists_for_transparent_headers():
     css = build(doc_with()).files["css/site.css"].decode()
     assert "hdr-tone-light:not(.is-scrolled) .brand-logo{filter:brightness(0) invert(1)}" in css
+
+
+def test_social_links_render_in_footer_and_must_be_http_links():
+    business = {
+        "social": {"instagram": "https://instagram.com/x", "My Blog": "https://blog.example"}
+    }
+    html = html_of(doc_with(business=business))
+    assert '<a href="https://instagram.com/x" rel="noopener" target="_blank">Instagram</a>' in html
+    assert ">My Blog</a>" in html
+    assert 'class="social"' not in html_of(doc_with())
+    with pytest.raises(ValueError):
+        doc_with(business={"social": {"x": "javascript:alert(1)"}})
+
+
+def test_preview_nav_links_carry_their_page_id_but_exports_do_not():
+    from sitegen.preview import render_preview
+
+    doc = doc_with()
+    page_id = doc.site.nav[0].page
+    assert f'data-page-id="{page_id}"' in render_preview(doc, page_id).html
+    assert "data-page-id" not in html_of(doc)

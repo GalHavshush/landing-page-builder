@@ -52,7 +52,17 @@ class Business(Strict):
     email: str = ""
     address: str = ""
     hours: list[Hours] = Field(default_factory=list)
-    social: dict[str, str] = Field(default_factory=dict)
+    social: dict[str, str] = Field(
+        default_factory=dict
+    )  # name -> link, e.g. instagram -> https://...
+
+    @field_validator("social")
+    @classmethod
+    def _social(cls, v: dict[str, str]) -> dict[str, str]:
+        for name, url in v.items():
+            if not name.strip() or not re.match(r"^https?://\S*$", url):  # no javascript: links
+                raise ValueError(f"social link {name!r} must be a full http(s):// address")
+        return v
 
 
 class SiteSEO(Strict):

@@ -193,6 +193,11 @@ class RenderContext:
             "description": pick("description", site.seo.default_description),
             "phone": site.business.phone,
             "email": site.business.email,
+            "social": [
+                {"label": k.strip().title(), "href": u}
+                for k, u in site.business.social.items()
+                if u.split("//", 1)[1]  # skip a bare "https://" left in the editor
+            ],
             "address": pick("address", site.business.address),
             "hours": pick("hours", site.business.hours),
             "footer_text": pick("footer_text", site.footer.text),
@@ -211,6 +216,7 @@ class RenderContext:
                     "label": item.labels.get(self.lang, item.label),
                     "href": self.rel(target),
                     "current": target == self.out_path,
+                    "page_id": item.page,  # the editor preview uses it to jump to that page
                 }
             )
         return items

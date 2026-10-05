@@ -107,6 +107,18 @@ export const removePage =
     doc.site.nav = doc.site.nav.filter((n) => n.page !== pageId);
   };
 
+/** Move a page to `toIndex`; the menu follows the page order (a page's menu links stay together). */
+export const movePage =
+  (pageId: string, toIndex: number): Recipe =>
+  (doc) => {
+    const from = doc.pages.findIndex((p) => p.id === pageId);
+    if (from === -1) return;
+    const [page] = doc.pages.splice(from, 1);
+    doc.pages.splice(Math.max(0, Math.min(toIndex, doc.pages.length)), 0, page);
+    const rank = new Map(doc.pages.map((p, i) => [p.id, i]));
+    doc.site.nav.sort((a, b) => rank.get(a.page)! - rank.get(b.page)!); // stable sort
+  };
+
 export const updatePage =
   (pageId: string, patch: Partial<Pick<Page, "title" | "slug">>): Recipe =>
   (doc) => {
