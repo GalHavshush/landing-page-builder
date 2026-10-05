@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDocument, useEditorMeta, useProject } from "@/api/hooks";
 import { LeftRail } from "@/editor/LeftRail";
 import { Preview, usePreviewHtml } from "@/editor/Preview";
-import { RightPanel } from "@/editor/RightPanel";
+import { PropertiesPanel } from "@/editor/PropertiesPanel";
 import { useAutosave, useShortcuts } from "@/editor/saving";
 import { useEditor } from "@/editor/store";
 import { TopBar } from "@/editor/TopBar";
@@ -69,7 +69,7 @@ function EditorShell({
             </div>
           )}
         </main>
-        <RightPanel />
+        <PropertiesPanel meta={meta} />
       </div>
     </div>
   );

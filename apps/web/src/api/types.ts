@@ -33,6 +33,8 @@ export interface EditorMeta {
   icons: string[];
   fonts: string[];
   radii: string[];
+  section_style_schema: { properties: Record<string, PropSchema> };
+  theme_schema: unknown;
   languages: Record<string, string>;
   rtl_languages: string[];
   starters: string[];
