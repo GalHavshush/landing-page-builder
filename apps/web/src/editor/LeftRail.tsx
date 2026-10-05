@@ -4,7 +4,7 @@ import { AddSection } from "./AddSection";
 import { addPage, newId, removePage } from "./commands";
 import { BlogList } from "./blog/BlogList";
 import { SectionList } from "./SectionList";
-import { currentPage, useEditor } from "./store";
+import { currentPage, useCanEditStructure, useEditor } from "./store";
 
 function PageList() {
   const doc = useEditor((s) => s.doc)!;
@@ -13,6 +13,7 @@ function PageList() {
   const apply = useEditor((s) => s.apply);
   const [adding, setAdding] = useState(false);
   const [title, setTitle] = useState("");
+  const canEdit = useCanEditStructure();
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -28,9 +29,11 @@ function PageList() {
     <div className="border-b border-slate-200 p-3">
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Pages</h2>
-        <button className="text-xs text-indigo-600 hover:underline" onClick={() => setAdding(!adding)}>
-          {adding ? "Cancel" : "+ Add page"}
-        </button>
+        {canEdit && (
+          <button className="text-xs text-indigo-600 hover:underline" onClick={() => setAdding(!adding)}>
+            {adding ? "Cancel" : "+ Add page"}
+          </button>
+        )}
       </div>
       {adding && (
         <form onSubmit={submit} className="mb-2">
@@ -56,7 +59,7 @@ function PageList() {
               {p.title}
               <span className="ml-2 text-xs text-slate-400">/{p.slug}</span>
             </button>
-            {doc.pages.length > 1 && (
+            {canEdit && doc.pages.length > 1 && (
               <button
                 aria-label={`Delete page ${p.title}`}
                 title="Delete page"
@@ -91,6 +94,7 @@ export function ViewTabs() {
 export function LeftRail({ meta }: { meta: EditorMeta }) {
   const page = useEditor(currentPage);
   const view = useEditor((s) => s.view);
+  const canEdit = useCanEditStructure();
   if (view === "blog")
     return (
       <div className="flex min-h-0 flex-col border-r border-slate-200 bg-white">
@@ -106,9 +110,12 @@ export function LeftRail({ meta }: { meta: EditorMeta }) {
         <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Sections</h2>
         {page && <SectionList sections={page.sections} meta={meta} />}
         {page?.sections.length === 0 && <p className="mb-2 text-sm text-slate-500">This page is empty.</p>}
-        <div className="mt-3">
-          <AddSection meta={meta} />
-        </div>
+        {!canEdit && <p className="mt-3 text-xs text-slate-400">You can edit the text, images and prices on this site. Layout and design are managed by your designer.</p>}
+        {canEdit && (
+          <div className="mt-3">
+            <AddSection meta={meta} />
+          </div>
+        )}
       </div>
     </aside>
   );

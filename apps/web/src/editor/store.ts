@@ -7,6 +7,7 @@ enablePatches();
 
 export type Device = "desktop" | "mobile";
 export type View = "site" | "blog";
+export type Role = "owner" | "designer" | "editor";
 export type SaveStatus = "saved" | "dirty" | "saving" | "error" | "conflict" | "invalid";
 
 interface HistoryEntry {
@@ -31,11 +32,12 @@ interface EditorState {
   pageId: string | null;
   lang: string | null;
   selectedId: string | null;
+  role: Role;
   device: Device;
   view: View;
   postId: string | null;
 
-  load: (projectId: number, doc: SiteDocument, revision: number) => void;
+  load: (projectId: number, doc: SiteDocument, revision: number, role?: Role) => void;
   apply: (recipe: Recipe, opts?: { coalesceKey?: string }) => void;
   undo: () => void;
   redo: () => void;
@@ -81,12 +83,14 @@ export const useEditor = create<EditorState>((set, get) => ({
   pageId: null,
   lang: null,
   selectedId: null,
+  role: "owner",
   device: "desktop",
   view: "site",
   postId: null,
 
-  load: (projectId, doc, revision) =>
+  load: (projectId, doc, revision, role = "owner") =>
     set({
+      role,
       projectId, doc, savedDoc: doc, revision, saveStatus: "saved", saveError: null,
       undoStack: [], redoStack: [],
       pageId: doc.pages[0]?.id ?? null,
@@ -163,3 +167,6 @@ export const useEditor = create<EditorState>((set, get) => ({
 export function currentPage(state: Pick<EditorState, "doc" | "pageId">): Page | undefined {
   return state.doc?.pages.find((p) => p.id === state.pageId);
 }
+
+/** Mirrors the server's permission matrix (the server is the real gate; this only hides UI). */
+export const useCanEditStructure = () => useEditor((s) => s.role !== "editor");

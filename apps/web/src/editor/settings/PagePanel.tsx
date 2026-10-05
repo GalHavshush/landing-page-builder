@@ -3,7 +3,7 @@ import { setPageTranslation, updatePage, updatePageSeo } from "../commands";
 import { TextAreaControl, TextControl, ToggleControl } from "../controls/basic";
 import { ImageControl } from "../controls/ImageControl";
 import { SlugControl } from "../controls/SlugControl";
-import { currentPage, useEditor } from "../store";
+import { currentPage, useCanEditStructure, useEditor } from "../store";
 
 type TField = "title" | "slug" | "seo_title" | "seo_description";
 
@@ -12,6 +12,7 @@ export function PagePanel() {
   const page = useEditor(currentPage);
   const lang = useEditor((s) => s.lang)!;
   const apply = useEditor((s) => s.apply);
+  const canEdit = useCanEditStructure();
   if (!page) return null;
 
   const translating = lang !== doc.site.default_language;
@@ -35,9 +36,9 @@ export function PagePanel() {
   return (
     <div className="space-y-4">
       {translating && <p className="text-xs text-indigo-600">Translating this page. Empty fields use the default language.</p>}
-      <TextControl label="Page title" value={value("title")} placeholder={ph("title")} onChange={(v, t) => write("title", v, t)} />
-      <SlugControl label="URL name" value={isHome ? "" : value("slug")} disabled={isHome} taken={takenSlugs}
-        placeholder={ph("slug")} onChange={(v, t) => write("slug", v, t)} />
+      {canEdit && <TextControl label="Page title" value={value("title")} placeholder={ph("title")} onChange={(v, t) => write("title", v, t)} />}
+      {canEdit && <SlugControl label="URL name" value={isHome ? "" : value("slug")} disabled={isHome} taken={takenSlugs}
+        placeholder={ph("slug")} onChange={(v, t) => write("slug", v, t)} />}
       <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Search engines</h3>
       <TextControl label="Search result title" value={value("seo_title")} placeholder={ph("seo_title") || page.title}
         hint="Leave empty to use the page title." onChange={(v, t) => write("seo_title", v, t)} />
@@ -48,8 +49,8 @@ export function PagePanel() {
           <ImageControl label="Social sharing image"
             value={page.seo.social_image ? { asset: page.seo.social_image, alt: "" } : null}
             onChange={(v) => apply(updatePageSeo(page.id, { social_image: v?.asset ?? null }))} />
-          <ToggleControl label="Hide this page from search engines" value={page.seo.noindex}
-            onChange={(v) => apply(updatePageSeo(page.id, { noindex: v }))} />
+          {canEdit && <ToggleControl label="Hide this page from search engines" value={page.seo.noindex}
+            onChange={(v) => apply(updatePageSeo(page.id, { noindex: v }))} />}
         </>
       )}
     </div>

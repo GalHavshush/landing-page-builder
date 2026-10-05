@@ -3,6 +3,7 @@ import { api } from "@/api/client";
 import type { EditorMeta, Project } from "@/api/types";
 import { Button } from "@/components/ui";
 import { saver } from "./saving";
+import { ShareDialog } from "./ShareDialog";
 import { useEditor, type SaveStatus } from "./store";
 
 async function downloadExport(projectId: number, slug: string) {
@@ -77,6 +78,8 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
             </button>
           ))}
         </div>
+        {project.role === "owner" && <ShareDialog projectId={project.id} />}
+        {project.role === "editor" && <span className="rounded bg-amber-50 px-2 py-1 text-xs text-amber-800">Content editing</span>}
         <Button variant="ghost" onClick={() => downloadExport(project.id, project.slug)}>Export ZIP</Button>
       </div>
     </header>

@@ -18,8 +18,9 @@ export default function EditorPage() {
   const loadedFor = useEditor((s) => s.projectId);
 
   useEffect(() => {
-    if (docQuery.data) load(projectId, docQuery.data.doc, docQuery.data.revision);
-  }, [docQuery.data, projectId, load]);
+    if (docQuery.data && project.data)
+      load(projectId, docQuery.data.doc, docQuery.data.revision, project.data.role as "owner" | "designer" | "editor");
+  }, [docQuery.data, project.data, projectId, load]);
 
   if (project.error || docQuery.error)
     return <div className="p-8 text-red-600">Could not open this site.</div>;

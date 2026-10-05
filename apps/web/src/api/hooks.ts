@@ -120,3 +120,62 @@ export function usePostMutations(projectId: number) {
     }),
   };
 }
+
+export interface Member {
+  user_id: number;
+  email: string;
+  name: string;
+  role: string;
+}
+export interface Invitation {
+  id: number;
+  role: string;
+  email: string | null;
+  expires_at: string;
+}
+
+export const useMembers = (projectId: number, enabled = true) =>
+  useQuery({
+    queryKey: ["members", projectId],
+    enabled,
+    queryFn: () => api<{ members: Member[]; invitations: Invitation[] }>(`/projects/${projectId}/members`),
+  });
+
+export function useMemberMutations(projectId: number) {
+  const qc = useQueryClient();
+  const refresh = () => qc.invalidateQueries({ queryKey: ["members", projectId] });
+  return {
+    invite: useMutation({
+      mutationFn: (body: { role: "designer" | "editor"; email?: string }) =>
+        api<Invitation & { token: string }>(`/projects/${projectId}/invitations`, { method: "POST", body }),
+      onSuccess: refresh,
+    }),
+    revoke: useMutation({
+      mutationFn: (id: number) => api<void>(`/projects/${projectId}/invitations/${id}`, { method: "DELETE" }),
+      onSuccess: refresh,
+    }),
+    setRole: useMutation({
+      mutationFn: ({ userId, role }: { userId: number; role: "designer" | "editor" }) =>
+        api<Member>(`/projects/${projectId}/members/${userId}`, { method: "PATCH", body: { role } }),
+      onSuccess: refresh,
+    }),
+    remove: useMutation({
+      mutationFn: (userId: number) => api<void>(`/projects/${projectId}/members/${userId}`, { method: "DELETE" }),
+      onSuccess: refresh,
+    }),
+  };
+}
+
+export const useInvitePreview = (token: string) =>
+  useQuery({
+    queryKey: ["invite", token],
+    queryFn: () => api<{ project_name: string; role: string; email: string | null }>(`/invitations/${token}`),
+  });
+
+export function useAcceptInvite(token: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api<{ project_id: number; role: string }>(`/invitations/${token}/accept`, { method: "POST" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
+  });
+}

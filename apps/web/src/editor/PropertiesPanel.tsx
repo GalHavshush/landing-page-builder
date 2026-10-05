@@ -4,7 +4,7 @@ import { setVariant, setTranslation, updateProps, updateStyle } from "./commands
 import { SegmentedControl } from "./controls/basic";
 import { Control, type Env } from "./controls/registry";
 import { SettingsPanel } from "./SettingsPanel";
-import { currentPage, useEditor } from "./store";
+import { currentPage, useCanEditStructure, useEditor } from "./store";
 
 const humanize = (s: string) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
 const enumOptions = (values: (string | number)[]) => values.map((v) => ({ value: v, label: String(v) }));
@@ -88,7 +88,9 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
   const lang = useEditor((s) => s.lang)!;
   const defaultLang = useEditor((s) => s.doc!.site.default_language);
   const apply = useEditor((s) => s.apply);
-  const [tab, setTab] = useState<"content" | "design">("content");
+  const [pickedTab, setTab] = useState<"content" | "design">("content");
+  const canEdit = useCanEditStructure();
+  const tab = canEdit ? pickedTab : "content";
   const section = page?.sections.find((s) => s.id === selectedId);
 
   if (!section) return <SettingsPanel meta={meta} />;
@@ -110,7 +112,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
         <h2 className="text-sm font-semibold">{sectionMeta?.label ?? section.type}</h2>
         {translating && <p className="mt-0.5 text-xs text-indigo-600">Translating to {meta.languages[lang] ?? lang}</p>}
         <div role="tablist" className="mt-2 flex gap-4">
-          {(["content", "design"] as const).map((t) => (
+          {(canEdit ? (["content", "design"] as const) : (["content"] as const)).map((t) => (
             <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
               className={`-mb-px border-b-2 pb-2 text-sm capitalize ${tab === t ? "border-indigo-600 font-medium text-indigo-700" : "border-transparent text-slate-500 hover:text-slate-800"}`}>
               {t}

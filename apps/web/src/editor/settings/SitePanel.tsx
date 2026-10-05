@@ -3,7 +3,7 @@ import type { SiteDocument } from "@/api/types";
 import { setNav, setSiteTranslation, updateSite } from "../commands";
 import { FieldShell, SelectControl, TextAreaControl, TextControl, ToggleControl } from "../controls/basic";
 import { Repeater } from "../controls/Repeater";
-import { useEditor } from "../store";
+import { useCanEditStructure, useEditor } from "../store";
 
 type Site = SiteDocument["site"];
 type Hours = Site["business"]["hours"][number];
@@ -28,6 +28,7 @@ export function SitePanel() {
   const doc = useEditor((s) => s.doc)!;
   const lang = useEditor((s) => s.lang)!;
   const apply = useEditor((s) => s.apply);
+  const canEdit = useCanEditStructure();
   const site = doc.site;
   const translating = lang !== site.default_language;
   const tr = site.i18n[lang];
@@ -66,10 +67,10 @@ export function SitePanel() {
   return (
     <div className="space-y-4">
       {translating && <p className="text-xs text-indigo-600">Translating site text. Phone, email, hours and web address are shared.</p>}
-      {field("name", "Site name")}
+      {canEdit && field("name", "Site name")}
       {field("tagline", "Tagline")}
       {field("description", "Default description", true, "Used in search results when a page has none.")}
-      {!translating && <BaseUrl value={site.base_url} onChange={(v, t) => apply(updateSite({ base_url: v }), { coalesceKey: t ? "site.base_url" : undefined })} />}
+      {canEdit && !translating && <BaseUrl value={site.base_url} onChange={(v, t) => apply(updateSite({ base_url: v }), { coalesceKey: t ? "site.base_url" : undefined })} />}
 
       <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Business info</h3>
       {!translating && business("phone")}
@@ -97,8 +98,8 @@ export function SitePanel() {
         />
       )}
 
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Menu</h3>
-      {translating ? (
+      {canEdit && <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Menu</h3>}
+      {!canEdit ? null : translating ? (
         <div className="space-y-3">
           {site.nav.map((item, i) => (
             <TextControl key={item.page} label={item.label} value={item.labels[lang] ?? ""} placeholder={item.label}
@@ -126,7 +127,7 @@ export function SitePanel() {
 
       <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Footer</h3>
       {field("footer_text", "Footer text", true)}
-      {!translating && (
+      {canEdit && !translating && (
         <ToggleControl label="Show business info in footer" value={site.footer.show_business_info}
           onChange={(v) => apply((d) => { d.site.footer.show_business_info = v; })} />
       )}

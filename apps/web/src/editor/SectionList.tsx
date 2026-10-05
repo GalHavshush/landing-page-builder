@@ -16,7 +16,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import type { EditorMeta, Section } from "@/api/types";
 import { duplicateSection, moveSection, removeSection } from "./commands";
-import { useEditor } from "./store";
+import { useCanEditStructure, useEditor } from "./store";
 
 function subtitle(s: Section): string {
   const p = s.props as unknown as Record<string, unknown>;
@@ -27,6 +27,7 @@ function Item({ section, label }: { section: Section; label: string }) {
   const selected = useEditor((s) => s.selectedId === section.id);
   const selectSection = useEditor((s) => s.selectSection);
   const apply = useEditor((s) => s.apply);
+  const canEdit = useCanEditStructure();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: section.id });
 
   return (
@@ -37,19 +38,23 @@ function Item({ section, label }: { section: Section; label: string }) {
         selected ? "border-indigo-400 bg-indigo-50" : "border-slate-200 hover:border-slate-300"
       } ${isDragging ? "z-10 shadow-lg" : ""}`}
     >
-      <button
-        aria-label={`Drag ${label}`}
-        className="cursor-grab touch-none px-1.5 text-slate-400 hover:text-slate-700 active:cursor-grabbing"
-        {...attributes}
-        {...listeners}
-      >
-        ⋮⋮
-      </button>
+      {canEdit ? (
+        <button
+          aria-label={`Drag ${label}`}
+          className="cursor-grab touch-none px-1.5 text-slate-400 hover:text-slate-700 active:cursor-grabbing"
+          {...attributes}
+          {...listeners}
+        >
+          ⋮⋮
+        </button>
+      ) : (
+        <span className="w-2" />
+      )}
       <button onClick={() => selectSection(section.id)} className="min-w-0 flex-1 py-2 pr-1 text-left">
         <div className="text-sm font-medium">{label}</div>
         <div className="truncate text-xs text-slate-500">{subtitle(section) || "—"}</div>
       </button>
-      <div className="flex items-center gap-0.5 pr-1 opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100">
+      {canEdit && <div className="flex items-center gap-0.5 pr-1 opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100">
         <button
           aria-label={`Duplicate ${label}`}
           title="Duplicate"
@@ -66,7 +71,7 @@ function Item({ section, label }: { section: Section; label: string }) {
         >
           ✕
         </button>
-      </div>
+      </div>}
     </li>
   );
 }

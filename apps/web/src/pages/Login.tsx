@@ -1,20 +1,24 @@
 import { useState, type FormEvent } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthMutation, useMe } from "@/api/hooks";
 import { Button, ErrorText, Field } from "@/components/ui";
 
 export default function Login() {
   const me = useMe();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  // only same-site paths: never redirect to a URL supplied by a link
+  const rawNext = params.get("next") ?? "/";
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/";
   const [mode, setMode] = useState<"login" | "register">("login");
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const auth = useAuthMutation(mode);
 
-  if (me.data) return <Navigate to="/" replace />;
+  if (me.data) return <Navigate to={next} replace />;
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    auth.mutate(form, { onSuccess: () => navigate("/") });
+    auth.mutate(form, { onSuccess: () => navigate(next) });
   };
 
   return (
