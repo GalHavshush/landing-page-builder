@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
+from sitegen.fonts import FONTS_DIR
 from sitegen.meta import editor_meta
 from sitegen.preview import render_preview
 from sqlalchemy.orm import Session
@@ -26,6 +27,26 @@ def get_editor_meta(_: User = Depends(get_current_user)) -> dict:
     return _META
 
 
+@router.get("/fonts/{path:path}", include_in_schema=False)
+def bundled_font(path: str) -> Response:
+    """Bundled web fonts for the editor's sandboxed preview iframe (public, immutable).
+
+    The iframe has an opaque origin, so the browser fetches its fonts cross-origin and needs CORS.
+    """
+    file = (FONTS_DIR / path).resolve()
+    if FONTS_DIR.resolve() not in file.parents or file.suffix != ".woff2" or not file.is_file():
+        raise HTTPException(404, "Not found")
+    return Response(
+        file.read_bytes(),
+        media_type="font/woff2",
+        headers={
+            "Cache-Control": "public, max-age=31536000, immutable",
+            "Access-Control-Allow-Origin": "*",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
 @router.post("/projects/{project_id}/preview", response_model=PreviewOut)
 def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db)):
     """Render a page of the document the editor currently holds (not necessarily saved yet)."""
@@ -42,6 +63,7 @@ def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db
             ),
             assets={asset_id: file for asset_id, (file, _) in known.items()},
             posts=published_posts(db, access.project),
+            font_base=f"{get_settings().media_url_prefix.rsplit('/', 1)[0]}/fonts/",
         )
     except KeyError as exc:
         raise HTTPException(404, f"Unknown page or language: {exc.args[0]}") from exc

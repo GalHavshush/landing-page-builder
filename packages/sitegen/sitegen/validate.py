@@ -7,6 +7,7 @@ from collections.abc import Iterator
 
 from pydantic import BaseModel
 
+from sitegen.fonts import SCRIPT_LABEL, manifest, missing_scripts
 from sitegen.models import ImageRef, Link
 from sitegen.renderer import AssetFile, Issue
 from sitegen.schema import Page, SiteDocument
@@ -44,6 +45,15 @@ def check(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> list
                 )
             )
 
+    for key, script in missing_scripts(doc):
+        issues.append(
+            Issue(
+                "warning",
+                f"{manifest()[key]['family']} has no {SCRIPT_LABEL.get(script, script)} letters; "
+                "visitors will see a fallback font for that language",
+                "theme",
+            )
+        )
     if not doc.pages:
         issues.append(Issue("warning", "The site has no pages", "site"))
     for page in doc.pages:

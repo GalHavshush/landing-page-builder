@@ -34,11 +34,19 @@ export interface SectionMeta {
 export interface EditorMeta {
   sections: SectionMeta[];
   icons: string[];
-  fonts: string[];
+  fonts: FontOption[];
   radii: string[];
   section_style_schema: { properties: Record<string, PropSchema> };
   theme_schema: unknown;
   languages: Record<string, string>;
   rtl_languages: string[];
   starters: string[];
+}
+
+export interface FontOption {
+  key: string;
+  label: string;
+  kind: "system" | "sans" | "serif";
+  scripts: string[]; // scripts beyond Latin the font can draw, e.g. ["hebrew"]
+  file: string | null; // Latin file under /fonts/, used for the sample line
 }

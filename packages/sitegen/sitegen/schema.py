@@ -9,7 +9,19 @@ from sitegen.models import Strict, new_id
 from sitegen.sections import REGISTRY, Section
 
 SCHEMA_VERSION = 1
-FontName = Literal["sans", "serif", "humanist", "rounded"]
+FontName = Literal[
+    "sans",
+    "serif",
+    "humanist",
+    "rounded",  # system stacks: no files, instant
+    "dm-sans",
+    "manrope",
+    "plus-jakarta",
+    "fraunces",
+    "source-serif",
+    "heebo",
+    "rubik",  # bundled web fonts (fonts.py)
+]
 _LANG = re.compile(r"^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$")
 _SLUG = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 RTL_LANGUAGES = {"ar", "he", "fa", "ur", "yi", "ps", "sd", "ckb", "dv"}

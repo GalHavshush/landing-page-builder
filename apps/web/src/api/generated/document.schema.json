@@ -2037,7 +2037,14 @@
               "sans",
               "serif",
               "humanist",
-              "rounded"
+              "rounded",
+              "dm-sans",
+              "manrope",
+              "plus-jakarta",
+              "fraunces",
+              "source-serif",
+              "heebo",
+              "rubik"
             ],
             "type": "string"
           },

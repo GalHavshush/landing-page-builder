@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 from sitegen import paths, seo
 from sitegen.css import STATIC, compose_css
+from sitegen.fonts import font_files
 from sitegen.posts import BLOG_DIR, Post
 from sitegen.renderer import (
     CSS_PATH,
@@ -64,6 +65,7 @@ def build(
         )
     result.files[CSS_PATH] = compose_css(doc).encode()
     result.files[JS_PATH] = (STATIC / "site.js").read_bytes()
+    result.files.update(font_files(doc))  # only the fonts and scripts this site uses
     # renderer and validator can report the same problem; show each once
     seen: set[tuple[str, str]] = set()
     result.issues = [

@@ -45,6 +45,7 @@ class PreviewOptions:
     """Editor preview mode: inline CSS, no navigation, and section ids for click-to-select."""
 
     asset_url: Callable[[str], str]  # asset id -> URL the editor's iframe can load
+    font_base: str = "/fonts/"  # where the editor's iframe can load bundled fonts from
 
 
 @dataclass
@@ -279,7 +280,7 @@ def _render_layout(
             doc=doc,
             ctx=ctx,
             preview=preview is not None,
-            inline_css=compose_css(doc) if preview else None,
+            inline_css=compose_css(doc, preview.font_base) if preview else None,
             inline_js=(STATIC / "site.js").read_text() if preview else None,
             preview_js=(STATIC / "preview.js").read_text() if preview else None,
         )

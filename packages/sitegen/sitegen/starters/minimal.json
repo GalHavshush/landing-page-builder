@@ -58,8 +58,8 @@
       "text": "#111827"
     },
     "fonts": {
-      "heading": "humanist",
-      "body": "sans"
+      "heading": "manrope",
+      "body": "manrope"
     },
     "radius": "sm",
     "button_style": "outline",

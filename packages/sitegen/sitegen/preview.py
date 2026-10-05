@@ -22,6 +22,7 @@ def render_preview(
     asset_url: Callable[[str], str] = lambda asset_id: "",
     assets: dict[str, AssetFile] | None = None,
     posts: list[Post] | None = None,
+    font_base: str = "/fonts/",
 ) -> PreviewResult:
     page = doc.page_by_id(page_id)
     if page is None:
@@ -36,7 +37,7 @@ def render_preview(
         lang,
         assets or {},
         issues,
-        preview=PreviewOptions(asset_url=asset_url),
+        preview=PreviewOptions(asset_url=asset_url, font_base=font_base),
         posts=posts,
     )
     return PreviewResult(html=html, issues=issues)
@@ -48,6 +49,7 @@ def render_post_preview(
     asset_url: Callable[[str], str] = lambda asset_id: "",
     assets: dict[str, AssetFile] | None = None,
     all_posts: list[Post] | None = None,
+    font_base: str = "/fonts/",
 ) -> PreviewResult:
     """Preview of one post page (the post may be an unsaved draft)."""
     issues: list[Issue] = []

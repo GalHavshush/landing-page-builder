@@ -82,8 +82,8 @@
       "text": "#2B2118"
     },
     "fonts": {
-      "heading": "serif",
-      "body": "sans"
+      "heading": "fraunces",
+      "body": "dm-sans"
     },
     "radius": "lg",
     "button_style": "solid",

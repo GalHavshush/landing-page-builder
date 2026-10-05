@@ -1,11 +1,17 @@
 import type { EditorMeta, SiteDocument } from "@/api/types";
 import { updateTheme } from "../commands";
 import { SegmentedControl, SelectControl } from "../controls/basic";
+import { FontControl } from "../controls/FontControl";
 import { ColorControl } from "../controls/ColorControl";
 import { contrastRatio, isHex, MIN_CONTRAST } from "../contrast";
 import { useEditor } from "../store";
 
 type Palette = SiteDocument["theme"]["palette"];
+
+const LANG_SCRIPT: Record<string, string> = { he: "hebrew", yi: "hebrew", ar: "arabic", fa: "arabic", ur: "arabic" };
+/** Scripts (beyond Latin) that the site's languages need, so the picker can warn about fonts lacking them. */
+export const scriptsFor = (languages: string[]) =>
+  [...new Set(languages.map((l) => LANG_SCRIPT[l.split("-")[0]]).filter(Boolean))];
 
 export const PALETTES: Record<string, Palette> = {
   Ocean: { primary: "#2563EB", accent: "#F59E0B", background: "#FFFFFF", surface: "#F3F4F6", text: "#111827" },
@@ -21,7 +27,9 @@ const LABELS: Record<keyof Palette, string> = {
 };
 
 export function ThemePanel({ meta }: { meta: EditorMeta }) {
-  const theme = useEditor((s) => s.doc)!.theme;
+  const doc = useEditor((s) => s.doc)!;
+  const theme = doc.theme;
+  const neededScripts = scriptsFor(doc.site.languages);
   const apply = useEditor((s) => s.apply);
   const setColor = (key: keyof Palette, v: string, typing?: boolean) =>
     apply((d) => { d.theme.palette[key] = v; }, { coalesceKey: typing ? `theme.${key}` : undefined });
@@ -56,8 +64,8 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
       ))}
       <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Style</h3>
       {(["heading", "body"] as const).map((role) => (
-        <SelectControl key={role} label={`${role === "heading" ? "Heading" : "Body"} font`} value={theme.fonts[role]}
-          options={meta.fonts.map((f) => ({ value: f, label: f }))}
+        <FontControl key={role} label={`${role === "heading" ? "Heading" : "Body"} font`} value={theme.fonts[role]}
+          options={meta.fonts} siteHasScripts={neededScripts}
           onChange={(v) => apply((d) => { d.theme.fonts[role] = v as typeof theme.fonts.heading; })} />
       ))}
       <SelectControl label="Corner roundness" value={theme.radius} options={meta.radii.map((r) => ({ value: r, label: r }))}

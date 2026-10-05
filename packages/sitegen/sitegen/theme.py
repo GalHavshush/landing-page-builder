@@ -1,5 +1,6 @@
 """Theme tokens -> CSS custom properties. Sections only ever reference the variables."""
 
+from sitegen.fonts import font_stack
 from sitegen.schema import Theme
 
 FONT_STACKS = {
@@ -45,8 +46,8 @@ def theme_css(theme: Theme) -> str:
   --color-bg: {p["background"]};
   --color-surface: {p["surface"]};
   --color-text: {p["text"]};
-  --font-heading: {FONT_STACKS[theme.fonts["heading"]]};
-  --font-body: {FONT_STACKS[theme.fonts["body"]]};
+  --font-heading: {font_stack(theme.fonts["heading"], FONT_STACKS)};
+  --font-body: {font_stack(theme.fonts["body"], FONT_STACKS)};
   --radius: {RADII[theme.radius]};
   --space-unit: {SPACE_UNIT[theme.spacing]};
 }}

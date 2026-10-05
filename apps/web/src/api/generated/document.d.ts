@@ -275,7 +275,18 @@ export interface Palette {
   [k: string]: string;
 }
 export interface Fonts {
-  [k: string]: "sans" | "serif" | "humanist" | "rounded";
+  [k: string]:
+    | "sans"
+    | "serif"
+    | "humanist"
+    | "rounded"
+    | "dm-sans"
+    | "manrope"
+    | "plus-jakarta"
+    | "fraunces"
+    | "source-serif"
+    | "heebo"
+    | "rubik";
 }
 export interface Page1 {
   id: Id;

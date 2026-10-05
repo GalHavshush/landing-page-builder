@@ -176,6 +176,7 @@ def preview_post(
             asset_url=lambda i: f"{prefix}/{known[i][1]}" if i in known else "",
             assets={i: f for i, (f, _) in known.items()},
             all_posts=published_posts(db, access.project),
+            font_base=f"{prefix.rsplit('/', 1)[0]}/fonts/",
         )
     except KeyError as exc:
         raise HTTPException(422, "Unknown language") from exc

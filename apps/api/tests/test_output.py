@@ -59,3 +59,28 @@ def test_preview_and_export_are_denied_to_strangers(client, db_session):
     eve = other_client(db_session)
     signup(eve, email="eve@example.com")
     assert eve.post(f"/projects/{p['id']}/exports").status_code == 404
+
+
+def test_bundled_fonts_are_served_publicly_with_cors_and_path_safety(client):
+    r = client.get("/fonts/dm-sans/latin.woff2")
+    assert r.status_code == 200 and r.content[:4] == b"wOF2"
+    assert r.headers["content-type"] == "font/woff2"
+    assert r.headers["access-control-allow-origin"] == "*"  # the sandboxed preview needs this
+    assert "immutable" in r.headers["cache-control"]
+    for bad in [
+        "../manifest.json",
+        "dm-sans/OFL.txt",
+        "nope/latin.woff2",
+        "..%2f..%2fsecrets.woff2",
+    ]:
+        assert client.get(f"/fonts/{bad}").status_code == 404, bad
+
+
+def test_preview_points_fonts_at_the_api_fonts_route(client):
+    signup(client)
+    p = make_project(client, template="warm")
+    doc = client.get(f"/projects/{p['id']}/doc").json()["doc"]
+    html = client.post(
+        f"/projects/{p['id']}/preview", json={"doc": doc, "page_id": "pg_home"}
+    ).json()["html"]
+    assert "url(/api/fonts/fraunces/latin.woff2)" in html
