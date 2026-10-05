@@ -1,2 +1,4 @@
-{% if p.heading %}<h2>{{ p.heading }}</h2>{% endif %}
-<div class="prose">{{ ctx.md(p.body) }}</div>
+<div class="text-wrap">
+  {% if p.heading %}<h2>{{ p.heading }}</h2>{% endif %}
+  <div class="prose">{{ ctx.md(p.body) }}</div>
+</div>

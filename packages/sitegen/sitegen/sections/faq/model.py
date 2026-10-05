@@ -18,7 +18,7 @@ class FaqProps(Strict):
 
 class FaqSection(BaseSection):
     type: Literal["faq"] = "faq"
-    variant: Literal["accordion"] = "accordion"
+    variant: Literal["accordion", "split"] = "accordion"
     props: FaqProps = Field(default_factory=FaqProps)
 
 

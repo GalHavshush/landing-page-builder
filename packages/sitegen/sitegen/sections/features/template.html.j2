@@ -1,11 +1,22 @@
 {% from "_macros.html.j2" import head %}
-{{ head(p) }}
-<div class="grid cols-{{ p.columns }}">
+{% macro items() %}
   {% for it in p.items %}
   <div class="item">
-    {% if it.icon %}<div class="icon-wrap">{{ ctx.icon(it.icon) }}</div>{% endif %}
-    {% if it.title %}<h3>{{ it.title }}</h3>{% endif %}
-    {% if it.text %}<p>{{ it.text }}</p>{% endif %}
+    {% if s.variant == "numbered" %}<span class="num" aria-hidden="true">{{ "%02d"|format(loop.index) }}</span>
+    {% elif it.icon %}<div class="icon-wrap">{{ ctx.icon(it.icon) }}</div>{% endif %}
+    <div class="item-body">
+      {% if it.title %}<h3>{{ it.title }}</h3>{% endif %}
+      {% if it.text %}<p>{{ it.text }}</p>{% endif %}
+    </div>
   </div>
   {% endfor %}
+{% endmacro %}
+{% if s.variant == "list" %}
+<div class="feat-split">
+  <div class="feat-intro">{{ head(p) }}</div>
+  <div class="feat-rows">{{ items() }}</div>
 </div>
+{% else %}
+{{ head(p) }}
+<div class="grid cols-{{ p.columns }}">{{ items() }}</div>
+{% endif %}

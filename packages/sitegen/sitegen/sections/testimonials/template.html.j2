@@ -1,6 +1,6 @@
 {% from "_macros.html.j2" import head %}
 {{ head(p) }}
-<div class="grid {% if s.variant == 'cards' %}cols-3{% else %}cols-1 quotes{% endif %}">
+<div class="grid {% if s.variant in ('cards', 'columns') %}cols-3{% else %}cols-1 quotes{% endif %}">
   {% for it in p.items %}
   {% set av = ctx.image(it.avatar) %}
   <figure class="item quote-item">

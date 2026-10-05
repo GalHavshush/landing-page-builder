@@ -184,3 +184,52 @@ def test_other_hero_layouts_are_unchanged():
     s = create_section("hero")
     html, _ = render(s)
     assert "hero-cover" not in html and 'class="container"' in html
+
+
+def one(section_type, variant, **props):
+    s = create_section(section_type)
+    s.variant = variant
+    for key, value in props.items():
+        setattr(s.props, key, value)
+    html, _ = render(s)
+    return html
+
+
+def test_features_list_and_numbered_layouts():
+    html = one("features", "list")
+    assert 'class="feat-split"' in html and 'class="feat-rows"' in html
+    numbered = one("features", "numbered")
+    assert 'class="num"' in numbered and ">01<" in numbered and ">03<" in numbered
+    assert "icon-wrap" not in numbered  # numerals replace icons
+
+
+def test_services_alternating_keeps_the_same_items():
+    html = one("services", "alternating")
+    assert "s-services--alternating" in html and html.count("<article") == 3
+
+
+def test_text_split_and_lead_layouts():
+    assert "s-text--split" in one("text", "split") and 'class="text-wrap"' in one("text", "split")
+    assert "s-text--lead" in one("text", "lead")
+
+
+def test_faq_split_and_testimonial_columns():
+    assert 'class="faq-split"' in one("faq", "split") and html_has_details(one("faq", "split"))
+    assert "cols-3" in one("testimonials", "columns") and "s-testimonials--columns" in one(
+        "testimonials", "columns"
+    )
+
+
+def html_has_details(html: str) -> bool:
+    return html.count("<details>") >= 2
+
+
+def test_gallery_mosaic_and_blog_featured_and_hero_banner():
+    assert "s-gallery--mosaic" in one("gallery", "mosaic")
+    assert "s-blog_list--featured" in one("blog_list", "featured")
+    banner = one("hero", "banner")
+    assert (
+        'class="hero-banner"' in banner
+        and 'class="hb-head"' in banner
+        and "hero-cover" not in banner
+    )

@@ -25,7 +25,7 @@ class HeroProps(Strict):
 
 class HeroSection(BaseSection):
     type: Literal["hero"] = "hero"
-    variant: Literal["centered", "split", "cover"] = "centered"
+    variant: Literal["centered", "split", "cover", "banner"] = "centered"
     props: HeroProps = Field(default_factory=HeroProps)
 
 

@@ -1,4 +1,10 @@
 {% from "_macros.html.j2" import head %}
+{% if s.variant == "split" %}
+<div class="faq-split">
+  <div class="faq-intro">{{ head(p) }}</div>
+  <div class="faq">{% for it in p.items %}<details><summary>{{ it.question }}</summary><div class="prose">{{ ctx.md(it.answer) }}</div></details>{% endfor %}</div>
+</div>
+{% else %}
 {{ head(p) }}
 <div class="faq">
   {% for it in p.items %}
@@ -8,3 +14,4 @@
   </details>
   {% endfor %}
 </div>
+{% endif %}

@@ -8,3 +8,17 @@
 .bg-primary .icon-wrap,.bg-dark .icon-wrap{background:color-mix(in srgb,currentColor 16%,transparent);color:inherit}
 .icon{width:1.4rem;height:1.4rem}
 .al-center .icon-wrap{margin-inline:auto}
+
+/* list: heading on the left, rows on the right */
+.feat-split{display:grid;gap:3rem}
+@media (min-width:900px){.feat-split{grid-template-columns:minmax(16rem,5fr) 7fr;gap:5rem}.feat-intro{position:sticky;top:6.5rem;align-self:start}}
+.feat-intro .section-head{margin-block-end:0}
+.feat-rows .item{display:flex;gap:1.25rem;align-items:flex-start;padding-block:1.6rem;border-block-start:1px solid var(--line)}
+.feat-rows .item:last-child{border-block-end:1px solid var(--line)}
+.feat-rows .icon-wrap{margin:0;flex:none}
+.feat-rows h3{margin-block-end:.3rem}
+/* numbered: big counters, no boxes */
+.s-features--numbered .item{border-block-start:1.5px solid var(--color-text);padding-block-start:1.1rem}
+.bg-primary.s-features--numbered .item,.bg-dark.s-features--numbered .item{border-color:currentColor}
+.s-features--numbered .num{display:block;font-family:var(--font-heading);font-size:2.6rem;line-height:1;letter-spacing:-.03em;margin-block-end:1.1rem;color:var(--color-primary)}
+.bg-primary .num,.bg-dark .num{color:inherit;opacity:.85}

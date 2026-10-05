@@ -12,7 +12,7 @@ class TextProps(Strict):
 
 class TextSection(BaseSection):
     type: Literal["text"] = "text"
-    variant: Literal["single", "columns"] = "single"
+    variant: Literal["single", "columns", "split", "lead"] = "single"
     props: TextProps = Field(default_factory=TextProps)
 
 

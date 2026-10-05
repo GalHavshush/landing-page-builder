@@ -20,7 +20,7 @@ class TestimonialsProps(Strict):
 
 class TestimonialsSection(BaseSection):
     type: Literal["testimonials"] = "testimonials"
-    variant: Literal["cards", "quote"] = "cards"
+    variant: Literal["cards", "quote", "columns"] = "cards"
     props: TestimonialsProps = Field(default_factory=TestimonialsProps)
 
 

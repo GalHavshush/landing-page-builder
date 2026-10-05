@@ -22,7 +22,7 @@ class ServicesProps(Strict):
 
 class ServicesSection(BaseSection):
     type: Literal["services"] = "services"
-    variant: Literal["cards", "list"] = "cards"
+    variant: Literal["cards", "list", "alternating"] = "cards"
     props: ServicesProps = Field(default_factory=ServicesProps)
 
 

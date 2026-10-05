@@ -9,3 +9,7 @@
 .al-center .quote-item figcaption{justify-content:center}
 .quote-item figcaption strong{color:inherit}
 .avatar{width:3rem;height:3rem;border-radius:50%;object-fit:cover}
+
+.s-testimonials--columns .quote-item{border-block-start:1.5px solid currentColor;padding-block-start:1.4rem}
+.s-testimonials--columns .quote-item blockquote::before{display:none}
+.s-testimonials--columns blockquote{font-family:var(--font-heading);font-size:1.25rem;line-height:1.4}

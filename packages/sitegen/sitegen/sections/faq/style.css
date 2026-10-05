@@ -11,3 +11,7 @@
 .faq summary{transition:color .15s}.faq summary:hover{color:var(--color-primary)}
 .faq summary::after{transition:transform .3s cubic-bezier(.25,1,.5,1);flex:none}
 .faq details[open] summary::after{content:"+";transform:rotate(45deg)}
+
+.faq-split{display:grid;gap:2.5rem}
+@media (min-width:900px){.faq-split{grid-template-columns:minmax(16rem,5fr) 7fr;gap:5rem}.faq-intro{position:sticky;top:6.5rem;align-self:start}}
+.faq-split .faq{max-width:none}.faq-intro .section-head{margin-block-end:0}

@@ -12,3 +12,12 @@
 .post-body p{margin:0;color:var(--muted)}
 .post-more{margin-block-start:.4rem;font-weight:600;font-size:.95rem}
 .muted{color:var(--muted)}
+
+.posts-featured{grid-template-columns:repeat(auto-fill,minmax(17rem,1fr))}
+@media (min-width:900px){
+  .posts-featured .post-card:first-child{grid-column:1/-1;flex-direction:row}
+  .posts-featured .post-card:first-child .post-cover{flex:0 0 58%}
+  .posts-featured .post-card:first-child .post-cover img{height:100%;aspect-ratio:auto;min-height:20rem}
+  .posts-featured .post-card:first-child .post-body{justify-content:center;padding:2.5rem}
+  .posts-featured .post-card:first-child h3{font-size:clamp(1.6rem,2.8vw,2.2rem)}
+}

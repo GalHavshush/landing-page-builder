@@ -85,7 +85,8 @@
           "default": "cards",
           "enum": [
             "cards",
-            "list"
+            "list",
+            "featured"
           ],
           "title": "Variant",
           "type": "string"
@@ -371,8 +372,11 @@
           "type": "string"
         },
         "variant": {
-          "const": "accordion",
           "default": "accordion",
+          "enum": [
+            "accordion",
+            "split"
+          ],
           "title": "Variant",
           "type": "string"
         },
@@ -522,7 +526,9 @@
           "default": "cards",
           "enum": [
             "cards",
-            "plain"
+            "plain",
+            "list",
+            "numbered"
           ],
           "title": "Variant",
           "type": "string"
@@ -668,7 +674,8 @@
           "default": "grid",
           "enum": [
             "grid",
-            "masonry"
+            "masonry",
+            "mosaic"
           ],
           "title": "Variant",
           "type": "string"
@@ -823,7 +830,8 @@
           "enum": [
             "centered",
             "split",
-            "cover"
+            "cover",
+            "banner"
           ],
           "title": "Variant",
           "type": "string"
@@ -1605,7 +1613,8 @@
           "default": "cards",
           "enum": [
             "cards",
-            "list"
+            "list",
+            "alternating"
           ],
           "title": "Variant",
           "type": "string"
@@ -1923,7 +1932,8 @@
           "default": "cards",
           "enum": [
             "cards",
-            "quote"
+            "quote",
+            "columns"
           ],
           "title": "Variant",
           "type": "string"
@@ -1996,7 +2006,9 @@
           "default": "single",
           "enum": [
             "single",
-            "columns"
+            "columns",
+            "split",
+            "lead"
           ],
           "title": "Variant",
           "type": "string"

@@ -15,7 +15,7 @@ class BlogListProps(Strict):
 
 class BlogListSection(BaseSection):
     type: Literal["blog_list"] = "blog_list"
-    variant: Literal["cards", "list"] = "cards"
+    variant: Literal["cards", "list", "featured"] = "cards"
     props: BlogListProps = Field(default_factory=BlogListProps)
 
 

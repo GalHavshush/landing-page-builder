@@ -8,3 +8,13 @@
 @media (min-width:900px){.s-gallery--masonry .gallery.cols-3{columns:3}.s-gallery--masonry .gallery.cols-4{columns:4}}
 .s-gallery--masonry .gallery figure{break-inside:avoid;margin-block-end:1rem}
 .gallery figcaption{font-size:.9rem;color:var(--muted);margin-block-start:.4rem}
+
+/* mosaic: one large picture and smaller ones around it */
+.s-gallery--mosaic .gallery{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:11rem;grid-auto-flow:dense;gap:.75rem}
+@media (min-width:900px){.s-gallery--mosaic .gallery{grid-template-columns:repeat(4,1fr);grid-auto-rows:14rem}}
+.s-gallery--mosaic figure{position:relative;margin:0}
+.s-gallery--mosaic figure img{height:100%;object-fit:cover;aspect-ratio:auto}
+.s-gallery--mosaic figure:nth-child(1){grid-column:span 2;grid-row:span 2}
+.s-gallery--mosaic figure:nth-child(6n+4){grid-row:span 2}
+.s-gallery--mosaic figcaption{position:absolute;inset-inline:.6rem;inset-block-end:.6rem;padding:.35rem .7rem;border-radius:calc(var(--radius)*.7);background:rgb(14 11 9 / .66);color:#fff;font-size:.85rem;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.s-gallery--mosaic figure:hover figcaption,.s-gallery--mosaic figure:focus-within figcaption{opacity:1;transform:none}

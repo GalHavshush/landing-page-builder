@@ -19,7 +19,7 @@ class GalleryProps(Strict):
 
 class GallerySection(BaseSection):
     type: Literal["gallery"] = "gallery"
-    variant: Literal["grid", "masonry"] = "grid"
+    variant: Literal["grid", "masonry", "mosaic"] = "grid"
     props: GalleryProps = Field(default_factory=GalleryProps)
 
 

@@ -21,7 +21,7 @@ class FeaturesProps(Strict):
 
 class FeaturesSection(BaseSection):
     type: Literal["features"] = "features"
-    variant: Literal["cards", "plain"] = "cards"
+    variant: Literal["cards", "plain", "list", "numbered"] = "cards"
     props: FeaturesProps = Field(default_factory=FeaturesProps)
 
 

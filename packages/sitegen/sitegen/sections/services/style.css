@@ -10,3 +10,16 @@
 .s-services--list .grid,.s-services .svc-list{grid-template-columns:1fr!important;gap:0}
 .s-services--list .item{border-block-end:1px solid var(--line);padding-block:1.25rem}
 .s-services--list .item img{display:none}
+
+/* alternating: image and text side by side, flipping each row */
+.s-services--alternating .grid{grid-template-columns:1fr!important;gap:3.5rem}
+.s-services--alternating .item{flex-direction:column;gap:1.5rem;align-items:stretch}
+@media (min-width:820px){
+  .s-services--alternating .item{flex-direction:row;align-items:center;gap:4.5rem}
+  .s-services--alternating .item:nth-child(even){flex-direction:row-reverse}
+  .s-services--alternating .item>img{flex:1 1 50%;max-width:50%;aspect-ratio:4/3}
+  .s-services--alternating .svc-body{flex:1 1 50%}
+}
+.s-services--alternating .item>img{border-radius:calc(var(--radius)*1.6);height:auto}
+.s-services--alternating .svc-top h3{font-size:clamp(1.5rem,2.6vw,2rem)}
+.s-services--alternating .item p{font-size:1.08rem}
