@@ -1,8 +1,5 @@
 import pytest
-
 from sitegen import AssetFile, SiteDocument, build
-from sitegen.models import Button, ImageRef, Link
-from sitegen.sections import create_section
 from sitegen.starters import load_starter
 
 
