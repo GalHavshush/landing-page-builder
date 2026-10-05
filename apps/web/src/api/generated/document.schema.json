@@ -1,5 +1,39 @@
 {
   "$defs": {
+    "Announcement": {
+      "additionalProperties": false,
+      "description": "A slim banner above the header: a sale, new opening hours, a booking deadline.",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "link": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Link"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "enabled",
+        "text",
+        "link"
+      ],
+      "title": "Announcement",
+      "type": "object"
+    },
     "BlogListProps": {
       "additionalProperties": false,
       "properties": {
@@ -586,11 +620,22 @@
           "default": true,
           "title": "Show Business Info",
           "type": "boolean"
+        },
+        "style": {
+          "default": "columns",
+          "enum": [
+            "columns",
+            "centered",
+            "minimal"
+          ],
+          "title": "Style",
+          "type": "string"
         }
       },
       "required": [
         "text",
-        "show_business_info"
+        "show_business_info",
+        "style"
       ],
       "title": "Footer",
       "type": "object"
@@ -719,6 +764,51 @@
         "props"
       ],
       "title": "GallerySection",
+      "type": "object"
+    },
+    "Header": {
+      "additionalProperties": false,
+      "description": "Top-of-page navigation bar.",
+      "properties": {
+        "style": {
+          "default": "classic",
+          "enum": [
+            "classic",
+            "centered",
+            "split"
+          ],
+          "title": "Style",
+          "type": "string"
+        },
+        "sticky": {
+          "default": true,
+          "title": "Sticky",
+          "type": "boolean"
+        },
+        "transparent": {
+          "default": false,
+          "title": "Transparent",
+          "type": "boolean"
+        },
+        "cta": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Button"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "style",
+        "sticky",
+        "transparent",
+        "cta"
+      ],
+      "title": "Header",
       "type": "object"
     },
     "HeroProps": {
@@ -1709,6 +1799,33 @@
         "footer": {
           "$ref": "#/$defs/Footer"
         },
+        "logo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "logo_size": {
+          "default": "medium",
+          "enum": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "title": "Logo Size",
+          "type": "string"
+        },
+        "header": {
+          "$ref": "#/$defs/Header"
+        },
+        "announcement": {
+          "$ref": "#/$defs/Announcement"
+        },
         "i18n": {
           "additionalProperties": {
             "$ref": "#/$defs/SiteTranslation"
@@ -1727,6 +1844,10 @@
         "seo",
         "nav",
         "footer",
+        "logo",
+        "logo_size",
+        "header",
+        "announcement",
         "i18n"
       ],
       "title": "Site",
@@ -1843,6 +1964,30 @@
           ],
           "default": null,
           "title": "Footer Text"
+        },
+        "cta_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cta Label"
+        },
+        "announcement_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Announcement Text"
         }
       },
       "required": [
@@ -1851,7 +1996,9 @@
         "description",
         "address",
         "hours",
-        "footer_text"
+        "footer_text",
+        "cta_label",
+        "announcement_text"
       ],
       "title": "SiteTranslation",
       "type": "object"

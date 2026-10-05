@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import Field, field_validator, model_validator
 
-from sitegen.models import Strict, new_id
+from sitegen.models import Button, ImageRef, Link, Strict, new_id
 from sitegen.sections import REGISTRY, Section
 
 SCHEMA_VERSION = 1
@@ -70,6 +70,25 @@ class NavItem(Strict):
 class Footer(Strict):
     text: str = ""
     show_business_info: bool = True
+    style: Literal["columns", "centered", "minimal"] = "columns"
+
+
+class Header(Strict):
+    """Top-of-page navigation bar."""
+
+    style: Literal["classic", "centered", "split"] = "classic"
+    sticky: bool = True
+    # Sits over a full-width cover hero at the top of a page and turns solid once you scroll.
+    transparent: bool = False
+    cta: Button | None = None  # an optional call-to-action button in the bar
+
+
+class Announcement(Strict):
+    """A slim banner above the header: a sale, new opening hours, a booking deadline."""
+
+    enabled: bool = False
+    text: str = ""
+    link: Link | None = None
 
 
 class SiteTranslation(Strict):
@@ -79,6 +98,8 @@ class SiteTranslation(Strict):
     address: str | None = None
     hours: list[Hours] | None = None
     footer_text: str | None = None
+    cta_label: str | None = None
+    announcement_text: str | None = None
 
 
 class Site(Strict):
@@ -91,6 +112,10 @@ class Site(Strict):
     seo: SiteSEO = Field(default_factory=SiteSEO)
     nav: list[NavItem] = Field(default_factory=list)
     footer: Footer = Field(default_factory=Footer)
+    logo: ImageRef | None = None  # shown instead of the site name in the header; alt = the name
+    logo_size: Literal["small", "medium", "large"] = "medium"
+    header: Header = Field(default_factory=Header)
+    announcement: Announcement = Field(default_factory=Announcement)
     i18n: dict[str, SiteTranslation] = Field(default_factory=dict)
 
     @field_validator("base_url")

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { EditorMeta } from "@/api/types";
+import { BrandPanel } from "./settings/BrandPanel";
 import { LanguagePanel } from "./settings/LanguagePanel";
 import { PagePanel } from "./settings/PagePanel";
 import { SitePanel } from "./settings/SitePanel";
 import { ThemePanel } from "./settings/ThemePanel";
 import { useCanEditStructure } from "./store";
 
-const TABS = ["page", "site", "theme", "languages"] as const;
+const TABS = ["page", "site", "brand", "theme", "languages"] as const;
 
 /** Shown when no section is selected: page, site-wide, theme and language settings. */
 export function SettingsPanel({ meta }: { meta: EditorMeta }) {
@@ -29,6 +30,7 @@ export function SettingsPanel({ meta }: { meta: EditorMeta }) {
       <div className="min-h-0 flex-1 overflow-y-auto p-4">
         {tab === "page" && <PagePanel />}
         {tab === "site" && <SitePanel />}
+        {tab === "brand" && <BrandPanel />}
         {tab === "theme" && <ThemePanel meta={meta} />}
         {tab === "languages" && <LanguagePanel meta={meta} />}
       </div>

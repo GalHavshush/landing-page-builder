@@ -21,24 +21,40 @@
 {% if preview %}<style>{{ inline_css|safe }}</style>{% else %}<link rel="stylesheet" href="{{ css_href }}">
 <script src="{{ js_href }}" defer></script>{% endif %}
 </head>
-<body class="tpl-{{ doc.theme.template }} btn-style-{{ doc.theme.button_style }}">
+<body class="tpl-{{ doc.theme.template }} btn-style-{{ doc.theme.button_style }}{% if header.overlay %} has-overlay-header{% endif %}">
 <a class="skip" href="#main">{{ ctx.t("skip") }}</a>
-<header class="site-header">
-  <div class="container">
-    <a class="brand" href="{{ home_href }}">{{ site.name }}</a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-label="{{ ctx.t('menu') }}">&#9776;</button>
-    <nav class="nav" aria-label="Main">
-      {% for item in nav %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>
-      {% endfor %}
-    </nav>
-    {% if languages %}<div class="langs" aria-label="Language">{% for l in languages %}<a href="{{ l.href }}" hreflang="{{ l.code }}" lang="{{ l.code }}"{% if l.current %} aria-current="true"{% endif %}>{{ l.label }}</a>{% endfor %}</div>{% endif %}
+{% from "_macros.html.j2" import img as picture %}
+{% if header.announcement %}
+<div class="announce">{% if header.announcement.href %}<a href="{{ header.announcement.href }}">{{ header.announcement.text }}</a>{% else %}<span>{{ header.announcement.text }}</span>{% endif %}</div>
+{% endif %}
+<header class="site-header hdr-{{ header.style }}{% if header.overlay %} hdr-overlay hdr-tone-{{ header.tone }}{% endif %}{% if not header.sticky %} hdr-static{% endif %}">
+  <div class="container hdr-bar">
+    {% macro brand() %}<a class="brand{% if header.logo %} has-logo{% endif %}" href="{{ home_href }}"{% if header.logo %} aria-label="{{ site.name }}"{% endif %}>{% if header.logo %}{{ picture(header.logo, "240px", "brand-logo logo-" ~ header.logo_size, true, "") }}{% else %}{{ site.name }}{% endif %}</a>{% endmacro %}
+    {% macro menu() %}<nav class="nav" aria-label="Main">{% for item in nav %}<a href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% endfor %}</nav>{% endmacro %}
+    {% macro extras() %}{% if languages %}<div class="langs" aria-label="Language">{% for l in languages %}<a href="{{ l.href }}" hreflang="{{ l.code }}" lang="{{ l.code }}"{% if l.current %} aria-current="true"{% endif %}>{{ l.label }}</a>{% endfor %}</div>{% endif %}{% if header.cta %}<a class="btn btn-{{ header.cta.style }} hdr-cta" href="{{ header.cta.href }}">{{ header.cta.label }}</a>{% endif %}{% endmacro %}
+    {% if header.style == "split" %}
+    <div class="hdr-left">{{ menu() }}</div>
+    {{ brand() }}
+    <div class="hdr-right">{{ extras() }}<button class="nav-toggle" type="button" aria-expanded="false" aria-label="{{ ctx.t('menu') }}"><span></span><span></span></button></div>
+    {% else %}
+    {{ brand() }}
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-label="{{ ctx.t('menu') }}"><span></span><span></span></button>
+    {{ menu() }}
+    <div class="hdr-right">{{ extras() }}</div>
+    {% endif %}
   </div>
 </header>
 <main id="main">
 {% for html in sections_html %}{{ html|safe }}
 {% endfor %}</main>
-<footer class="site-footer">
+<footer class="site-footer ftr-{{ doc.site.footer.style }}">
   <div class="container">
+    {% if doc.site.footer.style == "minimal" %}
+    <div class="ftr-line">
+      <a class="brand" href="{{ home_href }}">{{ site.name }}</a>
+      {% if nav %}<nav class="footer-nav" aria-label="{{ ctx.t('menu') }}">{% for item in nav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>{% endif %}
+    </div>
+    {% else %}
     <div class="cols">
       <div>
         <a class="brand" href="{{ home_href }}">{{ site.name }}</a>
@@ -64,6 +80,7 @@
       {% endif %}
       {% endif %}
     </div>
+    {% endif %}
     <div class="footer-note"><span>&copy; {{ site.name }}</span>{% if site.footer_text %}<span>{{ site.footer_text }}</span>{% endif %}</div>
   </div>
 </footer>

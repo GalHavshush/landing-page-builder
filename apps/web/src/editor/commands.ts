@@ -149,9 +149,9 @@ export const setPageTranslation =
   };
 
 export const setSiteTranslation =
-  (lang: string, field: "name" | "tagline" | "description" | "address" | "footer_text", value: string | undefined): Recipe =>
+  (lang: string, field: "name" | "tagline" | "description" | "address" | "footer_text" | "cta_label" | "announcement_text", value: string | undefined): Recipe =>
   (doc) => {
-    const bucket = (doc.site.i18n[lang] ??= { name: null, tagline: null, description: null, address: null, hours: null, footer_text: null });
+    const bucket = (doc.site.i18n[lang] ??= { name: null, tagline: null, description: null, address: null, hours: null, footer_text: null, cta_label: null, announcement_text: null });
     bucket[field] = value === undefined || value === "" ? null : value;
     if (Object.values(bucket).every((v) => v === null)) delete doc.site.i18n[lang];
   };

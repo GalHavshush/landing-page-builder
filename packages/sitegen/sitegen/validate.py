@@ -58,6 +58,19 @@ def check(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> list
                 "theme",
             )
         )
+    if doc.site.logo and not doc.site.logo.alt.strip():
+        issues.append(Issue("warning", "The logo has no alt text (use the business name)", "site"))
+    if doc.site.header.transparent and not any(
+        p.sections and p.sections[0].type == "hero" and p.sections[0].variant == "cover"
+        for p in doc.pages
+    ):
+        issues.append(
+            Issue(
+                "info",
+                "The transparent header only shows over a Cover hero at the top of a page",
+                "site",
+            )
+        )
     if not doc.pages:
         issues.append(Issue("warning", "The site has no pages", "site"))
     for page in doc.pages:

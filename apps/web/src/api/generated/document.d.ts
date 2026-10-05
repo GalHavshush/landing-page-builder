@@ -27,12 +27,30 @@ export type Page = string;
 export type Nav = NavItem[];
 export type Text = string;
 export type ShowBusinessInfo = boolean;
+export type Style = "columns" | "centered" | "minimal";
+export type Asset = string;
+export type Alt = string;
+export type X = number;
+export type Y = number;
+export type LogoSize = "small" | "medium" | "large";
+export type Style1 = "classic" | "centered" | "split";
+export type Sticky = boolean;
+export type Transparent = boolean;
+export type Label2 = string;
+export type Page1 = string | null;
+export type Url = string | null;
+export type Asset1 = string | null;
+export type Style2 = "primary" | "secondary" | "outline" | "link";
+export type Enabled = boolean;
+export type Text1 = string;
 export type Name1 = string | null;
 export type Tagline1 = string | null;
 export type Description = string | null;
 export type Address1 = string | null;
 export type Hours2 = Hours1[] | null;
 export type FooterText = string | null;
+export type CtaLabel = string | null;
+export type AnnouncementText = string | null;
 export type Template = string;
 export type Radius = "none" | "sm" | "md" | "lg" | "full";
 export type ButtonStyle = "solid" | "outline" | "soft";
@@ -53,15 +71,6 @@ export type Variant = "centered" | "split" | "cover" | "banner";
 export type Eyebrow = string;
 export type Heading = string;
 export type Subheading = string;
-export type Asset = string;
-export type Alt = string;
-export type X = number;
-export type Y = number;
-export type Label2 = string;
-export type Page2 = string | null;
-export type Url = string | null;
-export type Asset1 = string | null;
-export type Style = "primary" | "secondary" | "outline" | "link";
 export type Buttons = Button[];
 export type ImagePosition = "start" | "end";
 export type VideoUrl = string;
@@ -98,7 +107,7 @@ export type Icon =
     )
   | null;
 export type Title2 = string;
-export type Text1 = string;
+export type Text2 = string;
 export type Items = Feature[];
 export type Columns = 2 | 3 | 4;
 export type Id4 = string;
@@ -139,7 +148,7 @@ export type Period = string;
 export type Description3 = string;
 export type Features = string;
 export type Highlighted = boolean;
-export type CtaLabel = string;
+export type CtaLabel1 = string;
 export type Plans = Plan[];
 export type Id8 = string;
 export type Type7 = "faq";
@@ -153,7 +162,7 @@ export type Id9 = string;
 export type Type8 = "contact";
 export type Variant8 = "split" | "stacked";
 export type Heading8 = string;
-export type Text2 = string;
+export type Text3 = string;
 export type ShowBusinessInfo1 = boolean;
 export type ShowForm = boolean;
 export type SubmitLabel = string;
@@ -198,7 +207,7 @@ export type Title4 = string | null;
 export type Slug1 = string | null;
 export type SeoTitle = string | null;
 export type SeoDescription = string | null;
-export type Pages = Page1[];
+export type Pages = Page2[];
 
 export interface SiteDocument {
   schema_version: SchemaVersion;
@@ -216,6 +225,10 @@ export interface Site {
   seo: SiteSEO;
   nav: Nav;
   footer: Footer;
+  logo: ImageRef | null;
+  logo_size: LogoSize;
+  header: Header;
+  announcement: Announcement;
   i18n: I18N;
 }
 /**
@@ -253,6 +266,57 @@ export interface Labels {
 export interface Footer {
   text: Text;
   show_business_info: ShowBusinessInfo;
+  style: Style;
+}
+export interface ImageRef {
+  asset: Asset;
+  alt: Alt;
+  focus: Focus;
+}
+/**
+ * The part of an image that must stay visible when it is cropped (percent from top-left).
+ */
+export interface Focus {
+  x: X;
+  y: Y;
+}
+/**
+ * Top-of-page navigation bar.
+ */
+export interface Header {
+  style: Style1;
+  sticky: Sticky;
+  transparent: Transparent;
+  cta: Button | null;
+}
+export interface Button {
+  label: Label2;
+  href: Link;
+  style: Style2;
+}
+/**
+ * A link to a page of this site, an external URL, or an uploaded asset (exactly one).
+ */
+export interface Link {
+  page: Page1;
+  url: Url;
+  asset: Asset1;
+}
+/**
+ * A slim banner above the header: a sale, new opening hours, a booking deadline.
+ */
+export interface Announcement {
+  enabled: Enabled;
+  text: Text1;
+  link: Link1 | null;
+}
+/**
+ * A link to a page of this site, an external URL, or an uploaded asset (exactly one).
+ */
+export interface Link1 {
+  page: Page1;
+  url: Url;
+  asset: Asset1;
 }
 export interface I18N {
   [k: string]: SiteTranslation;
@@ -264,6 +328,8 @@ export interface SiteTranslation {
   address: Address1;
   hours: Hours2;
   footer_text: FooterText;
+  cta_label: CtaLabel;
+  announcement_text: AnnouncementText;
 }
 export interface Theme {
   template: Template;
@@ -290,7 +356,7 @@ export interface Fonts {
     | "heebo"
     | "rubik";
 }
-export interface Page1 {
+export interface Page2 {
   id: Id;
   slug: Slug;
   title: Title;
@@ -336,31 +402,6 @@ export interface HeroProps {
   overlay: Overlay;
   height: Height;
 }
-export interface ImageRef {
-  asset: Asset;
-  alt: Alt;
-  focus: Focus;
-}
-/**
- * The part of an image that must stay visible when it is cropped (percent from top-left).
- */
-export interface Focus {
-  x: X;
-  y: Y;
-}
-export interface Button {
-  label: Label2;
-  href: Link;
-  style: Style;
-}
-/**
- * A link to a page of this site, an external URL, or an uploaded asset (exactly one).
- */
-export interface Link {
-  page: Page2;
-  url: Url;
-  asset: Asset1;
-}
 export interface TextSection {
   id: Id2;
   style: SectionStyle;
@@ -400,7 +441,7 @@ export interface FeaturesProps {
 export interface Feature {
   icon: Icon;
   title: Title2;
-  text: Text1;
+  text: Text2;
 }
 export interface ServicesSection {
   id: Id4;
@@ -427,14 +468,6 @@ export interface Service {
   price: Price;
   image: ImageRef | null;
   link: Link1 | null;
-}
-/**
- * A link to a page of this site, an external URL, or an uploaded asset (exactly one).
- */
-export interface Link1 {
-  page: Page2;
-  url: Url;
-  asset: Asset1;
 }
 export interface GallerySection {
   id: Id5;
@@ -508,7 +541,7 @@ export interface Plan {
   description: Description3;
   features: Features;
   highlighted: Highlighted;
-  cta_label: CtaLabel;
+  cta_label: CtaLabel1;
   cta_link: Link1 | null;
 }
 export interface FaqSection {
@@ -548,7 +581,7 @@ export interface I18N9 {
 }
 export interface ContactProps {
   heading: Heading8;
-  text: Text2;
+  text: Text3;
   show_business_info: ShowBusinessInfo1;
   show_form: ShowForm;
   submit_label: SubmitLabel;

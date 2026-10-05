@@ -138,3 +138,37 @@ def test_a_mixed_edit_is_rejected_as_a_whole(old):
         d["theme"]["radius"] = "full"  # not allowed
 
     assert edit(old, mutate) == ["/theme/radius"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda d: d["site"]["header"].update(style="split"),
+        lambda d: d["site"]["header"].update(transparent=True),
+        lambda d: d["site"]["header"].update(
+            cta={"label": "Buy", "href": {"url": "https://x.example"}, "style": "primary"}
+        ),
+        lambda d: d["site"]["announcement"].update(enabled=True, text="Sale"),
+        lambda d: d["site"]["footer"].update(style="minimal"),
+        lambda d: d["site"].update(logo={"asset": "a1", "alt": "x", "focus": {"x": 50, "y": 50}}),
+        lambda d: d["site"].update(logo_size="large"),
+    ],
+)
+def test_branding_and_navigation_chrome_is_not_client_editable(old, mutate):
+    assert edit(old, mutate), "header, footer, logo and announcement belong to the designer"
+
+
+def test_clients_may_translate_the_cta_and_announcement_text(old):
+    def mutate(d):
+        d["site"]["i18n"]["he"] = {
+            "name": None,
+            "tagline": None,
+            "description": None,
+            "address": None,
+            "hours": None,
+            "footer_text": None,
+            "cta_label": "הזמינו",
+            "announcement_text": "מבצע",
+        }
+
+    assert edit(old, mutate) == []

@@ -183,6 +183,8 @@ class RenderContext:
             "address": pick("address", site.business.address),
             "hours": pick("hours", site.business.hours),
             "footer_text": pick("footer_text", site.footer.text),
+            "cta_label": pick("cta_label", site.header.cta.label if site.header.cta else ""),
+            "announcement_text": pick("announcement_text", site.announcement.text),
         }
 
     def nav(self) -> list[dict]:
@@ -247,6 +249,34 @@ class RenderContext:
             "iso_date": post.published_at.date().isoformat(),
         }
 
+    def header_view(self, first_section) -> dict:
+        """Everything the header/announcement markup needs, resolved for this page and language."""
+        site = self.doc.site
+        view = self.site_view()
+        cta = site.header.cta
+        cover = bool(
+            first_section and first_section.type == "hero" and first_section.variant == "cover"
+        )
+        # a light tint over the picture needs dark header text; everything else needs light text
+        light_overlay = cover and first_section.props.overlay == "light"
+        return {
+            "style": site.header.style,
+            "sticky": site.header.sticky,
+            "overlay": site.header.transparent and cover,
+            "tone": "dark" if light_overlay else "light",
+            "logo": self.image(site.logo) if site.logo else None,
+            "logo_size": site.logo_size,
+            "cta": {"label": view["cta_label"], "href": self.link(cta.href), "style": cta.style}
+            if cta and view["cta_label"]
+            else None,
+            "announcement": {
+                "text": view["announcement_text"],
+                "href": self.link(site.announcement.link) if site.announcement.link else None,
+            }
+            if site.announcement.enabled and view["announcement_text"]
+            else None,
+        }
+
     def md(self, source: str) -> Markup:
         """Markdown -> safe HTML. `asset:<id>` links/images resolve to uploaded files."""
 
@@ -283,6 +313,7 @@ def _render_layout(
     head: dict,
     preview: PreviewOptions | None,
     languages: list[dict],
+    first_section=None,
 ) -> str:
     plan = ctx.plan
     home = plan[(doc.pages[0].id, lang)] if doc.pages else ctx.out_path
@@ -297,6 +328,7 @@ def _render_layout(
             js_href=ctx.rel(JS_PATH),
             home_href=ctx.rel(home),
             site=ctx.site_view(),
+            header=ctx.header_view(first_section),
             nav=ctx.nav(),
             languages=languages,
             sections_html=sections_html,
@@ -363,13 +395,30 @@ def render_page(
         "noindex": page.seo.noindex or not is_real_page,
         "alternates": seo.alternates(doc, page, plan) if is_real_page else [],
         "og_type": "website",
-        "favicon": favicon_href(doc, site["name"]),
+        "favicon": favicon_href(doc, site["name"], ctx),
     }
-    return _render_layout(doc, lang, ctx, sections_html, head, preview, ctx.language_links())
+    return _render_layout(
+        doc,
+        lang,
+        ctx,
+        sections_html,
+        head,
+        preview,
+        ctx.language_links(),
+        first_section=page.sections[0] if page.sections else None,
+    )
 
 
-def favicon_href(doc: SiteDocument, site_name: str) -> str:
-    """An inline SVG favicon (site initial on the brand color): no extra file, no request."""
+def favicon_href(doc: SiteDocument, site_name: str, ctx: "RenderContext | None" = None) -> str:
+    """The favicon: the uploaded logo (its smallest copy) when there is one, otherwise an inline SVG
+    (site initial on the brand color) that needs no file and no request."""
+    if ctx and doc.site.logo and not ctx.preview:
+        asset = ctx.assets.get(doc.site.logo.asset)
+        if asset:
+            if asset.variants:
+                width = min(w for w, _ in asset.variants)
+                return ctx.rel(variant_output_path(doc.site.logo.asset, asset, width))
+            return ctx.rel(asset_output_path(doc.site.logo.asset, asset))
     primary = doc.theme.palette["primary"]
     letter = (site_name.strip()[:1] or "S").upper()
     svg = (
@@ -446,7 +495,7 @@ def render_post(
         "noindex": False,
         "alternates": alternates,
         "og_type": "article",
-        "favicon": favicon_href(doc, site["name"]),
+        "favicon": favicon_href(doc, site["name"], ctx),
     }
     return _render_layout(doc, lang, ctx, [wrapper], head, preview, languages)
 

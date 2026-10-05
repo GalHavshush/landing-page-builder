@@ -86,3 +86,14 @@ def test_small_images_are_flagged_for_where_they_are_used():
     assert not any(
         "blurry" in m for _, m in messages(doc, {"a1": AssetFile("x.webp", b"x", width=1300)})
     )
+
+
+def test_logo_alt_and_transparent_header_hints():
+    doc = load_starter("clean")
+    doc.site.logo = ImageRef(asset="a1", alt="")
+    doc.site.header.transparent = True
+    found = messages(doc)
+    assert ("warning", "The logo has no alt text (use the business name)") in found
+    assert any(level == "info" and "transparent header" in m for level, m in found)
+    doc.pages[0].sections[0].variant = "cover"
+    assert not any("transparent header" in m for _, m in messages(doc))
