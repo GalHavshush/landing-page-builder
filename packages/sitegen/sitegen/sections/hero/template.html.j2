@@ -1,9 +1,10 @@
+{% from "_macros.html.j2" import img as picture %}
 {% set img = ctx.image(p.image) %}
 {% if s.variant == "cover" %}
 {% set vid = ctx.youtube_id(p.video_url) if p.video_url else None %}
 <div class="hero-cover hc-{{ p.height }} ov-{{ p.overlay }}">
   <div class="cover-media" aria-hidden="true">
-    {% if img %}<img src="{{ img.src }}" alt=""{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %} fetchpriority="high">{% endif %}
+    {% if img %}{{ picture(img, "100vw", "", true, "") }}{% endif %}
     {% if vid %}<div class="cover-video" data-yt-bg="{{ vid }}"></div>{% endif %}
   </div>
   <div class="cover-scrim"></div>
@@ -33,7 +34,7 @@
     {% if p.buttons %}<div class="buttons">{% for b in p.buttons %}<a class="btn btn-{{ b.style }}" href="{{ ctx.link(b.href) }}">{{ b.label }}</a>{% endfor %}</div>{% endif %}
   </div>
 </div>
-{% if img %}<div class="hero-media hb-media"><img src="{{ img.src }}" alt="{{ img.alt }}"{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %}></div>{% endif %}
+{% if img %}<div class="hero-media hb-media">{{ picture(img, "(min-width:1200px) 1120px, 100vw", "", true) }}</div>{% endif %}
 {% else %}
 <div class="hero-grid{% if img and s.variant == 'split' %} has-image{% endif %}{% if p.image_position == 'start' %} image-start{% endif %}">
   <div class="hero-copy">
@@ -47,7 +48,7 @@
     {% endif %}
   </div>
   {% if img %}
-  <div class="hero-media"><img src="{{ img.src }}" alt="{{ img.alt }}"{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %}></div>
+  <div class="hero-media">{{ picture(img, "(min-width:860px) 50vw, 100vw", "", true) }}</div>
   {% endif %}
 </div>
 {% endif %}

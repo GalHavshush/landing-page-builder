@@ -47,7 +47,7 @@ export function PagePanel() {
       {!translating && (
         <>
           <ImageControl label="Social sharing image"
-            value={page.seo.social_image ? { asset: page.seo.social_image, alt: "" } : null}
+            value={page.seo.social_image ? { asset: page.seo.social_image, alt: "", focus: { x: 50, y: 50 } } : null}
             onChange={(v) => apply(updatePageSeo(page.id, { social_image: v?.asset ?? null }))} />
           {canEdit && <ToggleControl label="Hide this page from search engines" value={page.seo.noindex}
             onChange={(v) => apply(updatePageSeo(page.id, { noindex: v }))} />}

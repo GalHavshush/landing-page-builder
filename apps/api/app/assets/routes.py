@@ -53,6 +53,11 @@ def asset_out(a: Asset) -> AssetOut:
     )
 
 
+def delete_files(storage: Storage, asset: Asset) -> None:
+    for key in {asset.storage_key, asset.thumb_key, *(v["key"] for v in asset.variants or [])}:
+        storage.delete(key)
+
+
 def _clean_name(name: str) -> str:
     stem = PurePath(name or "image").stem
     return re.sub(r"[^a-zA-Z0-9._-]+", "-", stem).strip("-")[:80] or "image"
@@ -77,12 +82,13 @@ async def upload_asset(
     name = _clean_name(file.filename or "")
     token = secrets.token_urlsafe(16)  # unguessable: files are public by URL, like on a CDN
     base = f"p{access.project.id}/{token}"
+    variant_rows = [{"width": w, "key": f"{base}/{name}-{w}.webp"} for w, _ in processed.variants]
     asset = Asset(
         id=new_id("asset"),
         project_id=access.project.id,
         uploaded_by=access.user.id,
         storage_key=f"{base}/{name}.webp",
-        thumb_key=f"{base}/{name}-thumb.webp",
+        thumb_key=variant_rows[0]["key"] if variant_rows else f"{base}/{name}.webp",
         original_filename=f"{name}.webp",
         mime="image/webp",
         size_bytes=len(processed.main),
@@ -90,9 +96,12 @@ async def upload_asset(
         height=processed.height,
         sha256=hashlib.sha256(processed.main).hexdigest(),
         alt_default="",
+        variants=variant_rows,
+        color=processed.color,
     )
     storage.put(asset.storage_key, processed.main, "image/webp")
-    storage.put(asset.thumb_key, processed.thumb, "image/webp")
+    for (_, data), row in zip(processed.variants, variant_rows, strict=True):
+        storage.put(row["key"], data, "image/webp")
     db.add(asset)
     db.flush()
     return asset_out(asset)
@@ -138,8 +147,7 @@ def delete_asset(
     )
     if asset_id in json.dumps(access.project.draft_doc) or used_in_posts:
         raise HTTPException(409, "This image is used on the site. Remove it there first.")
-    storage.delete(asset.storage_key)
-    storage.delete(asset.thumb_key)
+    delete_files(storage, asset)
     db.delete(asset)
     return Response(status_code=204)
 

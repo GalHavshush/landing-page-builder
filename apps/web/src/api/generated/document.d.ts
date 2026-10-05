@@ -55,6 +55,8 @@ export type Heading = string;
 export type Subheading = string;
 export type Asset = string;
 export type Alt = string;
+export type X = number;
+export type Y = number;
 export type Label2 = string;
 export type Page2 = string | null;
 export type Url = string | null;
@@ -337,6 +339,14 @@ export interface HeroProps {
 export interface ImageRef {
   asset: Asset;
   alt: Alt;
+  focus: Focus;
+}
+/**
+ * The part of an image that must stay visible when it is cropped (percent from top-left).
+ */
+export interface Focus {
+  x: X;
+  y: Y;
 }
 export interface Button {
   label: Label2;

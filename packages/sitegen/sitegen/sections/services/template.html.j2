@@ -1,10 +1,10 @@
-{% from "_macros.html.j2" import head %}
+{% from "_macros.html.j2" import head, img as picture %}
 {{ head(p) }}
 <div class="grid cols-{{ p.columns }} svc-{{ s.variant }}">
   {% for it in p.items %}
   {% set img = ctx.image(it.image) %}
   <article class="item">
-    {% if img %}<img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy"{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %}>{% endif %}
+    {% if img %}{{ picture(img, "(min-width:960px) 370px, (min-width:600px) 50vw, 100vw") }}{% endif %}
     <div class="svc-body">
       <div class="svc-top"><h3>{{ it.title }}</h3>{% if it.price %}<span class="price">{{ it.price }}</span>{% endif %}</div>
       {% if it.description %}<p>{{ it.description }}</p>{% endif %}

@@ -52,7 +52,7 @@ export function PostSettings({
       </div>
       <TextAreaControl label="Summary" value={draft.excerpt ?? ""} onChange={(v) => update({ excerpt: v })}
         hint="Shown in lists and in search/social previews." />
-      <ImageControl label="Cover image" hideAlt value={draft.cover_asset_id ? { asset: draft.cover_asset_id, alt: "" } : null}
+      <ImageControl label="Cover image" hideAlt value={draft.cover_asset_id ? { asset: draft.cover_asset_id, alt: "", focus: { x: 50, y: 50 } } : null}
         onChange={(v) => update({ cover_asset_id: v?.asset ?? null })} />
       {doc.site.languages.length > 1 && (
         <div>

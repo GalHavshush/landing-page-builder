@@ -10,6 +10,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
 from app.assets.models import Asset
+from app.assets.routes import delete_files
 from app.assets.storage import Storage, get_storage
 from app.auth.deps import get_current_user
 from app.auth.models import User
@@ -106,8 +107,7 @@ def delete_project(
     """
     pid = access.project.id
     for asset in db.scalars(select(Asset).where(Asset.project_id == pid)):
-        storage.delete(asset.storage_key)
-        storage.delete(asset.thumb_key)
+        delete_files(storage, asset)
     for export in db.scalars(select(SiteExport).where(SiteExport.project_id == pid)):
         storage.delete(export.artifact_key)
     for model in (Asset, SiteExport, BlogPost, Invitation, ProjectMember):

@@ -19,7 +19,9 @@ def test_upload_returns_urls_and_dimensions(client, project):
     assert (body["width"], body["height"]) == (64, 48)
     assert body["filename"] == "My-Photo-1.webp"  # sanitised, extension reflects real format
     assert body["url"].startswith("/api/media/p")
-    assert body["thumb_url"] != body["url"]
+    assert body[
+        "thumb_url"
+    ]  # tiny pictures have no smaller copy, so the thumbnail is the file itself
 
 
 def test_uploaded_files_are_served_publicly_as_webp(client, project):
@@ -118,3 +120,30 @@ def test_other_users_cannot_use_the_library(client, project, db_session):
     assert upload(eve, project["id"], PNG).status_code == 404
     assert eve.get(f"/projects/{project['id']}/assets").status_code == 404
     assert eve.delete(f"/projects/{project['id']}/assets/{a['id']}").status_code == 404
+
+
+def test_exports_include_srcset_variants_and_placeholder_colour(client, project):
+    big = image_bytes("JPEG", (2000, 1000), mode="RGB")
+    a = upload(client, project["id"], big, name="wide.jpg", content_type="image/jpeg").json()
+    use_image(client, project["id"], a["id"])
+    _, z = export_zip(client, project["id"])
+    names = z.namelist()
+    assert any(n.endswith("-320w.webp") for n in names) and any(
+        n.endswith("-960w.webp") for n in names
+    )
+    html = z.read("index.html").decode()
+    assert " 320w," in html and " 2000w" in html and "background-color:#" in html
+
+
+def test_deleting_an_asset_removes_every_variant_file(client, project, storage):
+    a = upload(
+        client,
+        project["id"],
+        image_bytes("JPEG", (2000, 1000), mode="RGB"),
+        name="w.jpg",
+        content_type="image/jpeg",
+    ).json()
+    before = [f for f in storage.root.rglob("*") if f.is_file()]
+    assert len(before) == 5  # main + 320/640/960/1440
+    assert client.delete(f"/projects/{project['id']}/assets/{a['id']}").status_code == 204
+    assert [f for f in storage.root.rglob("*") if f.is_file()] == []

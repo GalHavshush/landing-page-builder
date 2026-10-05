@@ -6,3 +6,9 @@
 </div>
 {% endif %}
 {% endmacro %}
+
+{# A responsive <img>: srcset from the generated sizes, intrinsic size (no layout shift), a colour while
+   loading, and the author's focal point. `sizes` tells the browser how wide it will be drawn. #}
+{% macro img(i, sizes="100vw", cls="", eager=false, alt=none) -%}
+<img{% if cls %} class="{{ cls }}"{% endif %} src="{{ i.src }}"{% if i.srcset %} srcset="{{ i.srcset }}" sizes="{{ sizes }}"{% endif %} alt="{{ i.alt if alt is none else alt }}"{% if i.width %} width="{{ i.width }}" height="{{ i.height }}"{% endif %} decoding="async"{% if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %}{% if i.style %} style="{{ i.style }}"{% endif %}>
+{%- endmacro %}

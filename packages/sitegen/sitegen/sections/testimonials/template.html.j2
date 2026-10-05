@@ -1,4 +1,4 @@
-{% from "_macros.html.j2" import head %}
+{% from "_macros.html.j2" import head, img as picture %}
 {{ head(p) }}
 <div class="grid {% if s.variant in ('cards', 'columns') %}cols-3{% else %}cols-1 quotes{% endif %}">
   {% for it in p.items %}
@@ -6,7 +6,7 @@
   <figure class="item quote-item">
     <blockquote>{{ it.quote }}</blockquote>
     <figcaption>
-      {% if av %}<img class="avatar" src="{{ av.src }}" alt="{{ av.alt }}" loading="lazy">{% endif %}
+      {% if av %}{{ picture(av, "48px", "avatar") }}{% endif %}
       <span><strong>{{ it.author }}</strong>{% if it.role %}<br><small>{{ it.role }}</small>{% endif %}</span>
     </figcaption>
   </figure>

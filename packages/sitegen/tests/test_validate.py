@@ -71,3 +71,18 @@ def test_new_section_has_no_warnings():
         }
     )
     assert not [i for i in check(doc) if i.level == "warning"]
+
+
+def test_small_images_are_flagged_for_where_they_are_used():
+    doc = load_starter("clean")
+    hero = doc.pages[0].sections[0]
+    hero.variant = "cover"
+    hero.props.image = ImageRef(asset="a1", alt="x")
+    small = {"a1": AssetFile("x.webp", b"x", width=900, height=600)}
+    big = {"a1": AssetFile("x.webp", b"x", width=2200, height=1400)}
+    assert any("900px wide" in m and "1600" in m for _, m in messages(doc, small))
+    assert not any("blurry" in m for _, m in messages(doc, big))
+    hero.variant = "split"  # smaller on screen, so 900px is plenty
+    assert not any(
+        "blurry" in m for _, m in messages(doc, {"a1": AssetFile("x.webp", b"x", width=1300)})
+    )

@@ -15,6 +15,7 @@ from sitegen.renderer import (
     render_not_found,
     render_page,
     render_post,
+    variant_output_path,
 )
 from sitegen.schema import SiteDocument
 from sitegen.validate import check
@@ -75,4 +76,6 @@ def build(
     ]
     for asset_id, asset in assets.items():
         result.files[asset_output_path(asset_id, asset)] = asset.data
+        for width, data in asset.variants:
+            result.files[variant_output_path(asset_id, asset, width)] = data
     return result

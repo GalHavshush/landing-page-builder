@@ -3,7 +3,7 @@
 import hashlib
 import re
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import quote
@@ -38,6 +38,9 @@ class AssetFile:
     mime: str = "application/octet-stream"
     width: int | None = None
     height: int | None = None
+    # smaller copies of the same picture: [(width, data)], for srcset. `data` is the largest.
+    variants: list[tuple[int, bytes]] = field(default_factory=list)
+    color: str | None = None  # average colour, shown while the image loads
 
 
 @dataclass
@@ -136,15 +139,30 @@ class RenderContext:
         if asset is None and not self.preview:
             self.issues.append(Issue("warning", f"missing image asset {ref.asset!r}"))
             return None
+        srcset = ""
         if self.preview:
             src = self.preview.asset_url(ref.asset)
         else:
             src = self.rel(self.asset_path(ref.asset))
+            if asset.variants:
+                parts = [
+                    f"{self.rel(variant_output_path(ref.asset, asset, w))} {w}w"
+                    for w, _ in sorted(asset.variants)
+                ]
+                parts.append(f"{src} {asset.width}w")
+                srcset = ", ".join(parts)
+        style = []
+        if asset and asset.color:
+            style.append(f"background-color:{asset.color}")
+        if (ref.focus.x, ref.focus.y) != (50, 50):
+            style.append(f"object-position:{ref.focus.x}% {ref.focus.y}%")
         return {
             "src": src,
+            "srcset": srcset,
             "alt": ref.alt,
             "width": asset.width if asset else None,
             "height": asset.height if asset else None,
+            "style": ";".join(style),
         }
 
     def site_view(self) -> dict:
@@ -244,6 +262,11 @@ class RenderContext:
 
         source = re.sub(r"asset:(asset_[0-9a-f]+)", resolve, source or "")
         return Markup(render_markdown(source))  # noqa: S704 - sanitised by nh3
+
+
+def variant_output_path(asset_id: str, asset: AssetFile, width: int) -> str:
+    stem, dot, ext = asset_output_path(asset_id, asset).rpartition(".")
+    return f"{stem}-{width}w{dot}{ext}"
 
 
 def asset_output_path(asset_id: str, asset: AssetFile) -> str:

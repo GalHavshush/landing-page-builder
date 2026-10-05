@@ -18,11 +18,33 @@ def test_png_becomes_webp_and_keeps_alpha():
     assert (out.width, out.height) == (40, 30)
 
 
-def test_large_images_are_downscaled_and_thumbnailed():
+def test_large_images_are_downscaled_and_get_srcset_variants():
     out = process_image(image_bytes("JPEG", (3000, 1500), mode="RGB"))
-    assert max(decode(out.main).size) == 2400
-    assert max(decode(out.thumb).size) == 480
+    assert decode(out.main).size == (2400, 1200)
+    assert [w for w, _ in out.variants] == [320, 640, 960, 1440]
+    for width, data in out.variants:
+        assert decode(data).size[0] == width  # aspect ratio kept
+    assert out.thumb == out.variants[0][1]  # the 320px copy is the editor thumbnail
     assert (out.width, out.height) == (2400, 1200)
+    assert [len(d) for _, d in out.variants] == sorted(
+        len(d) for _, d in out.variants
+    )  # smaller is lighter
+
+
+def test_variants_are_only_made_for_widths_below_the_main_file():
+    out = process_image(image_bytes("PNG", (700, 400)))
+    assert [w for w, _ in out.variants] == [320, 640]
+    assert process_image(image_bytes("PNG", (300, 200))).variants == []
+
+
+def test_very_tall_images_are_height_limited():
+    out = process_image(image_bytes("PNG", (800, 9000), mode="RGB"))
+    assert out.height <= 3600
+
+
+def test_average_colour_is_reported_as_hex():
+    out = process_image(image_bytes("PNG", (50, 50), (200, 40, 40, 255)))
+    assert out.color == "#c82828"
 
 
 def test_small_images_are_not_upscaled():

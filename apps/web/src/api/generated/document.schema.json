@@ -548,6 +548,32 @@
       "title": "FeaturesSection",
       "type": "object"
     },
+    "Focus": {
+      "additionalProperties": false,
+      "description": "The part of an image that must stay visible when it is cropped (percent from top-left).",
+      "properties": {
+        "x": {
+          "default": 50,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "X",
+          "type": "integer"
+        },
+        "y": {
+          "default": 50,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Y",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "title": "Focus",
+      "type": "object"
+    },
     "Footer": {
       "additionalProperties": false,
       "properties": {
@@ -895,11 +921,15 @@
           "default": "",
           "title": "Alt",
           "type": "string"
+        },
+        "focus": {
+          "$ref": "#/$defs/Focus"
         }
       },
       "required": [
         "asset",
-        "alt"
+        "alt",
+        "focus"
       ],
       "title": "ImageRef",
       "type": "object"

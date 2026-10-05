@@ -1,11 +1,11 @@
-{% from "_macros.html.j2" import head %}
+{% from "_macros.html.j2" import head, img as picture %}
 {{ head(p) }}
 {% set items = ctx.blog_posts(p.limit) %}
 {% if items %}
 <div class="posts posts-{{ s.variant }}">
   {% for post in items %}
   <article class="post-card">
-    {% if p.show_cover and post.cover %}<a class="post-cover" href="{{ post.href }}" tabindex="-1" aria-hidden="true"><img src="{{ post.cover.src }}" alt="" loading="lazy"{% if post.cover.width %} width="{{ post.cover.width }}" height="{{ post.cover.height }}"{% endif %}></a>{% endif %}
+    {% if p.show_cover and post.cover %}<a class="post-cover" href="{{ post.href }}" tabindex="-1" aria-hidden="true">{{ picture(post.cover, "(min-width:900px) 380px, (min-width:600px) 50vw, 100vw", alt="") }}</a>{% endif %}
     <div class="post-body">
       <time datetime="{{ post.iso_date }}">{{ post.date }}</time>
       <h3><a href="{{ post.href }}">{{ post.title }}</a></h3>

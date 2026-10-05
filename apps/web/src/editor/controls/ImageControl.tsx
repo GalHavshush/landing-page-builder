@@ -9,6 +9,44 @@ import { FieldShell, type ControlProps } from "./basic";
 export interface ImageValue {
   asset: string;
   alt: string;
+  focus: { x: number; y: number };
+}
+
+/**
+ * Click or drag on the picture to say which part matters. When the image is cropped (a wide hero, a
+ * square card, a phone screen) that point stays in view.
+ */
+function FocusPicker({ src, focus, onChange }: { src: string; focus: { x: number; y: number }; onChange: (f: { x: number; y: number }) => void }) {
+  const set = (e: React.PointerEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const clamp = (n: number) => Math.round(Math.min(100, Math.max(0, n)));
+    onChange({ x: clamp(((e.clientX - r.left) / r.width) * 100), y: clamp(((e.clientY - r.top) / r.height) * 100) });
+  };
+  return (
+    <div>
+      <div className="field-label mb-1">Focus point</div>
+      <div
+        role="slider" aria-label="Focus point" aria-valuetext={`${focus.x}% across, ${focus.y}% down`} tabIndex={0}
+        className="relative cursor-crosshair touch-none select-none overflow-hidden rounded-md ring-1 ring-ink-200"
+        onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); set(e); }}
+        onPointerMove={(e) => e.buttons === 1 && set(e)}
+        onKeyDown={(e) => {
+          const step = e.shiftKey ? 10 : 2;
+          const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+          if (!d) return;
+          e.preventDefault();
+          onChange({ x: Math.min(100, Math.max(0, focus.x + d[0])), y: Math.min(100, Math.max(0, focus.y + d[1])) });
+        }}
+      >
+        <img src={src} alt="" draggable={false} className="block w-full" />
+        <span aria-hidden className="pointer-events-none absolute h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1.5px_rgb(0_0_0/0.55)]"
+          style={{ left: `${focus.x}%`, top: `${focus.y}%` }}>
+          <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+        </span>
+      </div>
+      <p className="mt-1.5 text-[12px] leading-snug text-ink-500">Cropping on cards, heroes and phones keeps this point in view.</p>
+    </div>
+  );
 }
 
 /** Image field: shows the chosen image, lets you pick/upload another, and edit its alt text. */
@@ -39,6 +77,9 @@ export function ImageControl({
         <Button type="button" variant="ghost" className="w-full" onClick={() => dialog.current?.showModal()}>
           {value ? "Change image" : "Choose image"}
         </Button>
+        {value && !hideAlt && current && (
+          <FocusPicker src={current.thumb_url} focus={value.focus ?? { x: 50, y: 50 }} onChange={(focus) => onChange({ ...value, focus })} />
+        )}
         {value && !hideAlt && (
           <div>
             <label className="block text-xs text-ink-500" htmlFor={`${label}-alt`}>
@@ -56,7 +97,7 @@ export function ImageControl({
         selected={value?.asset}
         onPick={(a) => {
           // keep the alt text if the user is just swapping the picture
-          onChange({ asset: a.id, alt: value?.alt || a.alt_default });
+          onChange({ asset: a.id, alt: value?.alt || a.alt_default, focus: value?.focus ?? { x: 50, y: 50 } });
           dialog.current?.close();
         }}
       />

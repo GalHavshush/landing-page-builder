@@ -64,9 +64,17 @@ class Link(Strict):
         return self
 
 
+class Focus(Strict):
+    """The part of an image that must stay visible when it is cropped (percent from top-left)."""
+
+    x: int = Field(50, ge=0, le=100)
+    y: int = Field(50, ge=0, le=100)
+
+
 class ImageRef(Strict):
     asset: str
     alt: str = ui("text", "")
+    focus: Focus = Field(default_factory=Focus)
 
 
 class Button(Strict):

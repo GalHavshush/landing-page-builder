@@ -60,6 +60,8 @@ def load_assets(
             mime=a.mime,
             width=a.width,
             height=a.height,
+            variants=[(v["width"], storage.get(v["key"])) for v in (a.variants or [])],
+            color=a.color or None,
         )
         for a in referenced_assets(db, project, doc, posts)
     }

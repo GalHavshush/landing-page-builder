@@ -233,3 +233,50 @@ def test_gallery_mosaic_and_blog_featured_and_hero_banner():
         and 'class="hb-head"' in banner
         and "hero-cover" not in banner
     )
+
+
+def test_images_get_srcset_placeholder_color_and_focus_point():
+    from sitegen.models import Focus
+
+    s = create_section("gallery")
+    s.props.items = [
+        GalleryItem(image=ImageRef(asset="a1", alt="Loaf", focus=Focus(x=20, y=80)), caption="")
+    ]
+    doc = SiteDocument.model_validate(
+        {
+            "site": {"name": "T"},
+            "pages": [{"id": "pg", "title": "A", "sections": [s.model_dump(mode="json")]}],
+        }
+    )
+    asset = AssetFile(
+        "loaf.webp",
+        b"big",
+        width=1600,
+        height=1000,
+        variants=[(480, b"s"), (960, b"m")],
+        color="#b07a4a",
+    )
+    files = build(doc, {"a1": asset}).files
+    html = files["index.html"].decode()
+    assert " 480w," in html and " 960w," in html and " 1600w" in html and "sizes=" in html
+    assert "background-color:#b07a4a" in html and "object-position:20% 80%" in html
+    assert 'width="1600" height="1000"' in html and 'decoding="async"' in html
+    variants = [p for p in files if p.startswith("assets/") and p.endswith("w.webp")]
+    assert len(variants) == 2  # the smaller copies are shipped next to the main file
+
+
+def test_images_without_variants_keep_a_plain_src():
+    s = create_section("gallery")
+    s.props.items = [GalleryItem(image=ImageRef(asset="a1", alt="Loaf"), caption="")]
+    doc = SiteDocument.model_validate(
+        {
+            "site": {"name": "T"},
+            "pages": [{"id": "pg", "title": "A", "sections": [s.model_dump(mode="json")]}],
+        }
+    )
+    html = (
+        build(doc, {"a1": AssetFile("loaf.webp", b"x", width=10, height=10)})
+        .files["index.html"]
+        .decode()
+    )
+    assert "srcset" not in html and "object-position" not in html

@@ -15,6 +15,10 @@ from sitegen.sections import REGISTRY
 from sitegen.theme import contrast_ratio
 
 MIN_CONTRAST = 4.5
+# Smallest comfortable picture width (px) for how large it is drawn. Below this it looks soft.
+MIN_IMAGE_WIDTH = {"hero": 1200, "gallery": 700, "services": 600, "blog_list": 600}
+MIN_IMAGE_WIDTH_DEFAULT = 500
+COVER_MIN_WIDTH = 1600  # a full-bleed hero is drawn at the whole screen width
 
 
 def _walk(value) -> Iterator[BaseModel]:
@@ -79,6 +83,20 @@ def _check_page(doc, page: Page, page_ids: set[str], assets) -> list[Issue]:
                     issues.append(Issue("warning", f"Missing image {node.asset!r}", sec_where))
                 if not node.alt.strip():
                     issues.append(Issue("warning", "Image has no alt text", sec_where))
+                file = assets.get(node.asset) if assets else None
+                if file and file.width:
+                    need = MIN_IMAGE_WIDTH.get(section.type, MIN_IMAGE_WIDTH_DEFAULT)
+                    if section.type == "hero" and section.variant in ("cover", "banner"):
+                        need = COVER_MIN_WIDTH
+                    if file.width < need:
+                        issues.append(
+                            Issue(
+                                "warning",
+                                f"This image is only {file.width}px wide; it may look blurry here "
+                                f"(try one at least {need}px wide)",
+                                sec_where,
+                            )
+                        )
             if isinstance(node, Link):
                 if node.page is not None and node.page not in page_ids:
                     issues.append(
