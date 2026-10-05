@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError } from "./client";
-import type { EditorMeta, Project, SiteDocument, User } from "./types";
+import type { Asset, EditorMeta, Project, SiteDocument, User } from "./types";
 
 export function useMe() {
   return useQuery({
@@ -69,3 +69,26 @@ export const useDocument = (id: number) =>
     staleTime: Infinity, // the editor store owns the document once loaded
     gcTime: 0,
   });
+
+export const useAssets = (projectId: number) =>
+  useQuery({ queryKey: ["assets", projectId], queryFn: () => api<Asset[]>(`/projects/${projectId}/assets`) });
+
+export function useUploadAsset(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => {
+      const form = new FormData();
+      form.append("file", file);
+      return api<Asset>(`/projects/${projectId}/assets`, { method: "POST", form });
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assets", projectId] }),
+  });
+}
+
+export function useDeleteAsset(projectId: number) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (assetId: string) => api<void>(`/projects/${projectId}/assets/${assetId}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assets", projectId] }),
+  });
+}

@@ -4,6 +4,7 @@ import type { SiteDocument } from "./generated/document";
 
 export type User = components["schemas"]["UserOut"];
 export type Project = components["schemas"]["ProjectOut"];
+export type Asset = components["schemas"]["AssetOut"];
 export type { SiteDocument };
 export type Page = SiteDocument["pages"][number];
 export type Section = Page["sections"][number];

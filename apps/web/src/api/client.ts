@@ -11,7 +11,7 @@ export class ApiError extends Error {
 
 export async function api<T>(
   path: string,
-  options: { method?: string; body?: unknown; raw?: boolean; signal?: AbortSignal } = {},
+  options: { method?: string; body?: unknown; form?: FormData; raw?: boolean; signal?: AbortSignal } = {},
 ): Promise<T> {
   const res = await fetch(`/api${path}`, {
     method: options.method ?? "GET",
@@ -19,9 +19,10 @@ export async function api<T>(
     signal: options.signal,
     headers: {
       "X-Requested-With": "builder",
+      // for FormData the browser sets the multipart Content-Type (with boundary) itself
       ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}),
     },
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+    body: options.form ?? (options.body !== undefined ? JSON.stringify(options.body) : undefined),
   });
   if (!res.ok) {
     let detail: unknown = res.statusText;
