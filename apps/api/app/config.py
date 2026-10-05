@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     cookie_secure: bool = False
     session_days: int = 14
     allow_registration: bool = True
+    rate_limit_enabled: bool = True
+    trust_proxy: bool = False  # honour X-Forwarded-For (only behind a proxy you control)
 
     # Uploaded files. "local" writes under storage_path (dev); "s3" uses any S3-compatible
     # service (MinIO locally, Cloudflare R2 / AWS S3 in production).

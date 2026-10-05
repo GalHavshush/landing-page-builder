@@ -8,11 +8,14 @@ from app.auth.schemas import Credentials, RegisterRequest, UserOut
 from app.auth.security import hash_password, verify_password
 from app.config import get_settings
 from app.db import get_db
+from app.ratelimit import limit_login, limit_register
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/register", response_model=UserOut, status_code=201)
+@router.post(
+    "/register", response_model=UserOut, status_code=201, dependencies=[Depends(limit_register)]
+)
 def register(body: RegisterRequest, response: Response, db: Session = Depends(get_db)):
     if not get_settings().allow_registration:
         raise HTTPException(403, "Registration is closed")
@@ -25,7 +28,7 @@ def register(body: RegisterRequest, response: Response, db: Session = Depends(ge
     return user
 
 
-@router.post("/login", response_model=UserOut)
+@router.post("/login", response_model=UserOut, dependencies=[Depends(limit_login)])
 def login(body: Credentials, response: Response, db: Session = Depends(get_db)):
     user = db.scalar(select(User).where(User.email == body.email))
     if not verify_password(user.password_hash if user else None, body.password):

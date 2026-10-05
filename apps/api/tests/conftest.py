@@ -32,6 +32,17 @@ def db_session():
     engine.dispose()
 
 
+@pytest.fixture(autouse=True)
+def _no_rate_limits(monkeypatch):
+    """Most tests sign up many users from one fake IP; rate limiting has its own tests."""
+    from app.config import get_settings
+    from app.ratelimit import login_limiter, register_limiter
+
+    monkeypatch.setattr(get_settings(), "rate_limit_enabled", False)
+    login_limiter.reset()
+    register_limiter.reset()
+
+
 @pytest.fixture
 def storage(tmp_path):
     return LocalStorage(str(tmp_path / "uploads"))

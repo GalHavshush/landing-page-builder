@@ -1,3 +1,7 @@
+import logging
+import time
+import uuid
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -12,9 +16,11 @@ from app.projects.output import router as output_router
 from app.projects.routes import router as projects_router
 
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
+log = logging.getLogger("builder")
 
 
 def create_app() -> FastAPI:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     app = FastAPI(title="Website Builder API")
     app.add_middleware(
         CORSMiddleware,
@@ -35,6 +41,36 @@ def create_app() -> FastAPI:
         ):
             return JSONResponse({"detail": "Missing X-Requested-With header"}, status_code=403)
         return await call_next(request)
+
+    @app.middleware("http")
+    async def observe_and_harden(request: Request, call_next):
+        """Request id + access log + a safe 500 + baseline security headers on every response."""
+        request_id = request.headers.get("x-request-id") or uuid.uuid4().hex[:12]
+        started = time.perf_counter()
+        try:
+            response = await call_next(request)
+        except Exception:
+            # never leak internals to the client; the id lets you find the stack trace in the log
+            log.exception(
+                "unhandled error request_id=%s %s %s", request_id, request.method, request.url.path
+            )
+            response = JSONResponse(
+                {"detail": "Something went wrong on our side.", "request_id": request_id},
+                status_code=500,
+            )
+        response.headers["X-Request-ID"] = request_id
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "same-origin"
+        response.headers["X-Frame-Options"] = "DENY"
+        log.info(
+            "%s %s -> %s %.0fms request_id=%s",
+            request.method,
+            request.url.path,
+            response.status_code,
+            (time.perf_counter() - started) * 1000,
+            request_id,
+        )
+        return response
 
     app.include_router(auth_router)
     app.include_router(projects_router)
