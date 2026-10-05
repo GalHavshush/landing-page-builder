@@ -3,8 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ title }}</title>
-{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+<title>{{ head.title }}</title>
+{% if head.description %}<meta name="description" content="{{ head.description }}">{% endif %}
+{% if head.noindex %}<meta name="robots" content="noindex">{% endif %}
+{% if head.canonical %}<link rel="canonical" href="{{ head.canonical }}">{% endif %}
+{% for hreflang, url in head.alternates %}<link rel="alternate" hreflang="{{ hreflang }}" href="{{ url }}">
+{% endfor %}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ head.title }}">
+{% if head.description %}<meta property="og:description" content="{{ head.description }}">{% endif %}
+{% if head.canonical %}<meta property="og:url" content="{{ head.canonical }}">{% endif %}
+<meta property="og:site_name" content="{{ site.name }}">
+{% if head.image %}<meta property="og:image" content="{{ head.image }}">{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if head.image else 'summary' }}">
 <link rel="stylesheet" href="{{ css_href }}">
 <script src="{{ js_href }}" defer></script>
 </head>

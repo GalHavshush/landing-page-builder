@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "site": {
+    "name": "Northside Studio",
+    "tagline": "Thoughtful design for growing businesses",
+    "default_language": "en",
+    "languages": ["en"],
+    "base_url": "",
+    "business": {
+      "phone": "+1 555 0100",
+      "email": "hello@example.com",
+      "address": "12 Main Street, Springfield",
+      "hours": [{"label": "Mon-Fri", "open": "09:00", "close": "17:00"}, {"label": "Sat-Sun", "closed": true}],
+      "social": {}
+    },
+    "seo": {"title_template": "{page} | {site}", "default_description": "Thoughtful design for growing businesses."},
+    "nav": [
+      {"label": "Home", "page": "pg_home"},
+      {"label": "Services", "page": "pg_services"},
+      {"label": "About", "page": "pg_about"}
+    ],
+    "footer": {"text": "", "show_business_info": true}
+  },
+  "theme": {
+    "template": "clean",
+    "palette": {"primary": "#2563EB", "accent": "#F59E0B", "background": "#FFFFFF", "surface": "#F3F4F6", "text": "#111827"},
+    "fonts": {"heading": "sans", "body": "sans"},
+    "radius": "md", "button_style": "solid", "spacing": "normal"
+  },
+  "pages": [
+    {
+      "id": "pg_home", "slug": "", "title": "Home",
+      "sections": [
+        {"id": "sec_home_hero", "type": "hero", "variant": "centered",
+         "style": {"background": "alt", "spacing": "spacious", "align": "center"},
+         "props": {"eyebrow": "Welcome", "heading": "We help your business look its best",
+                   "subheading": "Simple, reliable services delivered with care. Tell us what you need and we will take it from there.",
+                   "buttons": [{"label": "Our services", "href": {"page": "pg_services"}}, {"label": "About us", "href": {"page": "pg_about"}, "style": "outline"}]}},
+        {"id": "sec_home_features", "type": "features", "variant": "cards", "style": {},
+         "props": {"heading": "Why choose us", "subheading": "A few things we do really well.",
+                   "items": [{"icon": "star", "title": "Quality", "text": "Made with care, every time."},
+                             {"icon": "clock", "title": "Fast", "text": "Quick turnaround you can rely on."},
+                             {"icon": "heart", "title": "Friendly", "text": "We treat every customer like family."}]}},
+        {"id": "sec_home_testimonials", "type": "testimonials", "variant": "cards", "style": {"background": "alt"},
+         "props": {"heading": "What customers say",
+                   "items": [{"quote": "Absolutely wonderful. Highly recommended!", "author": "Alex P.", "role": "Customer"},
+                             {"quote": "Great service and lovely people.", "author": "Sam R.", "role": "Customer"}]}}
+      ]
+    },
+    {
+      "id": "pg_services", "slug": "services", "title": "Services",
+      "sections": [
+        {"id": "sec_services_list", "type": "services", "variant": "cards", "style": {},
+         "props": {"heading": "Our services", "subheading": "Clear pricing, no surprises.",
+                   "items": [{"title": "Consultation", "description": "Tell us what you need.", "price": "$50"},
+                             {"title": "Standard package", "description": "Our most popular option.", "price": "$150"},
+                             {"title": "Premium package", "description": "Everything included.", "price": "$300"}]}},
+        {"id": "sec_services_faq", "type": "faq", "variant": "accordion", "style": {"background": "alt"},
+         "props": {"heading": "Questions", "items": [{"question": "How do I get started?", "answer": "Just get in touch and we will help."},
+                                                      {"question": "Do you offer refunds?", "answer": "Yes, within 30 days."}]}}
+      ]
+    },
+    {
+      "id": "pg_about", "slug": "about", "title": "About",
+      "seo": {"description": "Learn more about our story."},
+      "sections": [
+        {"id": "sec_about_text", "type": "text", "variant": "single", "style": {},
+         "props": {"heading": "Our story", "body": "We started with a simple idea: do good work and treat people well.\n\nToday we help customers across the region."}}
+      ]
+    }
+  ]
+}

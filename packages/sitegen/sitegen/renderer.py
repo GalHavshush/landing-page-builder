@@ -7,11 +7,11 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from markupsafe import Markup
 
-from sitegen import paths, strings
+from sitegen import paths, seo, strings
 from sitegen.icons import render_icon
 from sitegen.markdown import render_markdown
-from sitegen.models import ImageRef, Link
-from sitegen.schema import Page, SiteDocument, language_dir
+from sitegen.models import Button, ImageRef, Link
+from sitegen.schema import SEO, Page, SiteDocument, language_dir
 from sitegen.sections import REGISTRY
 from sitegen.sections.base import SECTIONS_DIR
 
@@ -63,13 +63,25 @@ def localized_props(section, lang: str, default_lang: str):
 class RenderContext:
     """Per-page helpers exposed to templates as `ctx`."""
 
-    def __init__(self, doc: SiteDocument, lang: str, out_path: str, assets, issues: list[Issue]):
+    def __init__(
+        self,
+        doc: SiteDocument,
+        lang: str,
+        out_path: str,
+        assets,
+        issues: list[Issue],
+        absolute: bool = False,
+    ):
         self.doc = doc
         self.lang = lang
         self.out_path = out_path
         self.assets = assets
         self.issues = issues
         self.plan = paths.plan_pages(doc)
+        self.absolute = absolute  # root-relative URLs (needed for 404.html, served at any depth)
+
+    def rel(self, target: str) -> str:
+        return "/" + target if self.absolute else paths.relative(self.out_path, target)
 
     def asset_path(self, asset_id: str) -> str | None:
         asset = self.assets.get(asset_id)
@@ -85,12 +97,12 @@ class RenderContext:
             if target is None:
                 self.issues.append(Issue("warning", f"link to unknown page {link.page!r}"))
                 return "#"
-            return paths.relative(self.out_path, target)
+            return self.rel(target)
         path = self.asset_path(link.asset)
         if path is None:
             self.issues.append(Issue("warning", f"link to missing asset {link.asset!r}"))
             return "#"
-        return paths.relative(self.out_path, path)
+        return self.rel(path)
 
     def image(self, ref: ImageRef | None) -> dict | None:
         if ref is None:
@@ -101,7 +113,7 @@ class RenderContext:
             return None
         asset = self.assets[ref.asset]
         return {
-            "src": paths.relative(self.out_path, path),
+            "src": self.rel(path),
             "alt": ref.alt,
             "width": asset.width,
             "height": asset.height,
@@ -136,7 +148,7 @@ class RenderContext:
             items.append(
                 {
                     "label": item.labels.get(self.lang, item.label),
-                    "href": paths.relative(self.out_path, target),
+                    "href": self.rel(target),
                     "current": target == self.out_path,
                 }
             )
@@ -167,10 +179,15 @@ def render_page(
     lang: str,
     assets: dict[str, AssetFile],
     issues: list[Issue],
+    *,
+    out_path: str | None = None,
+    absolute: bool = False,
 ) -> str:
+    """Render one page in one language. `out_path`/`absolute` are for synthetic pages (404)."""
     env = get_env()
-    out_path = paths.plan_pages(doc)[(page.id, lang)]
-    ctx = RenderContext(doc, lang, out_path, assets, issues)
+    plan = paths.plan_pages(doc)
+    out_path = out_path or plan[(page.id, lang)]
+    ctx = RenderContext(doc, lang, out_path, assets, issues, absolute=absolute)
     wrapper = env.get_template("_section.html.j2")
     sections_html = [
         wrapper.render(
@@ -180,20 +197,60 @@ def render_page(
         )
         for section in page.sections
     ]
-    tr = page.i18n.get(lang)
     site = ctx.site_view()
-    home = paths.plan_pages(doc)[(doc.pages[0].id, lang)] if doc.pages else out_path
+    is_real_page = (page.id, lang) in plan
+    social_id = page.seo.social_image or doc.site.seo.social_image
+    social_path = ctx.asset_path(social_id) if social_id else None
+    head = {
+        "title": seo.page_title(doc, page, lang, site["name"], site["tagline"])
+        if doc.pages
+        else page.title,
+        "description": seo.page_description(doc, page, lang, site["description"]),
+        "canonical": seo.public_url(doc, out_path) if is_real_page else None,
+        "image": f"{doc.site.base_url}/{social_path}"
+        if social_path and doc.site.base_url
+        else None,
+        "noindex": page.seo.noindex or not is_real_page,
+        "alternates": seo.alternates(doc, page, plan) if is_real_page else [],
+    }
+    home = plan[(doc.pages[0].id, lang)] if doc.pages else out_path
     return env.get_template("layout.html.j2").render(
         lang=lang,
         dir=language_dir(lang),
-        title=(tr.title if tr and tr.title else page.title),
-        description=site["description"],
-        css_href=paths.relative(out_path, CSS_PATH),
-        js_href=paths.relative(out_path, JS_PATH),
-        home_href=paths.relative(out_path, home),
+        head=head,
+        css_href=ctx.rel(CSS_PATH),
+        js_href=ctx.rel(JS_PATH),
+        home_href=ctx.rel(home),
         site=site,
         nav=ctx.nav(),
         sections_html=sections_html,
         doc=doc,
         ctx=ctx,
     )
+
+
+def render_not_found(doc: SiteDocument, assets, issues: list[Issue]) -> str:
+    """404.html: root-relative URLs because hosts serve it at whatever path was requested."""
+    from sitegen.sections import create_section
+
+    lang = doc.site.default_language
+    hero = create_section("hero")
+    hero.variant = "centered"
+    hero.style.align = "center"
+    hero.style.spacing = "spacious"
+    hero.props.heading = strings.get(lang, "not_found_title")
+    hero.props.subheading = strings.get(lang, "not_found_text")
+    hero.props.buttons = []
+    if doc.pages:
+        hero.props.buttons = [
+            Button(label=strings.get(lang, "back_home"), href=Link(page=doc.pages[0].id))
+        ]
+    page = Page.model_construct(
+        id="pg_404",
+        slug="404",
+        title=hero.props.heading,
+        seo=SEO(noindex=True),
+        sections=[hero],
+        i18n={},
+    )
+    return render_page(doc, page, lang, assets, issues, out_path="404.html", absolute=True)

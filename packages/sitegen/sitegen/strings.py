@@ -4,58 +4,89 @@ Anything a user can type lives in the document; this is only text the generator 
 Unknown languages fall back to English.
 """
 
+KEYS = (
+    "skip",
+    "learn_more",
+    "contact",
+    "hours",
+    "closed",
+    "menu",
+    "not_found_title",
+    "not_found_text",
+    "back_home",
+)
+
 STRINGS = {
-    "en": {
-        "skip": "Skip to content",
-        "learn_more": "Learn more",
-        "contact": "Contact",
-        "hours": "Hours",
-        "closed": "Closed",
-        "menu": "Menu",
-    },
-    "he": {
-        "skip": "דלג לתוכן",
-        "learn_more": "למידע נוסף",
-        "contact": "צור קשר",
-        "hours": "שעות פעילות",
-        "closed": "סגור",
-        "menu": "תפריט",
-    },
-    "es": {
-        "skip": "Saltar al contenido",
-        "learn_more": "Más información",
-        "contact": "Contacto",
-        "hours": "Horario",
-        "closed": "Cerrado",
-        "menu": "Menú",
-    },
-    "de": {
-        "skip": "Zum Inhalt springen",
-        "learn_more": "Mehr erfahren",
-        "contact": "Kontakt",
-        "hours": "Öffnungszeiten",
-        "closed": "Geschlossen",
-        "menu": "Menü",
-    },
-    "fr": {
-        "skip": "Aller au contenu",
-        "learn_more": "En savoir plus",
-        "contact": "Contact",
-        "hours": "Horaires",
-        "closed": "Fermé",
-        "menu": "Menu",
-    },
-    "ar": {
-        "skip": "انتقل إلى المحتوى",
-        "learn_more": "اعرف المزيد",
-        "contact": "اتصل بنا",
-        "hours": "ساعات العمل",
-        "closed": "مغلق",
-        "menu": "القائمة",
-    },
+    "en": (
+        "Skip to content",
+        "Learn more",
+        "Contact",
+        "Hours",
+        "Closed",
+        "Menu",
+        "Page not found",
+        "The page you are looking for does not exist.",
+        "Back to home",
+    ),
+    "he": (
+        "דלג לתוכן",
+        "למידע נוסף",
+        "צור קשר",
+        "שעות פעילות",
+        "סגור",
+        "תפריט",
+        "הדף לא נמצא",
+        "הדף שחיפשת אינו קיים.",
+        "חזרה לדף הבית",
+    ),
+    "es": (
+        "Saltar al contenido",
+        "Más información",
+        "Contacto",
+        "Horario",
+        "Cerrado",
+        "Menú",
+        "Página no encontrada",
+        "La página que buscas no existe.",
+        "Volver al inicio",
+    ),
+    "de": (
+        "Zum Inhalt springen",
+        "Mehr erfahren",
+        "Kontakt",
+        "Öffnungszeiten",
+        "Geschlossen",
+        "Menü",
+        "Seite nicht gefunden",
+        "Die gesuchte Seite existiert nicht.",
+        "Zur Startseite",
+    ),
+    "fr": (
+        "Aller au contenu",
+        "En savoir plus",
+        "Contact",
+        "Horaires",
+        "Fermé",
+        "Menu",
+        "Page introuvable",
+        "La page que vous cherchez n'existe pas.",
+        "Retour à l'accueil",
+    ),
+    "ar": (
+        "انتقل إلى المحتوى",
+        "اعرف المزيد",
+        "اتصل بنا",
+        "ساعات العمل",
+        "مغلق",
+        "القائمة",
+        "الصفحة غير موجودة",
+        "الصفحة التي تبحث عنها غير موجودة.",
+        "العودة إلى الرئيسية",
+    ),
 }
+_TABLES = {lang: dict(zip(KEYS, values, strict=True)) for lang, values in STRINGS.items()}
 
 
 def get(lang: str, key: str) -> str:
-    table = STRINGS.get(lang) or STRINGS.get(lang.split("-")[0]) or STRINGS["en"]
-    return table.get(key) or STRINGS["en"][key]
+    table = _TABLES.get(lang) or _TABLES.get(lang.split("-")[0]) or _TABLES["en"]
+    return table[key]

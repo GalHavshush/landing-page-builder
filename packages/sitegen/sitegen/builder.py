@@ -3,13 +3,14 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from sitegen import paths
+from sitegen import paths, seo
 from sitegen.renderer import (
     CSS_PATH,
     JS_PATH,
     AssetFile,
     Issue,
     asset_output_path,
+    render_not_found,
     render_page,
 )
 from sitegen.schema import SiteDocument
@@ -33,6 +34,15 @@ def build(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> Buil
         for lang in doc.site.languages:
             html = render_page(doc, page, lang, assets, result.issues)
             result.files[plan[(page.id, lang)]] = html.encode()
+    result.files["404.html"] = render_not_found(doc, assets, result.issues).encode()
+    result.files["robots.txt"] = seo.robots_txt(doc).encode()
+    sitemap = seo.sitemap_xml(doc)
+    if sitemap:
+        result.files["sitemap.xml"] = sitemap.encode()
+    else:
+        result.issues.append(
+            Issue("warning", "No base_url set: sitemap.xml, canonical and og:image were skipped")
+        )
     used = {s.type for page in doc.pages for s in page.sections}
     css = [theme_css(doc.theme), (STATIC / "base.css").read_text()]
     css += [REGISTRY[t].css() for t in sorted(used)]  # only CSS for sections actually used
