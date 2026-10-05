@@ -7,3 +7,4 @@ dist/
 out/
 node_modules/
 .env
+apps/api/data/

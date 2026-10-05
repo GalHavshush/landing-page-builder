@@ -48,4 +48,5 @@ def project_access(action: str):
 VIEW = Depends(project_access("view"))
 RENAME = Depends(project_access("rename"))
 EDIT_STRUCTURE = Depends(project_access("edit_structure"))
+EDIT_CONTENT = Depends(project_access("edit_content"))
 DELETE = Depends(project_access("delete_project"))

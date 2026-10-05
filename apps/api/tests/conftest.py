@@ -1,5 +1,6 @@
 import pytest
 from app import models  # noqa: F401  (registers tables on Base.metadata)
+from app.assets.storage import LocalStorage, get_storage
 from app.db import Base, get_db
 from app.main import create_app
 from fastapi.testclient import TestClient
@@ -22,7 +23,12 @@ def db_session():
 
 
 @pytest.fixture
-def client(db_session):
+def storage(tmp_path):
+    return LocalStorage(str(tmp_path / "uploads"))
+
+
+@pytest.fixture
+def client(db_session, storage):
     app = create_app()
 
     def override_get_db():
@@ -34,5 +40,6 @@ def client(db_session):
             raise
 
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_storage] = lambda: storage
     with TestClient(app, base_url="http://localhost", headers={"X-Requested-With": "builder"}) as c:
         yield c

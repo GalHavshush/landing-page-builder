@@ -8,3 +8,26 @@ def make_project(client, name="Rosa Bakery", template="clean"):
     r = client.post("/projects", json={"name": name, "template": template})
     assert r.status_code == 201, r.text
     return r.json()
+
+
+def image_bytes(
+    fmt="PNG", size=(40, 30), color=(200, 40, 40, 255), mode="RGBA", exif_orientation=None
+):
+    import io
+
+    from PIL import Image
+
+    img = Image.new(mode, size, color if mode == "RGBA" else color[:3])
+    out = io.BytesIO()
+    kwargs = {}
+    if exif_orientation:
+        exif = Image.Exif()
+        exif[0x0112] = exif_orientation
+        exif[0x010F] = "SecretCameraMaker"  # metadata that must not survive
+        kwargs["exif"] = exif
+    img.save(out, fmt, **kwargs)
+    return out.getvalue()
+
+
+def upload(client, project_id, data, name="photo.png", content_type="image/png"):
+    return client.post(f"/projects/{project_id}/assets", files={"file": (name, data, content_type)})

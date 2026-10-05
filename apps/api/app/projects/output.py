@@ -6,10 +6,12 @@ from sitegen.meta import editor_meta
 from sitegen.preview import render_preview
 from sqlalchemy.orm import Session
 
+from app.assets.storage import Storage, get_storage
 from app.auth.deps import get_current_user
 from app.auth.models import User
+from app.config import get_settings
 from app.db import get_db
-from app.projects.build import build_project, load_assets
+from app.projects.build import build_project, preview_assets
 from app.projects.deps import VIEW, Access
 from app.projects.routes import parse_document
 from app.projects.schemas import PreviewIn, PreviewOut
@@ -32,13 +34,17 @@ def get_editor_meta(_: User = Depends(get_current_user)) -> dict:
 def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db)):
     """Render a page of the document the editor currently holds (not necessarily saved yet)."""
     doc = parse_document(body.doc)
+    known = preview_assets(db, access.project)
+    prefix = get_settings().media_url_prefix
     try:
         result = render_preview(
             doc,
             body.page_id,
             body.lang,
-            asset_url=lambda asset_id: f"/media/{asset_id}",
-            assets=load_assets(db, access.project),
+            asset_url=lambda asset_id: (
+                f"{prefix}/{known[asset_id][1]}" if asset_id in known else ""
+            ),
+            assets={asset_id: file for asset_id, (file, _) in known.items()},
         )
     except KeyError as exc:
         raise HTTPException(404, f"Unknown page or language: {exc.args[0]}") from exc
@@ -46,11 +52,15 @@ def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db
 
 
 @router.post("/projects/{project_id}/export")
-def export_zip(access: Access = VIEW, db: Session = Depends(get_db)):
+def export_zip(
+    access: Access = VIEW,
+    db: Session = Depends(get_db),
+    storage: Storage = Depends(get_storage),
+):
     """Build the saved draft and return it as a ZIP: plain static files, deployable anywhere."""
     project = access.project
     doc = parse_document(project.draft_doc)
-    result = build_project(db, project, doc)
+    result = build_project(db, project, doc, storage)
     data = make_zip(result.files, doc)
     filename = re.sub(r"[^a-z0-9-]", "", project.slug) or "site"
     return Response(
