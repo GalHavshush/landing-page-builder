@@ -1,0 +1,11 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<div class="grid cols-{{ p.columns }}">
+  {% for it in p.items %}
+  <div class="item">
+    {% if it.icon %}<div class="icon-wrap">{{ ctx.icon(it.icon) }}</div>{% endif %}
+    {% if it.title %}<h3>{{ it.title }}</h3>{% endif %}
+    {% if it.text %}<p>{{ it.text }}</p>{% endif %}
+  </div>
+  {% endfor %}
+</div>

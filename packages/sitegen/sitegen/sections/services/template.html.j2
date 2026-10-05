@@ -1,0 +1,15 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<div class="grid cols-{{ p.columns }} svc-{{ s.variant }}">
+  {% for it in p.items %}
+  {% set img = ctx.image(it.image) %}
+  <article class="item">
+    {% if img %}<img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy"{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %}>{% endif %}
+    <div class="svc-body">
+      <div class="svc-top"><h3>{{ it.title }}</h3>{% if it.price %}<span class="price">{{ it.price }}</span>{% endif %}</div>
+      {% if it.description %}<p>{{ it.description }}</p>{% endif %}
+      {% if it.link %}<a href="{{ ctx.link(it.link) }}">{{ ctx.t("learn_more") }}</a>{% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</div>

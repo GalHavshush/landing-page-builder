@@ -1,0 +1,11 @@
+.quote-item{margin:0}
+.s-testimonials--cards .quote-item{background:var(--card);border:1px solid var(--line);border-radius:calc(var(--radius)*1.4);padding:1.75rem}
+.quote-item blockquote{margin:0 0 1.25rem;font-size:1.1rem}
+.quote-item blockquote::before{content:"\201C";display:block;font-family:var(--font-heading);font-size:3rem;line-height:.6;color:var(--color-accent)}
+.s-testimonials--quote blockquote{font-size:clamp(1.3rem,2.6vw,1.9rem);font-family:var(--font-heading);line-height:1.35}
+.s-testimonials--quote .quotes{max-width:48rem}
+.al-center.s-testimonials--quote .quotes{margin-inline:auto}
+.quote-item figcaption{display:flex;align-items:center;gap:.75rem;color:var(--muted)}
+.al-center .quote-item figcaption{justify-content:center}
+.quote-item figcaption strong{color:inherit}
+.avatar{width:3rem;height:3rem;border-radius:50%;object-fit:cover}

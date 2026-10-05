@@ -1,0 +1,10 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<div class="faq">
+  {% for it in p.items %}
+  <details>
+    <summary>{{ it.question }}</summary>
+    <div class="prose">{{ ctx.md(it.answer) }}</div>
+  </details>
+  {% endfor %}
+</div>

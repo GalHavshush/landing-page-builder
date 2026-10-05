@@ -1,0 +1,8 @@
+{% macro head(p) %}
+{% if p.heading or p.subheading %}
+<div class="section-head">
+  {% if p.heading %}<h2>{{ p.heading }}</h2>{% endif %}
+  {% if p.subheading %}<p>{{ p.subheading }}</p>{% endif %}
+</div>
+{% endif %}
+{% endmacro %}

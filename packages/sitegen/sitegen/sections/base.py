@@ -19,6 +19,7 @@ class SectionDef:
     label: str
     section_model: type[BaseSection]
     props_model: type[BaseModel]
+    defaults: dict | None = None  # starter props for a newly added section
 
     @property
     def folder(self) -> Path:
@@ -31,6 +32,10 @@ class SectionDef:
     def css(self) -> str:
         path = self.folder / "style.css"
         return path.read_text() if path.exists() else ""
+
+    def create(self) -> BaseSection:
+        """A fresh section of this type with starter content and a new id."""
+        return self.section_model(props=self.props_model.model_validate(self.defaults or {}))
 
     @property
     def translatable(self) -> set[str]:

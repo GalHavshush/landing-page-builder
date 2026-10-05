@@ -7,7 +7,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from markupsafe import Markup
 
-from sitegen import paths
+from sitegen import paths, strings
+from sitegen.icons import render_icon
 from sitegen.markdown import render_markdown
 from sitegen.models import ImageRef, Link
 from sitegen.schema import Page, SiteDocument, language_dir
@@ -140,6 +141,12 @@ class RenderContext:
                 }
             )
         return items
+
+    def icon(self, name: str | None) -> Markup:
+        return render_icon(name)
+
+    def t(self, key: str) -> str:
+        return strings.get(self.lang, key)
 
     def md(self, source: str) -> Markup:
         return Markup(render_markdown(source))  # noqa: S704 - sanitised by nh3

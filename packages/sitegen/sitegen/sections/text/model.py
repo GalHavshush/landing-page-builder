@@ -16,4 +16,10 @@ class TextSection(BaseSection):
     props: TextProps = Field(default_factory=TextProps)
 
 
-DEF = SectionDef("text", "Text", TextSection, TextProps)
+DEF = SectionDef(
+    "text",
+    "Text",
+    TextSection,
+    TextProps,
+    defaults={"heading": "About us", "body": "Write something about your business here."},
+)

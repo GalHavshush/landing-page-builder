@@ -20,4 +20,14 @@ class HeroSection(BaseSection):
     props: HeroProps = Field(default_factory=HeroProps)
 
 
-DEF = SectionDef("hero", "Hero", HeroSection, HeroProps)
+DEF = SectionDef(
+    "hero",
+    "Hero",
+    HeroSection,
+    HeroProps,
+    defaults={
+        "heading": "Your headline here",
+        "subheading": "A short line that explains what you offer.",
+        "buttons": [{"label": "Get in touch", "href": {"url": "#contact"}}],
+    },
+)

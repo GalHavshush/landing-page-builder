@@ -1,0 +1,8 @@
+.faq{max-width:50rem}
+.al-center .faq{margin-inline:auto;text-align:start}
+.faq details{border-block-end:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding-block:1.1rem;font-weight:600;font-size:1.1rem;display:flex;justify-content:space-between;gap:1rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-weight:400;font-size:1.5rem;line-height:1}
+.faq details[open] summary::after{content:"\2212"}
+.faq .prose{padding-block-end:1.1rem;color:var(--muted)}
