@@ -161,6 +161,8 @@ export interface paths {
         /**
          * Get Editor Meta
          * @description Section types, field hints, themes constants: everything the editor UI is generated from.
+         *
+         *     `lang`: the language of the placeholder text in new sections and pages (the site's language).
          */
         get: operations["get_editor_meta_editor_meta_get"];
         put?: never;
@@ -1293,7 +1295,9 @@ export interface operations {
     };
     get_editor_meta_editor_meta_get: {
         parameters: {
-            query?: never;
+            query?: {
+                lang?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1309,6 +1313,15 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
