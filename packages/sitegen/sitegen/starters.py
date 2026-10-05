@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+from sitegen.localize import localize_starter
 from sitegen.schema import SiteDocument
 
 STARTERS_DIR = Path(__file__).parent / "starters"
@@ -76,8 +77,11 @@ def list_starters() -> list[str]:
     return sorted(p.stem for p in STARTERS_DIR.glob("*.json"))
 
 
-def load_starter(name: str, site_name: str | None = None) -> SiteDocument:
+def load_starter(name: str, site_name: str | None = None, lang: str | None = None) -> SiteDocument:
+    """A starter document; with `lang`, its placeholder text is in that language (if we have it)."""
     data = json.loads((STARTERS_DIR / f"{name}.json").read_text())
+    if lang and lang != "en":
+        data = localize_starter(data, lang)
     if site_name:
         data["site"]["name"] = site_name
     return SiteDocument.model_validate(data)

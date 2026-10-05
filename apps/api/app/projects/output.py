@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from sitegen.fonts import FONTS_DIR
 from sitegen.meta import editor_meta
 from sitegen.preview import render_preview
+from sitegen.strings import LANGUAGE_NAMES
 from sqlalchemy.orm import Session
 
 from app.auth.deps import get_current_user
@@ -15,16 +16,19 @@ from app.projects.schemas import PreviewIn, PreviewOut
 
 router = APIRouter(tags=["output"])
 
-_META = None
+_META: dict[str | None, dict] = {}
 
 
 @router.get("/editor-meta")
-def get_editor_meta(_: User = Depends(get_current_user)) -> dict:
-    """Section types, field hints, themes constants: everything the editor UI is generated from."""
-    global _META
-    if _META is None:
-        _META = editor_meta()
-    return _META
+def get_editor_meta(lang: str | None = None, _: User = Depends(get_current_user)) -> dict:
+    """Section types, field hints, themes constants: everything the editor UI is generated from.
+
+    `lang`: the language of the placeholder text in new sections and pages (the site's language).
+    """
+    lang = lang if lang in LANGUAGE_NAMES else None
+    if lang not in _META:
+        _META[lang] = editor_meta(lang)
+    return _META[lang]
 
 
 @router.get("/fonts/{path:path}", include_in_schema=False)

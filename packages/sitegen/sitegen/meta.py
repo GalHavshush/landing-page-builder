@@ -2,6 +2,7 @@
 
 from sitegen.fonts import manifest
 from sitegen.icons import ICONS
+from sitegen.localize import translate
 from sitegen.models import SectionStyle
 from sitegen.recipes import list_recipes
 from sitegen.schema import RTL_LANGUAGES, Theme
@@ -38,7 +39,19 @@ def font_options() -> list[dict]:
     return options
 
 
-def editor_meta() -> dict:
+def _recipes(lang: str | None) -> dict:
+    recipes = list_recipes()
+    if not lang:
+        return recipes
+    # label/description are editor text (the editor translates them); title/sections are content
+    return {
+        k: {**r, "title": translate(r, lang)["title"], "sections": translate(r["sections"], lang)}
+        for k, r in recipes.items()
+    }
+
+
+def editor_meta(lang: str | None = None) -> dict:
+    """`lang`: the language of the placeholder text in new sections and pages."""
     sections = []
     for d in REGISTRY.values():
         template = d.create().model_dump(mode="json")
@@ -48,7 +61,9 @@ def editor_meta() -> dict:
                 "label": d.label,
                 "description": d.description,
                 "variants": list(type(d.create()).model_fields["variant"].annotation.__args__),
-                "template": template,  # a complete new section (the editor assigns a fresh id)
+                "template": translate(template, lang)
+                if lang
+                else template,  # a new section (fresh id)
                 # JSON Schema of the props; every property carries `group` and `control` hints
                 "props_schema": d.props_model.model_json_schema(),
             }
@@ -64,5 +79,5 @@ def editor_meta() -> dict:
         "rtl_languages": sorted(RTL_LANGUAGES),
         "starters": list_starters(),
         "starter_info": starter_info(),
-        "page_recipes": list_recipes(),
+        "page_recipes": _recipes(lang),
     }

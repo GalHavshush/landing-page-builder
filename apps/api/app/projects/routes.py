@@ -59,10 +59,10 @@ def create_project(
 ):
     if body.template not in list_starters():
         raise HTTPException(422, f"Unknown template {body.template!r}")
-    doc = load_starter(body.template, site_name=body.name)
     languages = list(dict.fromkeys([body.language, *body.extra_languages]))
     if not all(code in LANGUAGE_NAMES for code in languages):
         raise HTTPException(422, "Unknown language")
+    doc = load_starter(body.template, site_name=body.name, lang=body.language)  # placeholder text
     if languages != ["en"]:
         data = doc.model_dump(mode="json")
         data["site"].update(default_language=languages[0], languages=languages)

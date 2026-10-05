@@ -155,3 +155,16 @@ def test_create_project_in_hebrew_only(client):
         "en",
     ]
     assert client.post("/projects", json={"name": "X", "language": "zz"}).status_code == 422
+
+
+def test_hebrew_site_starts_with_hebrew_placeholder_text(client):
+    signup(client)
+    r = client.post("/projects", json={"name": "Shop", "template": "warm", "language": "he"})
+    doc = client.get(f"/projects/{r.json()['id']}/doc").json()["doc"]
+    assert doc["pages"][0]["title"] == "בית" and doc["site"]["name"] == "Shop"
+    assert (
+        client.get("/editor-meta", params={"lang": "he"}).json()["page_recipes"]["about"]["title"]
+        == "אודותינו"
+    )
+    en = client.get("/editor-meta").json()
+    assert en["page_recipes"]["about"]["title"] == "About us"
