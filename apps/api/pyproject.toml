@@ -20,6 +20,8 @@ sitegen = { workspace = true }
 
 [dependency-groups]
 dev = ["httpx>=0.27"]
+# optional: a bundled Postgres for running migrations without Docker (see README)
+pg = ["pgserver>=0.1"]
 
 [build-system]
 requires = ["hatchling"]

@@ -1,7 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
+from app.auth.routes import router as auth_router
 from app.config import get_settings
+
+SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 
 
 def create_app() -> FastAPI:
@@ -13,6 +17,20 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    @app.middleware("http")
+    async def require_csrf_header(request: Request, call_next):
+        """CSRF defence in depth (on top of SameSite=Lax cookies): state-changing requests must
+        carry a custom header. Browsers only let same-origin JS (or CORS-approved origins) add
+        one, so a form or <img> on another site cannot forge such a request."""
+        if (
+            request.method not in SAFE_METHODS
+            and request.headers.get("x-requested-with") != "builder"
+        ):
+            return JSONResponse({"detail": "Missing X-Requested-With header"}, status_code=403)
+        return await call_next(request)
+
+    app.include_router(auth_router)
 
     @app.get("/health")
     def health() -> dict:

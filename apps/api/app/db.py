@@ -1,8 +1,9 @@
 """Database wiring: engine, session-per-request, declarative base."""
 
 from collections.abc import Iterator
+from datetime import UTC, datetime
 
-from sqlalchemy import JSON, create_engine
+from sqlalchemy import JSON, DateTime, TypeDecorator, create_engine
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
@@ -10,6 +11,27 @@ from app.config import get_settings
 
 # JSONB on Postgres (indexable, binary), plain JSON elsewhere (SQLite in tests).
 JSONType = JSON().with_variant(JSONB(), "postgresql")
+
+
+class UTCDateTime(TypeDecorator):
+    """Timezone-aware UTC datetimes on every backend (SQLite drops tzinfo, so restore it)."""
+
+    impl = DateTime(timezone=True)
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        if value is not None and value.tzinfo is None:
+            raise ValueError("naive datetime; use datetime.now(UTC)")
+        return value.astimezone(UTC) if value is not None else None
+
+    def process_result_value(self, value, dialect):
+        if value is not None and value.tzinfo is None:
+            return value.replace(tzinfo=UTC)
+        return value
+
+
+def utcnow() -> datetime:
+    return datetime.now(UTC)
 
 
 class Base(DeclarativeBase):

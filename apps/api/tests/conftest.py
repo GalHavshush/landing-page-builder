@@ -34,5 +34,5 @@ def client(db_session):
             raise
 
     app.dependency_overrides[get_db] = override_get_db
-    with TestClient(app, base_url="http://localhost") as c:
+    with TestClient(app, base_url="http://localhost", headers={"X-Requested-With": "builder"}) as c:
         yield c

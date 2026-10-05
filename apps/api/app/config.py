@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     # Cookies are marked Secure outside local development.
     cookie_secure: bool = False
     session_days: int = 14
+    allow_registration: bool = True
     cors_origins: list[str] = ["http://localhost:5173"]
 
 
