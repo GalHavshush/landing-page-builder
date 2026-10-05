@@ -35,7 +35,7 @@ export function PagePanel() {
 
   return (
     <div className="space-y-4">
-      {translating && <p className="text-xs text-accent-600">Translating this page. Empty fields use the default language.</p>}
+      {translating && <p className="text-[12px] text-ink-600">Translating this page. Empty fields use the default language.</p>}
       {canEdit && <TextControl label="Page title" value={value("title")} placeholder={ph("title")} onChange={(v, t) => write("title", v, t)} />}
       {canEdit && <SlugControl label="URL name" value={isHome ? "" : value("slug")} disabled={isHome} taken={takenSlugs}
         placeholder={ph("slug")} onChange={(v, t) => write("slug", v, t)} />}

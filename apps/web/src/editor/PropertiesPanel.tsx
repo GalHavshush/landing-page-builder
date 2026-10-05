@@ -53,7 +53,7 @@ function PropField({ name, schema, ctx, env }: { name: string; schema: PropSchem
         <p className="text-xs text-ink-400">
           {override === undefined ? "Using the default language." : "Translated."}
           {override !== undefined && (
-            <button className="ml-2 text-accent-600 hover:underline" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
+            <button className="ml-2 text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
               Reset to default
             </button>
           )}
@@ -114,7 +114,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
           <span className="grid h-5 w-5 place-items-center rounded bg-ink-100 text-ink-700"><SectionIcon type={section.type} size={12} /></span>
           {sectionMeta?.label ?? section.type}
         </h2>
-        {translating && <p className="mt-0.5 text-xs text-accent-600">Translating to {meta.languages[lang] ?? lang}</p>}
+        {translating && <p className="mt-0.5 text-[12px] text-ink-600">Translating to {meta.languages[lang] ?? lang}</p>}
         <div role="tablist" className="mt-2.5 flex gap-4">
           {(canEdit ? (["content", "design"] as const) : (["content"] as const)).map((t) => (
             <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}

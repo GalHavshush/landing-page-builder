@@ -66,7 +66,7 @@ export function SitePanel() {
 
   return (
     <div className="space-y-4">
-      {translating && <p className="text-xs text-accent-600">Translating site text. Phone, email, hours and web address are shared.</p>}
+      {translating && <p className="text-[12px] text-ink-600">Translating site text. Phone, email, hours and web address are shared.</p>}
       {canEdit && field("name", "Site name")}
       {field("tagline", "Tagline")}
       {field("description", "Default description", true, "Used in search results when a page has none.")}

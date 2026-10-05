@@ -82,7 +82,7 @@ export function ExportDialog({ projectId }: { projectId: number }) {
                 {history.data.map((e) => (
                   <li key={e.id} className="flex items-center justify-between gap-3 px-3 py-2">
                     <span>{when(e.created_at)}<span className="ml-2 text-xs text-ink-400">by {e.created_by} · v{e.doc_revision} · {kb(e.size_bytes)}</span></span>
-                    <a className="text-accent-600 hover:underline" href={href(projectId, e.id)} download>Download</a>
+                    <a className="text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" href={href(projectId, e.id)} download>Download</a>
                   </li>
                 ))}
               </ul>

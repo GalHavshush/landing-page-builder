@@ -15,7 +15,7 @@ export default function InvitePage() {
         <>
           <h1 className="text-xl font-semibold">This invitation can't be used</h1>
           <p className="text-sm text-ink-500">It may have expired, been used already, or been withdrawn. Ask the person who sent it for a new link.</p>
-          <Link to="/" className="text-sm text-accent-600 hover:underline">Go to your sites</Link>
+          <Link to="/" className="text-sm text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900">Go to your sites</Link>
         </>
       )}
       {preview.data && (

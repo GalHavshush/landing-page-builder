@@ -37,7 +37,7 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
         <div className="mt-1.5 grid grid-cols-3 gap-2">
           {Object.entries(PALETTES).map(([name, p]) => (
             <button key={name} type="button" onClick={() => apply(updateTheme({ palette: { ...p } }))}
-              className="rounded-md border border-ink-200 p-1.5 text-left text-xs hover:border-accent-400">
+              className="rounded-md border border-ink-200 p-1.5 text-left text-xs hover:border-ink-400">
               <div className="mb-1 flex h-5 overflow-hidden rounded">
                 {[p.primary, p.accent, p.background, p.surface, p.text].map((c, i) => (
                   <span key={i} className="flex-1" style={{ background: c }} />

@@ -13,7 +13,7 @@ export function SlugControl({
   const problem = draft === "" ? "A page needs a URL name" : !SLUG.test(draft) ? "Use lowercase letters, numbers and single hyphens" : taken.includes(draft) ? "Another page already uses this" : null;
   return (
     <FieldShell label={label} htmlFor={id}>
-      <div className="mt-1 flex items-center rounded-md border border-ink-300 bg-white text-sm focus-within:border-accent-500">
+      <div className="mt-1 flex items-center rounded-md border border-ink-300 bg-white text-sm focus-within:border-ink-900">
         <span className="pl-2.5 text-ink-400">/</span>
         <input id={id} value={draft} disabled={disabled} placeholder={placeholder} aria-invalid={Boolean(problem)} spellCheck={false}
           onChange={(e) => {

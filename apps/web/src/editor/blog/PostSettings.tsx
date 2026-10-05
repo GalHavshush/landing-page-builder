@@ -60,11 +60,11 @@ export function PostSettings({
           <ul className="space-y-1 text-sm">
             <li className="text-ink-500">This post: <strong>{draft.lang}</strong></li>
             {siblings.map((s) => (
-              <li key={s.id}><button className="text-accent-600 hover:underline" onClick={() => openPost(s.id)}>Edit {s.lang} version</button></li>
+              <li key={s.id}><button className="text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" onClick={() => openPost(s.id)}>Edit {s.lang} version</button></li>
             ))}
             {missing.map((l) => (
               <li key={l}>
-                <button className="text-accent-600 hover:underline" disabled={translate.isPending}
+                <button className="text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" disabled={translate.isPending}
                   onClick={() => translate.mutate({ id: post.id, lang: l }, { onSuccess: (p) => openPost(p.id) })}>
                   Translate to {l}
                 </button>

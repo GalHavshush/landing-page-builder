@@ -46,7 +46,7 @@ export function BlogList() {
       <div className="flex-1 overflow-y-auto p-3">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-500">Posts</h2>
-          <button className="text-xs text-accent-600 hover:underline" onClick={() => setAdding(!adding)}>
+          <button className="text-[12px] text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" onClick={() => setAdding(!adding)}>
             {adding ? "Cancel" : "+ New post"}
           </button>
         </div>
@@ -68,7 +68,7 @@ export function BlogList() {
           {posts.data?.map((p) => (
             <li key={p.id}>
               <button onClick={() => openPost(p.id)}
-                className={`w-full rounded-md border px-2.5 py-2 text-left ${p.id === postId ? "border-accent-400 bg-accent-50" : "border-ink-200 hover:border-ink-300"}`}>
+                className={`w-full rounded-md border px-2.5 py-2 text-left ${p.id === postId ? "border-ink-900 bg-white shadow-[0_0_0_1px_var(--color-ink-900)]" : "border-ink-200 hover:border-ink-300"}`}>
                 <div className="truncate text-sm font-medium">{p.title}</div>
                 <div className="mt-0.5 flex items-center gap-1.5 text-xs">
                   <span className={`rounded px-1.5 py-0.5 ${STATUS_STYLE[p.status]}`}>{p.status}</span>
