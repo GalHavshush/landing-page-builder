@@ -1,0 +1,7 @@
+{
+  "name": "builder-qa",
+  "private": true,
+  "type": "module",
+  "scripts": { "check": "node check.mjs" },
+  "dependencies": { "axe-core": "^4.10.0", "playwright-core": "^1.50.0" }
+}

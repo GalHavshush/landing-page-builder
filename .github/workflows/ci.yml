@@ -47,3 +47,28 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+  qa:
+    # Visual QA: every starter (plus awkward-content and right-to-left copies) at phone, tablet and
+    # desktop widths. Fails on sideways scrolling and on axe accessibility violations.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: qa/package-lock.json
+      - run: uv sync --all-packages --all-groups
+      - run: uv run python qa/build_sites.py qa/out
+      - run: npm ci
+        working-directory: qa
+      - run: npx playwright-core install --with-deps chromium
+        working-directory: qa
+      - run: node check.mjs out shots
+        working-directory: qa
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa-screenshots
+          path: qa/shots

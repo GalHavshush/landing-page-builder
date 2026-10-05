@@ -37,12 +37,33 @@ def readable_on(background: str) -> str:
     )
 
 
+def _mix(color: str, target: str, amount: float) -> str:
+    a = [int(color[i : i + 2], 16) for i in (1, 3, 5)]
+    b = [int(target[i : i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x + (y - x) * amount):02X}" for x, y in zip(a, b, strict=True))
+
+
+def legible_on(color: str, backgrounds: list[str], minimum: float = 4.5) -> str:
+    """`color`, nudged towards black or white just far enough to be readable as text on every
+    background. Brand colours often fail as small text (a pale amber on white); this keeps the hue."""
+    light = sum(luminance(b) for b in backgrounds) / len(backgrounds) > 0.4
+    target = "#000000" if light else "#FFFFFF"
+    for step in range(0, 26):
+        candidate = _mix(color, target, step * 0.04)
+        if all(contrast_ratio(candidate, b) >= minimum for b in backgrounds):
+            return candidate
+    return target
+
+
 def theme_css(theme: Theme) -> str:
     p = theme.palette
+    text_bgs = [p["background"], p["surface"]]
     return f""":root {{
   --color-primary: {p["primary"]};
   --color-primary-contrast: {readable_on(p["primary"])};
   --color-accent: {p["accent"]};
+  --color-accent-text: {legible_on(p["accent"], text_bgs)};
+  --color-primary-text: {legible_on(p["primary"], text_bgs)};
   --color-bg: {p["background"]};
   --color-surface: {p["surface"]};
   --color-text: {p["text"]};

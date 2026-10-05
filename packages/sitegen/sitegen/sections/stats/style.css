@@ -8,3 +8,4 @@
 .stats-cards .stat{background:var(--card);border:1px solid var(--line);border-radius:calc(var(--radius)*1.4);padding:1.6rem 1.5rem}
 .al-center .stats-row .stat{padding-inline-start:0;border-inline-start:0;align-items:center;text-align:center}
 .al-center .stats-cards .stat{align-items:center;text-align:center}
+@media (max-width:420px){.stats{grid-template-columns:1fr}}

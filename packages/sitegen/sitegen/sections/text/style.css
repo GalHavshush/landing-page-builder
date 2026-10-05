@@ -6,5 +6,5 @@
 .s-text--split .prose{max-width:none}
 .s-text--lead .prose{max-width:58rem;font-family:var(--font-heading);font-size:clamp(1.5rem,2.9vw,2.3rem);line-height:1.32;letter-spacing:-.02em}
 .s-text--lead .prose p{margin-block-end:.9em}
-.s-text--lead h2{font-family:var(--font-body);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-primary);margin-block-end:1.5rem}
+.s-text--lead h2{font-family:var(--font-body);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--color-primary-text);margin-block-end:1.5rem}
 .bg-primary.s-text--lead h2,.bg-dark.s-text--lead h2{color:inherit;opacity:.8}

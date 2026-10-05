@@ -350,7 +350,10 @@ def test_gallery_images_link_to_full_size_for_the_lightbox():
     s = create_section("gallery")
     s.props.items = [GalleryItem(image=ImageRef(asset="a1", alt="One"), caption="First")]
     doc = SiteDocument.model_validate(
-        {"site": {"name": "T"}, "pages": [{"id": "p", "title": "A", "sections": [s.model_dump(mode="json")]}]}
+        {
+            "site": {"name": "T"},
+            "pages": [{"id": "p", "title": "A", "sections": [s.model_dump(mode="json")]}],
+        }
     )
     asset = AssetFile("a.png", b"x", "image/png", 800, 600)
     html = build(doc, {"a1": asset}).files["index.html"].decode()
@@ -364,3 +367,12 @@ def test_motion_setting_is_a_body_class(motion):
     doc = load_starter("clean")
     doc.theme.motion = motion
     assert f"motion-{motion}" in build(doc).files["index.html"].decode()
+
+
+@pytest.mark.parametrize("color", ["#F59E0B", "#FACC15", "#2563EB", "#FFFFFF", "#111111"])
+@pytest.mark.parametrize(("bg", "surface"), [("#FFFFFF", "#F3F4F6"), ("#0F172A", "#1E293B")])
+def test_legible_on_always_reaches_text_contrast(color, bg, surface):
+    from sitegen.theme import contrast_ratio, legible_on
+
+    out = legible_on(color, [bg, surface])
+    assert contrast_ratio(out, bg) >= 4.5 and contrast_ratio(out, surface) >= 4.5

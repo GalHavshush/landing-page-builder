@@ -47,3 +47,11 @@ npm run gen                    # after changing backend models: regenerate the T
 - `docs/` architecture and decision records
 
 Full-stack containers: `docker compose --profile app up --build` (see the note in `docker-compose.yml`).
+
+## Visual QA
+
+`qa/` builds every starter (plus a copy with awkward content and a right-to-left copy) and opens
+each at 320, 768 and 1440 px, failing on sideways scrolling and accessibility violations (axe-core):
+
+    uv run python qa/build_sites.py qa/out
+    cd qa && npm ci && node check.mjs out shots     # screenshots land in qa/shots

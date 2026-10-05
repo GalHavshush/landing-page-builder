@@ -4,7 +4,7 @@
 .member-photo img{width:100%;height:100%;object-fit:cover;border-radius:0}
 .member-photo .ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-heading);font-size:4rem;color:color-mix(in srgb,var(--color-primary) 55%,transparent)}
 .member-body{padding:1.25rem 1.4rem 1.5rem}
-.member h3{margin:0 0 .15rem}.member .role{color:var(--color-primary);font-weight:600;font-size:.92rem;margin:0 0 .6rem}.member .bio{color:var(--muted);margin:0;font-size:.98rem}
+.member h3{margin:0 0 .15rem}.member .role{color:var(--color-primary-text);font-weight:600;font-size:.92rem;margin:0 0 .6rem}.member .bio{color:var(--muted);margin:0;font-size:.98rem}
 .bg-primary .member .role,.bg-dark .member .role{color:inherit;opacity:.85}
 /* round: circular portraits, no boxes */
 .team-round .member{text-align:center}

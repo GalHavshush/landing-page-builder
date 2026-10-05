@@ -4,7 +4,7 @@
 .s-services .item img{width:100%;aspect-ratio:3/2;object-fit:cover}
 .svc-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
 .svc-top h3{margin:0}
-.price{font-weight:700;color:var(--color-primary);white-space:nowrap}
+.price{font-weight:700;color:var(--color-primary-text);white-space:nowrap}
 .bg-primary .price,.bg-dark .price{color:inherit}
 .s-services .item p{color:var(--muted);margin-block:.4rem 0}
 .s-services--list .grid,.s-services .svc-list{grid-template-columns:1fr!important;gap:0}
