@@ -1,0 +1,16 @@
+{% set img = ctx.image(p.image) %}
+<div class="hero-grid{% if img and s.variant == 'split' %} has-image{% endif %}{% if p.image_position == 'start' %} image-start{% endif %}">
+  <div class="hero-copy">
+    {% if p.eyebrow %}<p class="eyebrow">{{ p.eyebrow }}</p>{% endif %}
+    <h1>{{ p.heading }}</h1>
+    {% if p.subheading %}<p class="lead">{{ p.subheading }}</p>{% endif %}
+    {% if p.buttons %}
+    <div class="buttons">
+      {% for b in p.buttons %}<a class="btn btn-{{ b.style }}" href="{{ ctx.link(b.href) }}">{{ b.label }}</a>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% if img %}
+  <div class="hero-media"><img src="{{ img.src }}" alt="{{ img.alt }}"{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %}></div>
+  {% endif %}
+</div>
