@@ -45,7 +45,7 @@ def _mix(color: str, target: str, amount: float) -> str:
 
 def legible_on(color: str, backgrounds: list[str], minimum: float = 4.5) -> str:
     """`color`, nudged towards black or white just far enough to be readable as text on every
-    background. Brand colours often fail as small text (a pale amber on white); this keeps the hue."""
+    background. Brand colours often fail as small text (pale amber on white); this keeps the hue."""
     light = sum(luminance(b) for b in backgrounds) / len(backgrounds) > 0.4
     target = "#000000" if light else "#FFFFFF"
     for step in range(0, 26):
