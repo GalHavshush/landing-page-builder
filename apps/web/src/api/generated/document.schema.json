@@ -48,13 +48,16 @@
       "additionalProperties": false,
       "properties": {
         "label": {
+          "control": "text",
           "title": "Label",
           "type": "string"
         },
         "href": {
-          "$ref": "#/$defs/Link"
+          "$ref": "#/$defs/Link",
+          "control": "link"
         },
         "style": {
+          "control": "select",
           "default": "primary",
           "enum": [
             "primary",
@@ -78,11 +81,13 @@
       "additionalProperties": false,
       "properties": {
         "question": {
+          "control": "text",
           "default": "",
           "title": "Question",
           "type": "string"
         },
         "answer": {
+          "control": "richtext",
           "default": "",
           "title": "Answer",
           "type": "string"
@@ -205,15 +210,18 @@
               "type": "null"
             }
           ],
+          "control": "icon",
           "default": null,
           "title": "Icon"
         },
         "title": {
+          "control": "text",
           "default": "",
           "title": "Title",
           "type": "string"
         },
         "text": {
+          "control": "textarea",
           "default": "",
           "title": "Text",
           "type": "string"
@@ -501,6 +509,7 @@
           "type": "string"
         },
         "alt": {
+          "control": "text",
           "default": "",
           "title": "Alt",
           "type": "string"
@@ -827,16 +836,19 @@
       "additionalProperties": false,
       "properties": {
         "title": {
+          "control": "text",
           "default": "",
           "title": "Title",
           "type": "string"
         },
         "description": {
+          "control": "textarea",
           "default": "",
           "title": "Description",
           "type": "string"
         },
         "price": {
+          "control": "text",
           "default": "",
           "title": "Price",
           "type": "string"
@@ -850,6 +862,7 @@
               "type": "null"
             }
           ],
+          "control": "image",
           "default": null
         },
         "link": {
@@ -861,6 +874,7 @@
               "type": "null"
             }
           ],
+          "control": "link",
           "default": null
         }
       },
@@ -1165,16 +1179,19 @@
       "additionalProperties": false,
       "properties": {
         "quote": {
+          "control": "textarea",
           "default": "",
           "title": "Quote",
           "type": "string"
         },
         "author": {
+          "control": "text",
           "default": "",
           "title": "Author",
           "type": "string"
         },
         "role": {
+          "control": "text",
           "default": "",
           "title": "Role",
           "type": "string"
@@ -1188,6 +1205,7 @@
               "type": "null"
             }
           ],
+          "control": "image",
           "default": null
         }
       },

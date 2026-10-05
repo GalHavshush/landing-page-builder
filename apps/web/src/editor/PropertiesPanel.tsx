@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { EditorMeta, PropSchema, Section, SectionMeta } from "@/api/types";
 import { setVariant, setTranslation, updateProps, updateStyle } from "./commands";
-import { SegmentedControl, SelectControl, TextAreaControl, TextControl, ToggleControl } from "./controls/basic";
+import { SegmentedControl } from "./controls/basic";
+import { Control, type Env } from "./controls/registry";
 import { currentPage, useEditor } from "./store";
 
 const humanize = (s: string) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
@@ -14,15 +15,14 @@ interface FieldCtx {
   defaultLang: string;
 }
 
-function PropField({ name, schema, ctx }: { name: string; schema: PropSchema; ctx: FieldCtx }) {
+function PropField({ name, schema, ctx, env }: { name: string; schema: PropSchema; ctx: FieldCtx; env: Env }) {
   const apply = useEditor((s) => s.apply);
   const { section, lang, defaultLang } = ctx;
   const translating = lang !== defaultLang && schema.group === "content";
   const props = section.props as unknown as Record<string, unknown>;
   const base = props[name];
   const override = section.i18n[lang]?.[name];
-  const label = schema.title ?? humanize(name);
-  const control = schema.control;
+  const isText = ["text", "textarea", "richtext"].includes(schema.control as string);
 
   if (lang !== defaultLang && schema.group === "design") return null; // structure is shared
 
@@ -36,29 +36,30 @@ function PropField({ name, schema, ctx }: { name: string; schema: PropSchema; ct
     }
   };
 
-  if (control === "text" || control === "textarea" || control === "richtext") {
-    const shown = translating ? ((override as string | undefined) ?? "") : (base as string);
-    const placeholder = translating ? (base as string) : undefined;
-    const hint = control === "richtext" ? "Supports Markdown: **bold**, *italic*, lists, [links](https://…)" : translating && override === undefined ? "Not translated yet: showing the default language." : undefined;
-    return control === "text" ? (
-      <TextControl label={label} value={shown} onChange={write} placeholder={placeholder} hint={hint} />
-    ) : (
-      <TextAreaControl label={label} value={shown} onChange={write} placeholder={placeholder} hint={hint} rows={control === "richtext" ? 8 : 3} />
+  if (translating && isText) {
+    return (
+      <Control name={name} schema={schema} env={env} value={(override as string | undefined) ?? ""}
+        placeholder={base as string} onChange={write}
+        hint={override === undefined ? "Not translated yet: showing the default language." : undefined} />
     );
   }
-  if (control === "segmented" || control === "select") {
-    const options = enumOptions(schema.enum ?? []);
-    const Cmp = control === "segmented" && options.length <= 4 ? SegmentedControl : SelectControl;
-    return <Cmp label={label} value={base as string | number} options={options} onChange={(v) => write(v)} />;
+  if (translating) {
+    // lists, links, images: a translation replaces the whole value
+    return (
+      <div className="space-y-1">
+        <Control name={name} schema={schema} env={env} value={override ?? base} onChange={write} />
+        <p className="text-xs text-slate-400">
+          {override === undefined ? "Using the default language." : "Translated."}
+          {override !== undefined && (
+            <button className="ml-2 text-indigo-600 hover:underline" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
+              Reset to default
+            </button>
+          )}
+        </p>
+      </div>
+    );
   }
-  if (control === "toggle" || schema.type === "boolean") {
-    return <ToggleControl label={label} value={Boolean(base)} onChange={(v) => write(v)} />;
-  }
-  return (
-    <p className="rounded bg-slate-50 px-2 py-1.5 text-xs text-slate-500">
-      {label}: editor for “{control}” fields arrives in the next step.
-    </p>
-  );
+  return <Control name={name} schema={schema} env={env} value={base} onChange={write} />;
 }
 
 function StyleFields({ section, meta }: { section: Section; meta: EditorMeta }) {
@@ -80,6 +81,7 @@ function StyleFields({ section, meta }: { section: Section; meta: EditorMeta }) 
 }
 
 export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
+  const doc = useEditor((s) => s.doc)!;
   const page = useEditor(currentPage);
   const selectedId = useEditor((s) => s.selectedId);
   const lang = useEditor((s) => s.lang)!;
@@ -100,6 +102,11 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
   const content = entries.filter(([, s]) => s.group === "content");
   const design = entries.filter(([, s]) => s.group === "design");
   const ctx: FieldCtx = { section, lang, defaultLang };
+  const env: Env = {
+    meta,
+    pages: doc.pages.map((p) => ({ id: p.id, title: p.title })),
+    defs: (sectionMeta?.props_schema.$defs ?? {}) as Env["defs"],
+  };
   const translating = lang !== defaultLang;
 
   return (
@@ -117,7 +124,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
         </div>
       </div>
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-        {tab === "content" && content.map(([name, schema]) => <PropField key={`${section.id}.${name}`} name={name} schema={schema} ctx={ctx} />)}
+        {tab === "content" && content.map(([name, schema]) => <PropField key={`${section.id}.${name}`} name={name} schema={schema} ctx={ctx} env={env} />)}
         {tab === "design" &&
           (translating ? (
             <p className="text-sm text-slate-500">Design is shared by all languages. Switch back to the default language to change it.</p>
@@ -132,7 +139,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
                 />
               )}
               <StyleFields section={section} meta={meta} />
-              {design.map(([name, schema]) => <PropField key={`${section.id}.${name}`} name={name} schema={schema} ctx={ctx} />)}
+              {design.map(([name, schema]) => <PropField key={`${section.id}.${name}`} name={name} schema={schema} ctx={ctx} env={env} />)}
             </>
           ))}
       </div>

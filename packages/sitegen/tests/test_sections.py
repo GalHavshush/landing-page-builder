@@ -45,3 +45,13 @@ def test_every_prop_declares_group_and_control():
             meta = info.json_schema_extra or {}
             assert meta.get("group") in {"content", "design"}, f"{definition.type}.{name}"
             assert meta.get("control"), f"{definition.type}.{name}"
+
+
+def test_nested_item_fields_declare_a_control():
+    """Repeater items are edited from the schema, so every item field needs an editor hint."""
+    for definition in REGISTRY.values():
+        for name, item in definition.props_model.model_json_schema().get("$defs", {}).items():
+            if name in {"Link", "ImageRef"}:  # edited as a whole by dedicated controls
+                continue
+            for prop, schema in item["properties"].items():
+                assert schema.get("control"), f"{definition.type}: {name}.{prop}"

@@ -1,13 +1,13 @@
 from typing import Literal
 
 from pydantic import Field
-from sitegen.models import BaseSection, Strict, content
+from sitegen.models import BaseSection, Strict, content, ui
 from sitegen.sections.base import SectionDef
 
 
 class FaqItem(Strict):
-    question: str = ""
-    answer: str = ""  # Markdown
+    question: str = ui("text", "")
+    answer: str = ui("richtext", "")  # Markdown
 
 
 class FaqProps(Strict):

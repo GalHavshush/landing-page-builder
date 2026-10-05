@@ -37,6 +37,11 @@ def field(group: str, control: str, default: Any = ..., *, default_factory=None,
     return Field(default, json_schema_extra=meta)
 
 
+def ui(control: str, default: Any = ..., **extra):
+    """Editor hint for a field of a nested item model (it inherits its parent prop's group)."""
+    return Field(default, json_schema_extra={"control": control, **extra})
+
+
 content = partial(field, "content")
 design = partial(field, "design")
 
@@ -61,13 +66,13 @@ class Link(Strict):
 
 class ImageRef(Strict):
     asset: str
-    alt: str = ""
+    alt: str = ui("text", "")
 
 
 class Button(Strict):
-    label: str
-    href: Link
-    style: Literal["primary", "secondary", "outline", "link"] = "primary"
+    label: str = ui("text")
+    href: Link = ui("link")
+    style: Literal["primary", "secondary", "outline", "link"] = ui("select", "primary")
 
 
 class SectionStyle(Strict):

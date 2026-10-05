@@ -1,16 +1,16 @@
 from typing import Literal
 
 from pydantic import Field
-from sitegen.models import BaseSection, ImageRef, Link, Strict, content, design
+from sitegen.models import BaseSection, ImageRef, Link, Strict, content, design, ui
 from sitegen.sections.base import SectionDef
 
 
 class Service(Strict):
-    title: str = ""
-    description: str = ""
-    price: str = ""
-    image: ImageRef | None = None
-    link: Link | None = None
+    title: str = ui("text", "")
+    description: str = ui("textarea", "")
+    price: str = ui("text", "")
+    image: ImageRef | None = ui("image", None)
+    link: Link | None = ui("link", None)
 
 
 class ServicesProps(Strict):

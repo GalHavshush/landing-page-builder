@@ -2,14 +2,14 @@ from typing import Literal
 
 from pydantic import Field
 from sitegen.icons import IconName
-from sitegen.models import BaseSection, Strict, content, design
+from sitegen.models import BaseSection, Strict, content, design, ui
 from sitegen.sections.base import SectionDef
 
 
 class Feature(Strict):
-    icon: IconName | None = None
-    title: str = ""
-    text: str = ""
+    icon: IconName | None = ui("icon", None)
+    title: str = ui("text", "")
+    text: str = ui("textarea", "")
 
 
 class FeaturesProps(Strict):

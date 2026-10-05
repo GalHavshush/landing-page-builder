@@ -336,7 +336,15 @@ export interface Service {
   description: Description2;
   price: Price;
   image: ImageRef | null;
-  link: Link | null;
+  link: Link1 | null;
+}
+/**
+ * A link to a page of this site, an external URL, or an uploaded asset (exactly one).
+ */
+export interface Link1 {
+  page: Page2;
+  url: Url;
+  asset: Asset1;
 }
 export interface TestimonialsSection {
   id: Id5;

@@ -1,15 +1,15 @@
 from typing import Literal
 
 from pydantic import Field
-from sitegen.models import BaseSection, ImageRef, Strict, content
+from sitegen.models import BaseSection, ImageRef, Strict, content, ui
 from sitegen.sections.base import SectionDef
 
 
 class Testimonial(Strict):
-    quote: str = ""
-    author: str = ""
-    role: str = ""
-    avatar: ImageRef | None = None
+    quote: str = ui("textarea", "")
+    author: str = ui("text", "")
+    role: str = ui("text", "")
+    avatar: ImageRef | None = ui("image", None)
 
 
 class TestimonialsProps(Strict):
