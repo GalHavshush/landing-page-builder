@@ -16,6 +16,7 @@ from sitegen.renderer import (
 from sitegen.schema import SiteDocument
 from sitegen.sections import REGISTRY
 from sitegen.theme import theme_css
+from sitegen.validate import check
 
 STATIC = Path(__file__).parent / "static"
 
@@ -29,6 +30,7 @@ class BuildResult:
 def build(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> BuildResult:
     assets = assets or {}
     result = BuildResult()
+    result.issues += check(doc, assets)
     plan = paths.plan_pages(doc)
     for page in doc.pages:
         for lang in doc.site.languages:
@@ -48,6 +50,13 @@ def build(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> Buil
     css += [REGISTRY[t].css() for t in sorted(used)]  # only CSS for sections actually used
     result.files[CSS_PATH] = "\n".join(c for c in css if c).encode()
     result.files[JS_PATH] = (STATIC / "site.js").read_bytes()
+    # renderer and validator can report the same problem; show each once
+    seen: set[tuple[str, str]] = set()
+    result.issues = [
+        i
+        for i in result.issues
+        if (i.level, i.message) not in seen and not seen.add((i.level, i.message))
+    ]
     for asset_id, asset in assets.items():
         result.files[asset_output_path(asset_id, asset)] = asset.data
     return result

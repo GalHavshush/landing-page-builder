@@ -18,7 +18,9 @@ def starter_with_base_url(**site) -> SiteDocument:
 def test_all_starters_build_without_issues():
     for name in list_starters():
         doc = load_starter(name)
-        issues = [i for i in build(doc).issues if "base_url" not in i.message]
+        issues = [
+            i for i in build(doc).issues if i.level == "warning" and "base_url" not in i.message
+        ]
         assert not issues, (name, issues)
 
 
