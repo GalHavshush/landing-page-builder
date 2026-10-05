@@ -1,12 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCreateProject, useLogout, useMe, useProjects, useTemplates } from "@/api/hooks";
+import { useCreateProject, useDeleteProject, useLogout, useMe, useProjects, useTemplates } from "@/api/hooks";
 import { Button, ErrorText, Field } from "@/components/ui";
 
 export default function Dashboard() {
   const me = useMe();
   const projects = useProjects();
   const logout = useLogout();
+  const del = useDeleteProject();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
@@ -20,13 +21,23 @@ export default function Dashboard() {
       <NewProject />
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {projects.data?.map((p) => (
-          <li key={p.id}>
+          <li key={p.id} className="group relative">
             <Link to={`/projects/${p.id}`} className="block rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:ring-indigo-400">
               <h2 className="font-medium">{p.name}</h2>
               <p className="mt-1 text-xs text-slate-500">
                 {p.role === "owner" ? "Owner" : p.role === "editor" ? "Client access" : "Designer"} · {p.template_id}
               </p>
             </Link>
+            {p.role === "owner" && (
+              <button
+                aria-label={`Delete ${p.name}`}
+                title="Delete site"
+                onClick={() => window.confirm(`Delete "${p.name}" and everything in it? This cannot be undone.`) && del.mutate(p.id)}
+                className="absolute right-3 top-3 rounded px-1.5 text-slate-400 opacity-0 hover:text-red-600 focus:opacity-100 group-hover:opacity-100"
+              >
+                ✕
+              </button>
+            )}
           </li>
         ))}
       </ul>

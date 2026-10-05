@@ -204,3 +204,11 @@ export function useCreateExport(projectId: number) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["exports", projectId] }),
   });
 }
+
+export function useDeleteProject() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => api<void>(`/projects/${id}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
+  });
+}

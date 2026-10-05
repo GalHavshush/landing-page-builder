@@ -6,13 +6,18 @@ from sitegen import SiteDocument
 from sitegen.migrations import UnsupportedVersion, load_document
 from sitegen.starters import list_starters, load_starter, starter_info
 from sitegen.validate import check
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
+from app.assets.models import Asset
+from app.assets.storage import Storage, get_storage
 from app.auth.deps import get_current_user
 from app.auth.models import User
 from app.db import get_db, utcnow
+from app.exports.models import SiteExport
+from app.members.models import Invitation
 from app.permissions import Role, can
+from app.posts.models import BlogPost
 from app.projects import service
 from app.projects.content_guard import content_violations
 from app.projects.deps import DELETE, EDIT_CONTENT, RENAME, VIEW, Access
@@ -89,11 +94,25 @@ def rename_project(body: ProjectUpdate, access: Access = RENAME):
 
 
 @router.delete("/projects/{project_id}", status_code=204)
-def delete_project(access: Access = DELETE, db: Session = Depends(get_db)):
+def delete_project(
+    access: Access = DELETE,
+    db: Session = Depends(get_db),
+    storage: Storage = Depends(get_storage),
+):
+    """Delete a project with everything that belongs to it, including stored files.
+
+    Rows are removed explicitly (not only via ON DELETE CASCADE) so this behaves the same on
+    every database, and the uploaded images and export ZIPs are deleted from storage too.
+    """
+    pid = access.project.id
+    for asset in db.scalars(select(Asset).where(Asset.project_id == pid)):
+        storage.delete(asset.storage_key)
+        storage.delete(asset.thumb_key)
+    for export in db.scalars(select(SiteExport).where(SiteExport.project_id == pid)):
+        storage.delete(export.artifact_key)
+    for model in (Asset, SiteExport, BlogPost, Invitation, ProjectMember):
+        db.execute(delete(model).where(model.project_id == pid))
     db.delete(access.project)
-    # members are removed by ON DELETE CASCADE; SQLite needs the explicit statement:
-    for m in db.scalars(select(ProjectMember).where(ProjectMember.project_id == access.project.id)):
-        db.delete(m)
     return Response(status_code=204)
 
 

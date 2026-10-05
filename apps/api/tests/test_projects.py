@@ -114,3 +114,28 @@ def test_templates_are_described_and_each_one_creates_a_valid_project(client):
         assert doc["site"]["name"] == f"Site {t['id']}"
         assert doc["theme"]["template"] == t["id"]
         assert client.post(f"/projects/{p['id']}/exports").status_code == 201
+
+
+def test_deleting_a_project_removes_everything_including_files(client, storage, db_session):
+    from app.assets.models import Asset
+    from app.exports.models import SiteExport
+    from app.members.models import Invitation
+    from app.posts.models import BlogPost
+    from helpers import export_zip, image_bytes, upload
+
+    signup(client)
+    p = make_project(client)
+    keep = make_project(client, "Other site")
+    upload(client, p["id"], image_bytes())
+    export_zip(client, p["id"])
+    client.post(f"/projects/{p['id']}/posts", json={"lang": "en", "title": "T", "slug": "t"})
+    client.post(f"/projects/{p['id']}/invitations", json={"role": "editor"})
+    upload(client, keep["id"], image_bytes())  # must survive
+
+    assert client.delete(f"/projects/{p['id']}").status_code == 204
+    for model in (Asset, SiteExport, BlogPost, Invitation):
+        remaining = db_session.query(model).filter(model.project_id == p["id"]).count()
+        assert remaining == 0, model.__name__
+    files = [f.relative_to(storage.root).parts[0] for f in storage.root.rglob("*") if f.is_file()]
+    assert sorted(set(files)) == ["p2"]  # only the other project's upload is left
+    assert [x["id"] for x in client.get("/projects").json()] == [keep["id"]]
