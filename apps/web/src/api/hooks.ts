@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError } from "./client";
-import type { Project, User } from "./types";
+import type { EditorMeta, Project, SiteDocument, User } from "./types";
 
 export function useMe() {
   return useQuery({
@@ -51,3 +51,21 @@ export function useCreateProject() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
   });
 }
+
+export const useEditorMeta = () =>
+  useQuery({
+    queryKey: ["editor-meta"],
+    queryFn: () => api<EditorMeta>("/editor-meta"),
+    staleTime: Infinity,
+  });
+
+export const useProject = (id: number) =>
+  useQuery({ queryKey: ["project", id], queryFn: () => api<Project>(`/projects/${id}`) });
+
+export const useDocument = (id: number) =>
+  useQuery({
+    queryKey: ["doc", id],
+    queryFn: () => api<{ doc: SiteDocument; revision: number }>(`/projects/${id}/doc`),
+    staleTime: Infinity, // the editor store owns the document once loaded
+    gcTime: 0,
+  });

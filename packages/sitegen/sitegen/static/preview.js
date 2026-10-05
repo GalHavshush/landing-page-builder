@@ -27,8 +27,19 @@
   }, true);
   document.addEventListener("submit", function (e) { e.preventDefault(); }, true);
 
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () { ticking = false; parent.postMessage({ type: "scroll", y: window.scrollY }, "*"); });
+  });
+
   window.addEventListener("message", function (e) {
     var m = e.data || {};
+    if (m.type === "restore-scroll") {
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, m.y || 0);
+      document.documentElement.style.scrollBehavior = "";
+    }
     if (m.type === "select") { var el = select(m.id); if (el && m.scroll) el.scrollIntoView({ behavior: "smooth", block: "center" }); }
   });
   parent.postMessage({ type: "preview-ready" }, "*");

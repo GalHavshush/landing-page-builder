@@ -11,11 +11,12 @@ export class ApiError extends Error {
 
 export async function api<T>(
   path: string,
-  options: { method?: string; body?: unknown; raw?: boolean } = {},
+  options: { method?: string; body?: unknown; raw?: boolean; signal?: AbortSignal } = {},
 ): Promise<T> {
   const res = await fetch(`/api${path}`, {
     method: options.method ?? "GET",
     credentials: "include",
+    signal: options.signal,
     headers: {
       "X-Requested-With": "builder",
       ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}),
