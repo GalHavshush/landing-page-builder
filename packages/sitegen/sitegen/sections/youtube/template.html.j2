@@ -1,0 +1,14 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+{% set vid = ctx.youtube_id(p.url) %}
+{% if vid %}
+<figure class="video">
+  <div class="yt" data-yt="{{ vid }}">
+    <a class="yt-link" href="https://www.youtube.com/watch?v={{ vid }}" target="_blank" rel="noopener">
+      <span class="yt-play" aria-hidden="true"></span>
+      <span class="yt-label">{{ ctx.t("play_video") }}</span>
+    </a>
+  </div>
+  {% if p.caption %}<figcaption>{{ p.caption }}</figcaption>{% endif %}
+</figure>
+{% endif %}

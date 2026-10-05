@@ -1,0 +1,13 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<div class="gallery cols-{{ p.columns }}">
+  {% for it in p.items %}
+  {% set img = ctx.image(it.image) %}
+  {% if img %}
+  <figure>
+    <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy"{% if img.width %} width="{{ img.width }}" height="{{ img.height }}"{% endif %}>
+    {% if it.caption %}<figcaption>{{ it.caption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
+  {% endfor %}
+</div>

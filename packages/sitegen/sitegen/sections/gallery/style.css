@@ -1,0 +1,10 @@
+.gallery{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr)}
+@media (min-width:900px){.gallery.cols-3{grid-template-columns:repeat(3,1fr)}.gallery.cols-4{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:480px){.gallery{grid-template-columns:1fr}}
+.gallery figure{margin:0}
+.gallery img{width:100%;border-radius:var(--radius)}
+.s-gallery--grid .gallery img{aspect-ratio:4/3;object-fit:cover}
+.s-gallery--masonry .gallery{display:block;columns:2;column-gap:1rem}
+@media (min-width:900px){.s-gallery--masonry .gallery.cols-3{columns:3}.s-gallery--masonry .gallery.cols-4{columns:4}}
+.s-gallery--masonry .gallery figure{break-inside:avoid;margin-block-end:1rem}
+.gallery figcaption{font-size:.9rem;color:var(--muted);margin-block-start:.4rem}

@@ -1,0 +1,14 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<div class="plans">
+  {% for plan in p.plans %}
+  <article class="plan{% if plan.highlighted %} plan--hl{% endif %}">
+    <h3>{{ plan.name }}</h3>
+    <p class="plan-price"><span class="amount">{{ plan.price }}</span>{% if plan.period %} <span class="period">{{ plan.period }}</span>{% endif %}</p>
+    {% if plan.description %}<p class="plan-desc">{{ plan.description }}</p>{% endif %}
+    {% set lines = plan.features.splitlines() | map("trim") | select | list %}
+    {% if lines %}<ul class="plan-features">{% for f in lines %}<li>{{ ctx.icon("check") }}<span>{{ f }}</span></li>{% endfor %}</ul>{% endif %}
+    {% if plan.cta_label and plan.cta_link %}<a class="btn {{ 'btn-primary' if plan.highlighted else 'btn-outline' }}" href="{{ ctx.link(plan.cta_link) }}">{{ plan.cta_label }}</a>{% endif %}
+  </article>
+  {% endfor %}
+</div>

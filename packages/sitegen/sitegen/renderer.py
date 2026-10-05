@@ -16,6 +16,7 @@ from sitegen.models import Button, ImageRef, Link
 from sitegen.schema import SEO, Page, SiteDocument, language_dir
 from sitegen.sections import REGISTRY
 from sitegen.sections.base import SECTIONS_DIR
+from sitegen.youtube import youtube_id
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 CSS_PATH = "css/site.css"
@@ -194,6 +195,12 @@ class RenderContext:
                 }
             )
         return links
+
+    def youtube_id(self, url: str) -> str | None:
+        vid = youtube_id(url)
+        if vid is None and url.strip():
+            self.issues.append(Issue("warning", f"Could not read this YouTube link: {url!r}"))
+        return vid
 
     def md(self, source: str) -> Markup:
         return Markup(render_markdown(source))  # noqa: S704 - sanitised by nh3

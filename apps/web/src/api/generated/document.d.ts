@@ -107,24 +107,78 @@ export type Price = string;
 export type Items1 = Service[];
 export type Columns1 = 2 | 3;
 export type Id5 = string;
-export type Type4 = "testimonials";
-export type Variant4 = "cards" | "quote";
+export type Type4 = "gallery";
+export type Variant4 = "grid" | "masonry";
 export type Heading4 = string;
 export type Subheading3 = string;
+export type Caption = string;
+export type Items2 = GalleryItem[];
+export type Columns2 = 2 | 3 | 4;
+export type Id6 = string;
+export type Type5 = "testimonials";
+export type Variant5 = "cards" | "quote";
+export type Heading5 = string;
+export type Subheading4 = string;
 export type Quote = string;
 export type Author = string;
 export type Role = string;
-export type Items2 = Testimonial[];
-export type Id6 = string;
-export type Type5 = "faq";
-export type Variant5 = "accordion";
-export type Heading5 = string;
-export type Subheading4 = string;
+export type Items3 = Testimonial[];
+export type Id7 = string;
+export type Type6 = "pricing";
+export type Variant6 = "cards";
+export type Heading6 = string;
+export type Subheading5 = string;
+export type Name2 = string;
+export type Price1 = string;
+export type Period = string;
+export type Description3 = string;
+export type Features = string;
+export type Highlighted = boolean;
+export type CtaLabel = string;
+export type Plans = Plan[];
+export type Id8 = string;
+export type Type7 = "faq";
+export type Variant7 = "accordion";
+export type Heading7 = string;
+export type Subheading6 = string;
 export type Question = string;
 export type Answer = string;
-export type Items3 = FaqItem[];
+export type Items4 = FaqItem[];
+export type Id9 = string;
+export type Type8 = "contact";
+export type Variant8 = "split" | "stacked";
+export type Heading8 = string;
+export type Text2 = string;
+export type ShowBusinessInfo1 = boolean;
+export type ShowForm = boolean;
+export type SubmitLabel = string;
+export type FormEndpoint = string;
+export type Id10 = string;
+export type Type9 = "youtube";
+export type Variant9 = "wide" | "narrow";
+export type Heading9 = string;
+export type Subheading7 = string;
+export type Url1 = string;
+export type Caption1 = string;
+export type Id11 = string;
+export type Type10 = "map";
+export type Variant10 = "embedded";
+export type Heading10 = string;
+export type Subheading8 = string;
+export type Query = string;
+export type Height = "short" | "medium" | "tall";
 export type Sections = (
-  HeroSection | TextSection | FeaturesSection | ServicesSection | TestimonialsSection | FaqSection
+  | HeroSection
+  | TextSection
+  | FeaturesSection
+  | ServicesSection
+  | GallerySection
+  | TestimonialsSection
+  | PricingSection
+  | FaqSection
+  | ContactSection
+  | YoutubeSection
+  | MapSection
 )[];
 export type Title4 = string | null;
 export type Slug1 = string | null;
@@ -217,7 +271,7 @@ export interface Page1 {
   title: Title;
   seo: SEO;
   sections: Sections;
-  i18n: I18N7;
+  i18n: I18N12;
 }
 export interface SEO {
   title: Title1;
@@ -346,23 +400,46 @@ export interface Link1 {
   url: Url;
   asset: Asset1;
 }
-export interface TestimonialsSection {
+export interface GallerySection {
   id: Id5;
   style: SectionStyle;
   i18n: I18N5;
   type: Type4;
   variant: Variant4;
-  props: TestimonialsProps;
+  props: GalleryProps;
 }
 export interface I18N5 {
   [k: string]: {
     [k: string]: unknown;
   };
 }
-export interface TestimonialsProps {
+export interface GalleryProps {
   heading: Heading4;
   subheading: Subheading3;
   items: Items2;
+  columns: Columns2;
+}
+export interface GalleryItem {
+  image: ImageRef | null;
+  caption: Caption;
+}
+export interface TestimonialsSection {
+  id: Id6;
+  style: SectionStyle;
+  i18n: I18N6;
+  type: Type5;
+  variant: Variant5;
+  props: TestimonialsProps;
+}
+export interface I18N6 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface TestimonialsProps {
+  heading: Heading5;
+  subheading: Subheading4;
+  items: Items3;
 }
 export interface Testimonial {
   quote: Quote;
@@ -370,29 +447,116 @@ export interface Testimonial {
   role: Role;
   avatar: ImageRef | null;
 }
-export interface FaqSection {
-  id: Id6;
+export interface PricingSection {
+  id: Id7;
   style: SectionStyle;
-  i18n: I18N6;
-  type: Type5;
-  variant: Variant5;
+  i18n: I18N7;
+  type: Type6;
+  variant: Variant6;
+  props: PricingProps;
+}
+export interface I18N7 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface PricingProps {
+  heading: Heading6;
+  subheading: Subheading5;
+  plans: Plans;
+}
+export interface Plan {
+  name: Name2;
+  price: Price1;
+  period: Period;
+  description: Description3;
+  features: Features;
+  highlighted: Highlighted;
+  cta_label: CtaLabel;
+  cta_link: Link1 | null;
+}
+export interface FaqSection {
+  id: Id8;
+  style: SectionStyle;
+  i18n: I18N8;
+  type: Type7;
+  variant: Variant7;
   props: FaqProps;
 }
-export interface I18N6 {
+export interface I18N8 {
   [k: string]: {
     [k: string]: unknown;
   };
 }
 export interface FaqProps {
-  heading: Heading5;
-  subheading: Subheading4;
-  items: Items3;
+  heading: Heading7;
+  subheading: Subheading6;
+  items: Items4;
 }
 export interface FaqItem {
   question: Question;
   answer: Answer;
 }
-export interface I18N7 {
+export interface ContactSection {
+  id: Id9;
+  style: SectionStyle;
+  i18n: I18N9;
+  type: Type8;
+  variant: Variant8;
+  props: ContactProps;
+}
+export interface I18N9 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface ContactProps {
+  heading: Heading8;
+  text: Text2;
+  show_business_info: ShowBusinessInfo1;
+  show_form: ShowForm;
+  submit_label: SubmitLabel;
+  form_endpoint: FormEndpoint;
+}
+export interface YoutubeSection {
+  id: Id10;
+  style: SectionStyle;
+  i18n: I18N10;
+  type: Type9;
+  variant: Variant9;
+  props: YoutubeProps;
+}
+export interface I18N10 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface YoutubeProps {
+  heading: Heading9;
+  subheading: Subheading7;
+  url: Url1;
+  caption: Caption1;
+}
+export interface MapSection {
+  id: Id11;
+  style: SectionStyle;
+  i18n: I18N11;
+  type: Type10;
+  variant: Variant10;
+  props: MapProps;
+}
+export interface I18N11 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface MapProps {
+  heading: Heading10;
+  subheading: Subheading8;
+  query: Query;
+  height: Height;
+}
+export interface I18N12 {
   [k: string]: PageTranslation;
 }
 export interface PageTranslation {

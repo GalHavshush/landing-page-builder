@@ -1,0 +1,10 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+{% set where = p.query or ctx.site_view().address %}
+{% if where %}
+<div class="map map-{{ p.height }}">
+  <iframe title="{{ where }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    src="https://www.google.com/maps?q={{ where | urlencode }}&amp;output=embed"></iframe>
+</div>
+<p class="map-link"><a href="https://www.google.com/maps/search/?api=1&amp;query={{ where | urlencode }}" target="_blank" rel="noopener">{{ ctx.t("open_map") }}</a></p>
+{% endif %}

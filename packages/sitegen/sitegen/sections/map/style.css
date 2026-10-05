@@ -1,0 +1,4 @@
+.map{border-radius:calc(var(--radius)*1.4);overflow:hidden;background:var(--color-surface);border:1px solid var(--line)}
+.map iframe{display:block;width:100%;border:0}
+.map-short iframe{height:16rem}.map-medium iframe{height:24rem}.map-tall iframe{height:34rem}
+.map-link{margin-block:.75rem 0;font-size:.95rem}

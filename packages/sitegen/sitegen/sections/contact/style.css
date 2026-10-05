@@ -1,0 +1,13 @@
+.contact-grid{display:grid;gap:3rem;align-items:start}
+@media (min-width:860px){.contact-grid.two{grid-template-columns:1fr 1fr}}
+.s-contact--stacked .contact-grid{grid-template-columns:1fr;max-width:40rem}
+.contact-list{list-style:none;margin:1.5rem 0 0;padding:0;display:grid;gap:.9rem}
+.contact-list li{display:flex;gap:.75rem;align-items:flex-start}
+.contact-list .icon{width:1.25rem;height:1.25rem;margin-block-start:.25rem;flex:none;color:var(--color-primary)}
+.bg-primary .contact-list .icon,.bg-dark .contact-list .icon{color:inherit}
+.contact-form{display:grid;gap:1rem;background:var(--card);border:1px solid var(--line);border-radius:calc(var(--radius)*1.4);padding:1.75rem}
+.contact-form label{display:grid;gap:.35rem;font-weight:600;font-size:.95rem}
+.contact-form input,.contact-form textarea{font:inherit;color:inherit;padding:.7em .9em;border:1px solid var(--line);border-radius:var(--radius);background:var(--color-bg)}
+.contact-form input:focus-visible,.contact-form textarea:focus-visible{outline:3px solid var(--color-accent);outline-offset:1px}
+.contact-form .hp{position:absolute;inset-inline-start:-9999px}
+.contact-form button{justify-self:start}

@@ -77,6 +77,112 @@
       "title": "Button",
       "type": "object"
     },
+    "ContactProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "Get in touch",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "text": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Text",
+          "type": "string"
+        },
+        "show_business_info": {
+          "control": "toggle",
+          "default": true,
+          "group": "content",
+          "title": "Show Business Info",
+          "type": "boolean"
+        },
+        "show_form": {
+          "control": "toggle",
+          "default": true,
+          "group": "content",
+          "title": "Show Form",
+          "type": "boolean"
+        },
+        "submit_label": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Submit Label",
+          "type": "string"
+        },
+        "form_endpoint": {
+          "control": "text",
+          "default": "",
+          "group": "design",
+          "hint": "Paste the form URL from a service like Formspree. Leave empty to use the email app.",
+          "title": "Form Endpoint",
+          "type": "string"
+        }
+      },
+      "required": [
+        "heading",
+        "text",
+        "show_business_info",
+        "show_form",
+        "submit_label",
+        "form_endpoint"
+      ],
+      "title": "ContactProps",
+      "type": "object"
+    },
+    "ContactSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "contact",
+          "default": "contact",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "split",
+          "enum": [
+            "split",
+            "stacked"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/ContactProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "ContactSection",
+      "type": "object"
+    },
     "FaqItem": {
       "additionalProperties": false,
       "properties": {
@@ -352,6 +458,131 @@
       "title": "Footer",
       "type": "object"
     },
+    "GalleryItem": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "image",
+          "default": null
+        },
+        "caption": {
+          "control": "text",
+          "default": "",
+          "title": "Caption",
+          "type": "string"
+        }
+      },
+      "required": [
+        "image",
+        "caption"
+      ],
+      "title": "GalleryItem",
+      "type": "object"
+    },
+    "GalleryProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/GalleryItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "columns": {
+          "control": "segmented",
+          "default": 3,
+          "enum": [
+            2,
+            3,
+            4
+          ],
+          "group": "design",
+          "title": "Columns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items",
+        "columns"
+      ],
+      "title": "GalleryProps",
+      "type": "object"
+    },
+    "GallerySection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "gallery",
+          "default": "gallery",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "grid",
+          "enum": [
+            "grid",
+            "masonry"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/GalleryProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "GallerySection",
+      "type": "object"
+    },
     "HeroProps": {
       "additionalProperties": false,
       "properties": {
@@ -571,6 +802,98 @@
       "title": "Link",
       "type": "object"
     },
+    "MapProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "query": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "hint": "An address or place name. Leave empty to use the business address.",
+          "title": "Query",
+          "type": "string"
+        },
+        "height": {
+          "control": "segmented",
+          "default": "medium",
+          "enum": [
+            "short",
+            "medium",
+            "tall"
+          ],
+          "group": "design",
+          "title": "Height",
+          "type": "string"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "query",
+        "height"
+      ],
+      "title": "MapProps",
+      "type": "object"
+    },
+    "MapSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "map",
+          "default": "map",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "const": "embedded",
+          "default": "embedded",
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/MapProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "MapSection",
+      "type": "object"
+    },
     "NavItem": {
       "additionalProperties": false,
       "properties": {
@@ -621,12 +944,17 @@
           "items": {
             "discriminator": {
               "mapping": {
+                "contact": "#/$defs/ContactSection",
                 "faq": "#/$defs/FaqSection",
                 "features": "#/$defs/FeaturesSection",
+                "gallery": "#/$defs/GallerySection",
                 "hero": "#/$defs/HeroSection",
+                "map": "#/$defs/MapSection",
+                "pricing": "#/$defs/PricingSection",
                 "services": "#/$defs/ServicesSection",
                 "testimonials": "#/$defs/TestimonialsSection",
-                "text": "#/$defs/TextSection"
+                "text": "#/$defs/TextSection",
+                "youtube": "#/$defs/YoutubeSection"
               },
               "propertyName": "type"
             },
@@ -644,10 +972,25 @@
                 "$ref": "#/$defs/ServicesSection"
               },
               {
+                "$ref": "#/$defs/GallerySection"
+              },
+              {
                 "$ref": "#/$defs/TestimonialsSection"
               },
               {
+                "$ref": "#/$defs/PricingSection"
+              },
+              {
                 "$ref": "#/$defs/FaqSection"
+              },
+              {
+                "$ref": "#/$defs/ContactSection"
+              },
+              {
+                "$ref": "#/$defs/YoutubeSection"
+              },
+              {
+                "$ref": "#/$defs/MapSection"
               }
             ]
           },
@@ -732,6 +1075,158 @@
         "seo_description"
       ],
       "title": "PageTranslation",
+      "type": "object"
+    },
+    "Plan": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "control": "text",
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "price": {
+          "control": "text",
+          "default": "",
+          "title": "Price",
+          "type": "string"
+        },
+        "period": {
+          "control": "text",
+          "default": "",
+          "title": "Period",
+          "type": "string"
+        },
+        "description": {
+          "control": "textarea",
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        },
+        "features": {
+          "control": "textarea",
+          "default": "",
+          "hint": "One per line",
+          "title": "Features",
+          "type": "string"
+        },
+        "highlighted": {
+          "control": "toggle",
+          "default": false,
+          "title": "Highlighted",
+          "type": "boolean"
+        },
+        "cta_label": {
+          "control": "text",
+          "default": "",
+          "title": "Cta Label",
+          "type": "string"
+        },
+        "cta_link": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Link"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "link",
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "price",
+        "period",
+        "description",
+        "features",
+        "highlighted",
+        "cta_label",
+        "cta_link"
+      ],
+      "title": "Plan",
+      "type": "object"
+    },
+    "PricingProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "plans": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Plan"
+          },
+          "title": "Plans",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "plans"
+      ],
+      "title": "PricingProps",
+      "type": "object"
+    },
+    "PricingSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "pricing",
+          "default": "pricing",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "const": "cards",
+          "default": "cards",
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/PricingProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "PricingSection",
       "type": "object"
     },
     "SEO": {
@@ -1450,6 +1945,96 @@
         "spacing"
       ],
       "title": "Theme",
+      "type": "object"
+    },
+    "YoutubeProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "url": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "hint": "Paste a YouTube link, e.g. https://youtu.be/\u2026",
+          "title": "Url",
+          "type": "string"
+        },
+        "caption": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Caption",
+          "type": "string"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "url",
+        "caption"
+      ],
+      "title": "YoutubeProps",
+      "type": "object"
+    },
+    "YoutubeSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "youtube",
+          "default": "youtube",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "wide",
+          "enum": [
+            "wide",
+            "narrow"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/YoutubeProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "YoutubeSection",
       "type": "object"
     }
   },

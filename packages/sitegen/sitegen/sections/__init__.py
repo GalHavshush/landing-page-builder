@@ -5,15 +5,33 @@ from typing import Annotated, Union
 from pydantic import Field
 
 from sitegen.sections.base import SectionDef
+from sitegen.sections.contact.model import DEF as CONTACT
 from sitegen.sections.faq.model import DEF as FAQ
 from sitegen.sections.features.model import DEF as FEATURES
+from sitegen.sections.gallery.model import DEF as GALLERY
 from sitegen.sections.hero.model import DEF as HERO
+from sitegen.sections.map.model import DEF as MAP
+from sitegen.sections.pricing.model import DEF as PRICING
 from sitegen.sections.services.model import DEF as SERVICES
 from sitegen.sections.testimonials.model import DEF as TESTIMONIALS
 from sitegen.sections.text.model import DEF as TEXT
+from sitegen.sections.youtube.model import DEF as YOUTUBE
 
 REGISTRY: dict[str, SectionDef] = {
-    d.type: d for d in (HERO, TEXT, FEATURES, SERVICES, TESTIMONIALS, FAQ)
+    d.type: d
+    for d in (
+        HERO,
+        TEXT,
+        FEATURES,
+        SERVICES,
+        GALLERY,
+        TESTIMONIALS,
+        PRICING,
+        FAQ,
+        CONTACT,
+        YOUTUBE,
+        MAP,
+    )
 }
 
 Section = Annotated[

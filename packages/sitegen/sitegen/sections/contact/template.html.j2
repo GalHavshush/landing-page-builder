@@ -1,0 +1,26 @@
+{% set b = ctx.site_view() %}
+{% set mailto = b.email if b.email else "" %}
+{% set show_form = p.show_form and (p.form_endpoint or mailto) %}
+<div class="contact-grid{% if show_form and p.show_business_info %} two{% endif %}">
+  <div class="contact-info">
+    {% if p.heading %}<h2>{{ p.heading }}</h2>{% endif %}
+    {% if p.text %}<p class="lead">{{ p.text }}</p>{% endif %}
+    {% if p.show_business_info %}
+    <ul class="contact-list">
+      {% if b.phone %}<li>{{ ctx.icon("phone") }}<a href="tel:{{ b.phone }}">{{ b.phone }}</a></li>{% endif %}
+      {% if b.email %}<li>{{ ctx.icon("mail") }}<a href="mailto:{{ b.email }}">{{ b.email }}</a></li>{% endif %}
+      {% if b.address %}<li>{{ ctx.icon("map-pin") }}<span>{{ b.address }}</span></li>{% endif %}
+      {% if b.hours %}<li>{{ ctx.icon("clock") }}<span>{% for h in b.hours %}{{ h.label }}: {% if h.closed %}{{ ctx.t("closed") }}{% else %}{{ h.open }}&ndash;{{ h.close }}{% endif %}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></li>{% endif %}
+    </ul>
+    {% endif %}
+  </div>
+  {% if show_form %}
+  <form class="contact-form" {% if p.form_endpoint %}action="{{ p.form_endpoint }}" method="post"{% else %}action="mailto:{{ mailto }}" method="post" enctype="text/plain"{% endif %}>
+    <label>{{ ctx.t("form_name") }}<input type="text" name="name" required autocomplete="name"></label>
+    <label>{{ ctx.t("form_email") }}<input type="email" name="email" required autocomplete="email"></label>
+    <label>{{ ctx.t("form_message") }}<textarea name="message" rows="5" required></textarea></label>
+    {% if p.form_endpoint %}<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">{% endif %}
+    <button class="btn btn-primary" type="submit">{{ p.submit_label or ctx.t("form_send") }}</button>
+  </form>
+  {% endif %}
+</div>
