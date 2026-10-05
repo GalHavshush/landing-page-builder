@@ -15,7 +15,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Strict(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    # In serialization-mode JSON Schema, fields with defaults are always present (-> TS types
+    # where they are required, which matches the documents the API returns).
+    model_config = ConfigDict(extra="forbid", json_schema_serialization_defaults_required=True)
 
 
 def new_id(prefix: str) -> str:

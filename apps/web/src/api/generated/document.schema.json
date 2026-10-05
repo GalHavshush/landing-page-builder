@@ -1,0 +1,1467 @@
+{
+  "$defs": {
+    "Business": {
+      "additionalProperties": false,
+      "description": "Shared business info. Sections (contact, footer, map) read from here.",
+      "properties": {
+        "phone": {
+          "default": "",
+          "title": "Phone",
+          "type": "string"
+        },
+        "email": {
+          "default": "",
+          "title": "Email",
+          "type": "string"
+        },
+        "address": {
+          "default": "",
+          "title": "Address",
+          "type": "string"
+        },
+        "hours": {
+          "items": {
+            "$ref": "#/$defs/Hours"
+          },
+          "title": "Hours",
+          "type": "array"
+        },
+        "social": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Social",
+          "type": "object"
+        }
+      },
+      "required": [
+        "phone",
+        "email",
+        "address",
+        "hours",
+        "social"
+      ],
+      "title": "Business",
+      "type": "object"
+    },
+    "Button": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "href": {
+          "$ref": "#/$defs/Link"
+        },
+        "style": {
+          "default": "primary",
+          "enum": [
+            "primary",
+            "secondary",
+            "outline",
+            "link"
+          ],
+          "title": "Style",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "href",
+        "style"
+      ],
+      "title": "Button",
+      "type": "object"
+    },
+    "FaqItem": {
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "default": "",
+          "title": "Question",
+          "type": "string"
+        },
+        "answer": {
+          "default": "",
+          "title": "Answer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "answer"
+      ],
+      "title": "FaqItem",
+      "type": "object"
+    },
+    "FaqProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/FaqItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items"
+      ],
+      "title": "FaqProps",
+      "type": "object"
+    },
+    "FaqSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "faq",
+          "default": "faq",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "const": "accordion",
+          "default": "accordion",
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/FaqProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "FaqSection",
+      "type": "object"
+    },
+    "Feature": {
+      "additionalProperties": false,
+      "properties": {
+        "icon": {
+          "anyOf": [
+            {
+              "enum": [
+                "star",
+                "check",
+                "heart",
+                "clock",
+                "phone",
+                "mail",
+                "map-pin",
+                "shield",
+                "bolt",
+                "leaf",
+                "users",
+                "gift",
+                "globe",
+                "wrench",
+                "coffee",
+                "camera"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Icon"
+        },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "icon",
+        "title",
+        "text"
+      ],
+      "title": "Feature",
+      "type": "object"
+    },
+    "FeaturesProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Feature"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "columns": {
+          "control": "segmented",
+          "default": 3,
+          "enum": [
+            2,
+            3,
+            4
+          ],
+          "group": "design",
+          "title": "Columns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items",
+        "columns"
+      ],
+      "title": "FeaturesProps",
+      "type": "object"
+    },
+    "FeaturesSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "features",
+          "default": "features",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cards",
+          "enum": [
+            "cards",
+            "plain"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/FeaturesProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "FeaturesSection",
+      "type": "object"
+    },
+    "Footer": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "show_business_info": {
+          "default": true,
+          "title": "Show Business Info",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "text",
+        "show_business_info"
+      ],
+      "title": "Footer",
+      "type": "object"
+    },
+    "HeroProps": {
+      "additionalProperties": false,
+      "properties": {
+        "eyebrow": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Eyebrow",
+          "type": "string"
+        },
+        "heading": {
+          "control": "text",
+          "default": "Your headline here",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "image",
+          "default": null,
+          "group": "content"
+        },
+        "buttons": {
+          "control": "buttons",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Button"
+          },
+          "title": "Buttons",
+          "type": "array"
+        },
+        "image_position": {
+          "control": "segmented",
+          "default": "end",
+          "enum": [
+            "start",
+            "end"
+          ],
+          "group": "design",
+          "title": "Image Position",
+          "type": "string"
+        }
+      },
+      "required": [
+        "eyebrow",
+        "heading",
+        "subheading",
+        "image",
+        "buttons",
+        "image_position"
+      ],
+      "title": "HeroProps",
+      "type": "object"
+    },
+    "HeroSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "hero",
+          "default": "hero",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "centered",
+          "enum": [
+            "centered",
+            "split"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/HeroProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "HeroSection",
+      "type": "object"
+    },
+    "Hours": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "open": {
+          "default": "",
+          "title": "Open",
+          "type": "string"
+        },
+        "close": {
+          "default": "",
+          "title": "Close",
+          "type": "string"
+        },
+        "closed": {
+          "default": false,
+          "title": "Closed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "label",
+        "open",
+        "close",
+        "closed"
+      ],
+      "title": "Hours",
+      "type": "object"
+    },
+    "ImageRef": {
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "title": "Asset",
+          "type": "string"
+        },
+        "alt": {
+          "default": "",
+          "title": "Alt",
+          "type": "string"
+        }
+      },
+      "required": [
+        "asset",
+        "alt"
+      ],
+      "title": "ImageRef",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "description": "A link to a page of this site, an external URL, or an uploaded asset (exactly one).",
+      "properties": {
+        "page": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "asset": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asset"
+        }
+      },
+      "required": [
+        "page",
+        "url",
+        "asset"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "NavItem": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "page": {
+          "title": "Page",
+          "type": "string"
+        },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "object"
+        }
+      },
+      "required": [
+        "label",
+        "page",
+        "labels"
+      ],
+      "title": "NavItem",
+      "type": "object"
+    },
+    "Page": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "slug": {
+          "default": "",
+          "title": "Slug",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "seo": {
+          "$ref": "#/$defs/SEO"
+        },
+        "sections": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "faq": "#/$defs/FaqSection",
+                "features": "#/$defs/FeaturesSection",
+                "hero": "#/$defs/HeroSection",
+                "services": "#/$defs/ServicesSection",
+                "testimonials": "#/$defs/TestimonialsSection",
+                "text": "#/$defs/TextSection"
+              },
+              "propertyName": "type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/HeroSection"
+              },
+              {
+                "$ref": "#/$defs/TextSection"
+              },
+              {
+                "$ref": "#/$defs/FeaturesSection"
+              },
+              {
+                "$ref": "#/$defs/ServicesSection"
+              },
+              {
+                "$ref": "#/$defs/TestimonialsSection"
+              },
+              {
+                "$ref": "#/$defs/FaqSection"
+              }
+            ]
+          },
+          "title": "Sections",
+          "type": "array"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "$ref": "#/$defs/PageTranslation"
+          },
+          "title": "I18N",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "slug",
+        "title",
+        "seo",
+        "sections",
+        "i18n"
+      ],
+      "title": "Page",
+      "type": "object"
+    },
+    "PageTranslation": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "slug": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Slug"
+        },
+        "seo_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seo Title"
+        },
+        "seo_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seo Description"
+        }
+      },
+      "required": [
+        "title",
+        "slug",
+        "seo_title",
+        "seo_description"
+      ],
+      "title": "PageTranslation",
+      "type": "object"
+    },
+    "SEO": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "social_image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Social Image"
+        },
+        "noindex": {
+          "default": false,
+          "title": "Noindex",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "social_image",
+        "noindex"
+      ],
+      "title": "SEO",
+      "type": "object"
+    },
+    "SectionStyle": {
+      "additionalProperties": false,
+      "description": "Design options every section has. All enums.",
+      "properties": {
+        "background": {
+          "default": "default",
+          "enum": [
+            "default",
+            "alt",
+            "primary",
+            "dark"
+          ],
+          "title": "Background",
+          "type": "string"
+        },
+        "spacing": {
+          "default": "normal",
+          "enum": [
+            "compact",
+            "normal",
+            "spacious"
+          ],
+          "title": "Spacing",
+          "type": "string"
+        },
+        "align": {
+          "default": "start",
+          "enum": [
+            "start",
+            "center",
+            "end"
+          ],
+          "title": "Align",
+          "type": "string"
+        }
+      },
+      "required": [
+        "background",
+        "spacing",
+        "align"
+      ],
+      "title": "SectionStyle",
+      "type": "object"
+    },
+    "Service": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        },
+        "price": {
+          "default": "",
+          "title": "Price",
+          "type": "string"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "link": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Link"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "price",
+        "image",
+        "link"
+      ],
+      "title": "Service",
+      "type": "object"
+    },
+    "ServicesProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Service"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "columns": {
+          "control": "segmented",
+          "default": 3,
+          "enum": [
+            2,
+            3
+          ],
+          "group": "design",
+          "title": "Columns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items",
+        "columns"
+      ],
+      "title": "ServicesProps",
+      "type": "object"
+    },
+    "ServicesSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "services",
+          "default": "services",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cards",
+          "enum": [
+            "cards",
+            "list"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/ServicesProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "ServicesSection",
+      "type": "object"
+    },
+    "Site": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "tagline": {
+          "default": "",
+          "title": "Tagline",
+          "type": "string"
+        },
+        "default_language": {
+          "default": "en",
+          "title": "Default Language",
+          "type": "string"
+        },
+        "languages": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Languages",
+          "type": "array"
+        },
+        "base_url": {
+          "default": "",
+          "title": "Base Url",
+          "type": "string"
+        },
+        "business": {
+          "$ref": "#/$defs/Business"
+        },
+        "seo": {
+          "$ref": "#/$defs/SiteSEO"
+        },
+        "nav": {
+          "items": {
+            "$ref": "#/$defs/NavItem"
+          },
+          "title": "Nav",
+          "type": "array"
+        },
+        "footer": {
+          "$ref": "#/$defs/Footer"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "$ref": "#/$defs/SiteTranslation"
+          },
+          "title": "I18N",
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "tagline",
+        "default_language",
+        "languages",
+        "base_url",
+        "business",
+        "seo",
+        "nav",
+        "footer",
+        "i18n"
+      ],
+      "title": "Site",
+      "type": "object"
+    },
+    "SiteSEO": {
+      "additionalProperties": false,
+      "properties": {
+        "title_template": {
+          "default": "{page} | {site}",
+          "title": "Title Template",
+          "type": "string"
+        },
+        "default_description": {
+          "default": "",
+          "title": "Default Description",
+          "type": "string"
+        },
+        "social_image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Social Image"
+        }
+      },
+      "required": [
+        "title_template",
+        "default_description",
+        "social_image"
+      ],
+      "title": "SiteSEO",
+      "type": "object"
+    },
+    "SiteTranslation": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "tagline": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tagline"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Address"
+        },
+        "hours": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Hours"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hours"
+        },
+        "footer_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Footer Text"
+        }
+      },
+      "required": [
+        "name",
+        "tagline",
+        "description",
+        "address",
+        "hours",
+        "footer_text"
+      ],
+      "title": "SiteTranslation",
+      "type": "object"
+    },
+    "Testimonial": {
+      "additionalProperties": false,
+      "properties": {
+        "quote": {
+          "default": "",
+          "title": "Quote",
+          "type": "string"
+        },
+        "author": {
+          "default": "",
+          "title": "Author",
+          "type": "string"
+        },
+        "role": {
+          "default": "",
+          "title": "Role",
+          "type": "string"
+        },
+        "avatar": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "quote",
+        "author",
+        "role",
+        "avatar"
+      ],
+      "title": "Testimonial",
+      "type": "object"
+    },
+    "TestimonialsProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Testimonial"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items"
+      ],
+      "title": "TestimonialsProps",
+      "type": "object"
+    },
+    "TestimonialsSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "testimonials",
+          "default": "testimonials",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cards",
+          "enum": [
+            "cards",
+            "quote"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/TestimonialsProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "TestimonialsSection",
+      "type": "object"
+    },
+    "TextProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "body": {
+          "control": "richtext",
+          "default": "",
+          "group": "content",
+          "title": "Body",
+          "type": "string"
+        }
+      },
+      "required": [
+        "heading",
+        "body"
+      ],
+      "title": "TextProps",
+      "type": "object"
+    },
+    "TextSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "text",
+          "default": "text",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "single",
+          "enum": [
+            "single",
+            "columns"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/TextProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "TextSection",
+      "type": "object"
+    },
+    "Theme": {
+      "additionalProperties": false,
+      "properties": {
+        "template": {
+          "default": "clean",
+          "title": "Template",
+          "type": "string"
+        },
+        "palette": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Palette",
+          "type": "object"
+        },
+        "fonts": {
+          "additionalProperties": {
+            "enum": [
+              "sans",
+              "serif",
+              "humanist",
+              "rounded"
+            ],
+            "type": "string"
+          },
+          "propertyNames": {
+            "enum": [
+              "heading",
+              "body"
+            ]
+          },
+          "title": "Fonts",
+          "type": "object"
+        },
+        "radius": {
+          "default": "md",
+          "enum": [
+            "none",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "title": "Radius",
+          "type": "string"
+        },
+        "button_style": {
+          "default": "solid",
+          "enum": [
+            "solid",
+            "outline",
+            "soft"
+          ],
+          "title": "Button Style",
+          "type": "string"
+        },
+        "spacing": {
+          "default": "normal",
+          "enum": [
+            "compact",
+            "normal",
+            "spacious"
+          ],
+          "title": "Spacing",
+          "type": "string"
+        }
+      },
+      "required": [
+        "template",
+        "palette",
+        "fonts",
+        "radius",
+        "button_style",
+        "spacing"
+      ],
+      "title": "Theme",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "site": {
+      "$ref": "#/$defs/Site"
+    },
+    "theme": {
+      "$ref": "#/$defs/Theme"
+    },
+    "pages": {
+      "items": {
+        "$ref": "#/$defs/Page"
+      },
+      "title": "Pages",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "site",
+    "theme",
+    "pages"
+  ],
+  "title": "SiteDocument",
+  "type": "object"
+}

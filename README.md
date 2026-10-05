@@ -10,6 +10,8 @@ uv sync --all-packages
 uv run pytest
 uv run ruff check . && uv run ruff format --check .
 docker compose up -d        # postgres + minio
+cd apps/web && npm install && npm run dev   # editor at http://localhost:5173 (proxies /api to :8000)
+npm run gen                 # after changing backend models: regenerate TypeScript types
 cd apps/api && uv run alembic upgrade head && uv run uvicorn app.main:app --reload
 ```
 
