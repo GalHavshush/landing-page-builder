@@ -4,9 +4,14 @@ import { setNav, setSiteTranslation, updateSite } from "../commands";
 import { FieldShell, SelectControl, TextAreaControl, TextControl, ToggleControl } from "../controls/basic";
 import { Repeater } from "../controls/Repeater";
 import { useCanEditStructure, useEditor } from "../store";
+import { t } from "@/i18n";
 
 type Site = SiteDocument["site"];
 type Hours = Site["business"]["hours"][number];
+type Social = { label: string; url: string };
+const SOCIALS = ["Instagram", "Facebook", "WhatsApp", "TikTok", "YouTube", "X", "LinkedIn"];
+const toRows = (m: Record<string, string>): Social[] => Object.entries(m).map(([label, url]) => ({ label, url }));
+const toMap = (rows: Social[]) => Object.fromEntries(rows.map((r) => [r.label.trim() || "Link", r.url]));
 type SiteTField = "name" | "tagline" | "description" | "address" | "footer_text";
 
 function BaseUrl({ value, onChange }: { value: string; onChange: (v: string, typing?: boolean) => void }) {
@@ -16,10 +21,10 @@ function BaseUrl({ value, onChange }: { value: string; onChange: (v: string, typ
   const bad = draft !== "" && !/^https?:\/\//.test(draft);
   return (
     <FieldShell label="Website address" htmlFor={id} hint="The final address, e.g. https://example.com. Needed for sitemap, social previews and search engines.">
-      <input id={id} value={draft} placeholder="https://example.com" aria-invalid={bad} spellCheck={false}
+      <input id={id} value={draft} dir="ltr" placeholder="https://example.com" aria-invalid={bad} spellCheck={false}
         onChange={(e) => { setDraft(e.target.value); if (e.target.value === "" || /^https?:\/\//.test(e.target.value)) onChange(e.target.value, true); }}
         className={`mt-1 block w-full rounded-md border px-2.5 py-1.5 text-sm ${bad ? "border-red-400" : "border-ink-300"}`} />
-      {bad && <p className="mt-1 text-xs text-red-600">Must start with https://</p>}
+      {bad && <p className="mt-1 text-xs text-red-600">{t("Must start with https://")}</p>}
     </FieldShell>
   );
 }
@@ -66,13 +71,13 @@ export function SitePanel() {
 
   return (
     <div className="space-y-4">
-      {translating && <p className="text-[12px] text-ink-600">Translating site text. Phone, email, hours and web address are shared.</p>}
+      {translating && <p className="text-[12px] text-ink-600">{t("Translating site text. Phone, email, hours and web address are shared.")}</p>}
       {canEdit && field("name", "Site name")}
       {field("tagline", "Tagline")}
       {field("description", "Default description", true, "Used in search results when a page has none.")}
       {canEdit && !translating && <BaseUrl value={site.base_url} onChange={(v, t) => apply(updateSite({ base_url: v }), { coalesceKey: t ? "site.base_url" : undefined })} />}
 
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Business info</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Business info")}</h3>
       {!translating && business("phone")}
       {!translating && business("email")}
       {field("address", "Address", true)}
@@ -98,7 +103,23 @@ export function SitePanel() {
         />
       )}
 
-      {canEdit && <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Menu</h3>}
+      {!translating && (
+        <Repeater<Social>
+          label="Social links"
+          items={toRows(site.business.social)}
+          onChange={(rows, t) => apply((d) => { d.site.business.social = toMap(rows); }, { coalesceKey: t ? "site.social" : undefined })}
+          makeBlank={() => ({ label: SOCIALS.find((n) => !(n in site.business.social)) ?? "Link", url: "https://" })}
+          addLabel="Add social link"
+          renderItem={(r, set) => (
+            <>
+              <TextControl label="Name" hint={t("e.g. {names}, or anything you like", { names: SOCIALS.join(", ") })} value={r.label} onChange={(v, t) => set({ ...r, label: v }, t)} />
+              <TextControl label="Link" hint="The full address, starting with https://. WhatsApp: https://wa.me/ and your number with country code." value={r.url} onChange={(v, t) => set({ ...r, url: v }, t)} />
+            </>
+          )}
+        />
+      )}
+
+      {canEdit && <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Menu")}</h3>}
       {!canEdit ? null : translating ? (
         <div className="space-y-3">
           {site.nav.map((item, i) => (
@@ -125,7 +146,7 @@ export function SitePanel() {
         />
       )}
 
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Footer</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Footer")}</h3>
       {field("footer_text", "Footer text", true)}
       {canEdit && !translating && (
         <ToggleControl label="Show business info in footer" value={site.footer.show_business_info}

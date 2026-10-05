@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes } from "react";
+import { t } from "@/i18n";
 
 type Variant = "primary" | "ghost" | "danger" | "quiet";
 
@@ -33,7 +34,7 @@ export function Field({ label, ...props }: InputHTMLAttributes<HTMLInputElement>
 export function ErrorText({ children }: { children?: React.ReactNode }) {
   return children ? (
     <p role="alert" className="text-[13px] text-red-600">
-      {children}
+      {typeof children === "string" ? t(children) : children}
     </p>
   ) : null;
 }

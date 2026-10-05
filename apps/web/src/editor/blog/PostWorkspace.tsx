@@ -21,9 +21,9 @@ export function PostWorkspace() {
   const posts = usePosts(projectId);
   const post = posts.data?.find((p) => p.id === postId);
 
-  if (!postId) return <Empty text="Pick a post on the left, or write a new one." />;
-  if (posts.isPending) return <Empty text="Loading…" />;
-  if (!post) return <Empty text="This post no longer exists." />;
+  if (!postId) return <Empty text={t("Pick a post on the side, or write a new one.")} />;
+  if (posts.isPending) return <Empty text={t("Loading…")} />;
+  if (!post) return <Empty text={t("This post no longer exists.")} />;
   // key: a fresh editor (and fresh local state) for each post
   return <Editor key={post.id} post={post} />;
 }
@@ -69,7 +69,7 @@ function Editor({ post }: { post: PostOut }) {
           },
           onError: (e) => {
             setState("error");
-            setError(e instanceof ApiError && e.status === 409 ? "Another post already uses this URL name." : e.message);
+            setError(e instanceof ApiError && e.status === 409 ? t("Another post already uses this URL name.") : e.message);
           },
         },
       );
@@ -93,15 +93,15 @@ function Editor({ post }: { post: PostOut }) {
     return () => { clearTimeout(timer); controller.abort(); };
   }, [draft, projectId, post.id]);
 
-  const statusText = !valid ? "Fix the highlighted fields to save" : { saved: "All changes saved", dirty: "Unsaved changes…", saving: "Saving…", error: "Could not save" }[state];
+  const statusText = !valid ? t("Fix the highlighted fields to save") : t({ saved: "All changes saved", dirty: "Unsaved changes…", saving: "Saving…", error: "Could not save" }[state]);
 
   return (
     <div className="col-span-2 grid min-h-0 grid-cols-[1fr_320px]">
       <div className="grid min-h-0 grid-cols-2">
-        <section className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
+        <section className="flex min-h-0 flex-col border-e border-ink-200 bg-white">
           <div className="border-b border-ink-200 px-4 pt-3">
-            <input aria-label="Post title" value={draft.title} onChange={(e) => update({ title: e.target.value })}
-              placeholder="Post title" className="w-full text-xl font-semibold focus:outline-none" />
+            <input dir="auto" aria-label={t("Post title")} value={draft.title} onChange={(e) => update({ title: e.target.value })}
+              placeholder={t("Post title")} className="w-full text-xl font-semibold focus:outline-none" />
             <div role="status" className={`pb-2 text-xs ${valid && state !== "error" ? "text-ink-400" : "text-red-600"}`}>
               {statusText}{error ? `: ${error}` : ""}
             </div>
@@ -116,6 +116,7 @@ function Editor({ post }: { post: PostOut }) {
 }
 
 import { queryClient } from "@/api/queryClient";
+import { t } from "@/i18n";
 function allPostsCacheUpdate(projectId: number, saved: PostOut) {
   queryClient.setQueryData<PostOut[]>(["posts", projectId], (old) =>
     old?.map((p) => (p.id === saved.id ? { ...saved, body_md: p.body_md === saved.body_md ? p.body_md : saved.body_md } : p)),

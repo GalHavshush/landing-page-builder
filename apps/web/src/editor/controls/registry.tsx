@@ -4,6 +4,7 @@ import { ImageControl, type ImageValue } from "./ImageControl";
 import { LinkControl, type LinkValue } from "./LinkControl";
 import { Repeater } from "./Repeater";
 import { blankItem, isNullable, unwrap, type Defs } from "./schema";
+import { t } from "@/i18n";
 
 const humanize = (s: string) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
 
@@ -65,14 +66,13 @@ export function Control({ name, schema, value, onChange, env, placeholder, hint,
       const itemSchema = (resolved.items ?? {}) as PropSchema;
       const item = unwrap(itemSchema, env.defs);
       const fields = Object.entries((item.properties ?? {}) as Record<string, PropSchema>);
-      const noun = control === "buttons" ? "button" : "item";
-      return (
+            return (
         <Repeater
           label={text}
           items={(value as Record<string, unknown>[]) ?? []}
           onChange={onChange as (v: Record<string, unknown>[], typing?: boolean) => void}
           makeBlank={() => (control === "buttons" ? { ...blankItem(itemSchema, env.defs), label: "Button", href: { url: "https://" } } : blankItem(itemSchema, env.defs))}
-          addLabel={`Add ${noun}`}
+          addLabel={control === "buttons" ? t("Add button") : t("Add item")}
           renderItem={(it, set) =>
             fields.map(([field, fieldSchema]) => (
               <Control key={field} name={field} schema={fieldSchema} env={env} value={it[field]}
@@ -86,5 +86,5 @@ export function Control({ name, schema, value, onChange, env, placeholder, hint,
   // no hint: fall back on the JSON type
   if (resolved.type === "boolean") return <ToggleControl label={text} value={Boolean(value)} onChange={(v) => onChange(v)} />;
   if (resolved.type === "string") return <TextControl label={text} value={(value as string) ?? ""} onChange={onChange} />;
-  return <p className="rounded bg-ink-50 px-2 py-1.5 text-xs text-ink-500">{text}: no editor for this field yet.</p>;
+  return <p className="rounded bg-ink-50 px-2 py-1.5 text-xs text-ink-500">{t("{field}: no editor for this field yet.", { field: t(text) })}</p>;
 }

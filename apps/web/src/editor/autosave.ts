@@ -1,6 +1,7 @@
 import { ApiError } from "@/api/client";
 import type { SiteDocument } from "@/api/types";
 import { useEditor } from "./store";
+import { t } from "@/i18n";
 
 export type SaveFn = (doc: SiteDocument, baseRevision: number) => Promise<{ revision: number }>;
 
@@ -57,17 +58,17 @@ export class Autosaver {
       useEditor.getState().markSaved(sending, revision);
     } catch (e) {
       if (e instanceof ApiError && e.status === 409) {
-        useEditor.getState().setSave("conflict", "This site was changed somewhere else.");
+        useEditor.getState().setSave("conflict", t("This site was changed somewhere else."));
         this.inFlight = false;
         return;
       }
       if (e instanceof ApiError && e.status === 422) {
-        useEditor.getState().setSave("invalid", "The server rejected these changes.");
+        useEditor.getState().setSave("invalid", t("The server rejected these changes."));
         this.inFlight = false;
         return;
       }
       this.failures += 1;
-      useEditor.getState().setSave("error", "Could not save. Retrying…");
+      useEditor.getState().setSave("error", t("Could not save. Retrying…"));
       this.schedule(Math.min(30_000, 2000 * 2 ** (this.failures - 1)));
       this.inFlight = false;
       return;

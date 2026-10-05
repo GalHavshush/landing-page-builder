@@ -43,6 +43,8 @@ export function initTheme() {
   systemQuery().addEventListener("change", () => pref === "system" && applyTheme());
 }
 
+export const getThemePref = () => pref;
+
 export function useThemePref(): ThemePref {
   return useSyncExternalStore(
     (cb) => (listeners.add(cb), () => listeners.delete(cb)),

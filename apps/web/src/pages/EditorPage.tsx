@@ -8,6 +8,7 @@ import { PropertiesPanel } from "@/editor/PropertiesPanel";
 import { useAutosave, useShortcuts } from "@/editor/saving";
 import { useEditor } from "@/editor/store";
 import { TopBar } from "@/editor/TopBar";
+import { t } from "@/i18n";
 
 export default function EditorPage() {
   const projectId = Number(useParams().projectId);
@@ -23,9 +24,9 @@ export default function EditorPage() {
   }, [docQuery.data, project.data, projectId, load]);
 
   if (project.error || docQuery.error)
-    return <div className="p-8 text-red-600">Could not open this site.</div>;
+    return <div className="p-8 text-red-600">{t("Could not open this site.")}</div>;
   if (!project.data || !meta.data || loadedFor !== projectId)
-    return <div className="p-8 text-ink-500">Loading editor…</div>;
+    return <div className="p-8 text-ink-500">{t("Loading editor…")}</div>;
 
   return <EditorShell projectId={projectId} project={project.data} meta={meta.data} />;
 }
@@ -65,14 +66,14 @@ function EditorShell({
               <span>{saveError}</span>
               {saveStatus === "conflict" && (
                 <button className="rounded bg-white/20 px-2 py-1 hover:bg-white/30" onClick={() => window.location.reload()}>
-                  Reload latest
+                  {t("Reload latest")}
                 </button>
               )}
             </div>
           )}
           {error && (
             <div role="alert" className="absolute inset-x-4 top-4 rounded-md bg-red-600 px-3 py-2 text-sm text-white shadow">
-              Preview failed: {error}
+              {t("Preview failed: {error}", { error: t(error) })}
             </div>
           )}
         </main>

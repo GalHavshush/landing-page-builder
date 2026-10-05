@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { isHex } from "../contrast";
 import { FieldShell, type ControlProps } from "./basic";
+import { t } from "@/i18n";
 
 /** Color picker + hex field. Only valid #RRGGBB values are committed. */
 export function ColorControl({ label, value, onChange }: ControlProps<string>) {
@@ -11,7 +12,7 @@ export function ColorControl({ label, value, onChange }: ControlProps<string>) {
   return (
     <FieldShell label={label} htmlFor={id}>
       <div className="mt-1 flex items-center gap-2">
-        <input type="color" aria-label={`${label} picker`} value={isHex(value) ? value.toLowerCase() : "#000000"}
+        <input type="color" aria-label={t("{label} picker", { label: t(label) })} value={isHex(value) ? value.toLowerCase() : "#000000"}
           onChange={(e) => onChange(e.target.value.toUpperCase(), true)}
           className="h-8 w-10 cursor-pointer rounded border border-ink-300 bg-white p-0.5" />
         <input id={id} value={draft} aria-invalid={invalid} spellCheck={false}

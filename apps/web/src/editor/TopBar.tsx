@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import type { EditorMeta, Project } from "@/api/types";
-import { IconBack, IconDesktop, IconMobile, IconRedo, IconUndo } from "@/components/icons";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { IconBack, IconDesktop, IconMobile, IconRedo, IconSettings, IconUndo } from "@/components/icons";
 import { ExportDialog } from "./ExportDialog";
 import { ShareDialog } from "./ShareDialog";
 import { useEditor, type SaveStatus } from "./store";
+import { t } from "@/i18n";
 
 const STATUS: Record<SaveStatus, { text: string; dot: string }> = {
   saved: { text: "Saved", dot: "bg-emerald-700" },
@@ -21,7 +21,7 @@ function SaveIndicator() {
   return (
     <span role="status" className="flex items-center gap-1.5 text-[12px] text-ink-500">
       <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {s.text}
+      {t(s.text)}
     </span>
   );
 }
@@ -43,29 +43,29 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
   return (
     <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center border-b border-ink-200 bg-white px-3">
       <div className="flex min-w-0 items-center gap-1">
-        <Link to="/" aria-label="All sites" title="All sites" className={iconBtn}>
+        <Link to="/" aria-label={t("All sites")} title={t("All sites")} className={iconBtn}>
           <IconBack size={15} />
         </Link>
         <span className="mx-1 h-4 w-px bg-ink-200" />
         <h1 className="truncate px-1 text-[13px] font-semibold tracking-tight">{project.name}</h1>
         <span className="mx-1 h-4 w-px bg-ink-200" />
-        <button aria-label="Undo" title="Undo  Ctrl+Z" disabled={!canUndo} onClick={undo} className={iconBtn}><IconUndo size={15} /></button>
-        <button aria-label="Redo" title="Redo  Ctrl+Shift+Z" disabled={!canRedo} onClick={redo} className={iconBtn}><IconRedo size={15} /></button>
-        <span className="ml-2"><SaveIndicator /></span>
+        <button aria-label={t("Undo")} title={`${t("Undo")}  Ctrl+Z`} disabled={!canUndo} onClick={undo} className={iconBtn}><IconUndo size={15} /></button>
+        <button aria-label={t("Redo")} title={`${t("Redo")}  Ctrl+Shift+Z`} disabled={!canRedo} onClick={redo} className={iconBtn}><IconRedo size={15} /></button>
+        <span className="ms-2"><SaveIndicator /></span>
       </div>
 
       <div className="flex items-center gap-2">
         {doc.site.languages.length > 1 && (
-          <select aria-label="Language" value={lang ?? ""} onChange={(e) => setLang(e.target.value)}
+          <select aria-label={t("Language")} value={lang ?? ""} onChange={(e) => setLang(e.target.value)}
             className="h-7 rounded-md border border-ink-300 bg-white px-2 text-[12px] font-medium">
             {doc.site.languages.map((l) => (
               <option key={l} value={l}>{meta.languages[l] ?? l}</option>
             ))}
           </select>
         )}
-        <div className="flex gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200" role="group" aria-label="Preview size">
+        <div className="flex gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200" role="group" aria-label={t("Preview size")}>
           {(["desktop", "mobile"] as const).map((d) => (
-            <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? "Desktop" : "Mobile"} title={d === "desktop" ? "Desktop" : "Mobile"}
+            <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? t("Desktop") : t("Mobile")} title={d === "desktop" ? t("Desktop") : t("Mobile")}
               className={`grid h-6 w-8 place-items-center rounded-[5px] transition ${device === d ? "bg-[var(--surface-raised)] text-ink-900 shadow-[0_1px_2px_rgb(0_0_0/0.18),0_0_0_1px_rgb(127_127_127/0.12)]" : "text-ink-500 hover:text-ink-900"}`}>
               {d === "desktop" ? <IconDesktop size={14} /> : <IconMobile size={14} />}
             </button>
@@ -74,8 +74,8 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
       </div>
 
       <div className="flex items-center justify-end gap-2">
-        {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">Content editing</span>}
-        <ThemeToggle />
+        {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">{t("Content editing")}</span>}
+        <Link to="/settings" aria-label={t("Settings")} title={t("Settings")} className={iconBtn}><IconSettings size={15} /></Link>
         {project.role === "owner" && <ShareDialog projectId={project.id} />}
         <ExportDialog projectId={project.id} />
       </div>

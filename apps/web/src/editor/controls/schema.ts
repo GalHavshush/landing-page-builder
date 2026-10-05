@@ -1,5 +1,6 @@
 /** Helpers for reading the JSON Schema that Pydantic generates for section props. */
 import type { PropSchema } from "@/api/types";
+import { t } from "@/i18n";
 
 export type Defs = Record<string, PropSchema>;
 
@@ -47,5 +48,5 @@ export function itemTitle(item: Record<string, unknown>, index: number): string 
     const v = item[key];
     if (typeof v === "string" && v.trim()) return v.slice(0, 40);
   }
-  return `Item ${index + 1}`;
+  return t("Item {n}", { n: index + 1 });
 }
