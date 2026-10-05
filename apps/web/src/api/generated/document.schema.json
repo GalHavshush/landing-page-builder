@@ -217,6 +217,131 @@
       "title": "Button",
       "type": "object"
     },
+    "CompareProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "image",
+          "default": null,
+          "group": "content"
+        },
+        "after": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "image",
+          "default": null,
+          "group": "content"
+        },
+        "before_label": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Before Label",
+          "type": "string"
+        },
+        "after_label": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "After Label",
+          "type": "string"
+        },
+        "caption": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Caption",
+          "type": "string"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "before",
+        "after",
+        "before_label",
+        "after_label",
+        "caption"
+      ],
+      "title": "CompareProps",
+      "type": "object"
+    },
+    "CompareSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "compare",
+          "default": "compare",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "wide",
+          "enum": [
+            "wide",
+            "narrow"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/CompareProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "CompareSection",
+      "type": "object"
+    },
     "ContactProps": {
       "additionalProperties": false,
       "properties": {
@@ -321,6 +446,90 @@
         "props"
       ],
       "title": "ContactSection",
+      "type": "object"
+    },
+    "CtaProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "Ready to get started?",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "text": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Text",
+          "type": "string"
+        },
+        "buttons": {
+          "control": "buttons",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Button"
+          },
+          "title": "Buttons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "text",
+        "buttons"
+      ],
+      "title": "CtaProps",
+      "type": "object"
+    },
+    "CtaSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "cta",
+          "default": "cta",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "banner",
+          "enum": [
+            "banner",
+            "split",
+            "card"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/CtaProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "CtaSection",
       "type": "object"
     },
     "FaqItem": {
@@ -999,6 +1208,104 @@
       "title": "Hours",
       "type": "object"
     },
+    "HoursProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "Opening hours",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "note": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "hint": "e.g. Last orders 30 minutes before closing.",
+          "title": "Note",
+          "type": "string"
+        },
+        "show_contact": {
+          "control": "toggle",
+          "default": true,
+          "group": "content",
+          "title": "Show Contact",
+          "type": "boolean"
+        },
+        "show_address": {
+          "control": "toggle",
+          "default": true,
+          "group": "design",
+          "title": "Show Address",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "note",
+        "show_contact",
+        "show_address"
+      ],
+      "title": "HoursProps",
+      "type": "object"
+    },
+    "HoursSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "hours",
+          "default": "hours",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "card",
+          "enum": [
+            "card",
+            "split"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/HoursProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "HoursSection",
+      "type": "object"
+    },
     "ImageRef": {
       "additionalProperties": false,
       "properties": {
@@ -1071,6 +1378,116 @@
         "asset"
       ],
       "title": "Link",
+      "type": "object"
+    },
+    "LogoItem": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "image",
+          "default": null
+        },
+        "link": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Link"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "link",
+          "default": null
+        }
+      },
+      "required": [
+        "image",
+        "link"
+      ],
+      "title": "LogoItem",
+      "type": "object"
+    },
+    "LogosProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/LogoItem"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "items"
+      ],
+      "title": "LogosProps",
+      "type": "object"
+    },
+    "LogosSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "logos",
+          "default": "logos",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "row",
+          "enum": [
+            "row",
+            "grid"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/LogosProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "LogosSection",
       "type": "object"
     },
     "MapProps": {
@@ -1165,6 +1582,49 @@
       "title": "MapSection",
       "type": "object"
     },
+    "Member": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "control": "text",
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "control": "text",
+          "default": "",
+          "title": "Role",
+          "type": "string"
+        },
+        "bio": {
+          "control": "textarea",
+          "default": "",
+          "title": "Bio",
+          "type": "string"
+        },
+        "photo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "control": "image",
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "role",
+        "bio",
+        "photo"
+      ],
+      "title": "Member",
+      "type": "object"
+    },
     "NavItem": {
       "additionalProperties": false,
       "properties": {
@@ -1216,14 +1676,21 @@
             "discriminator": {
               "mapping": {
                 "blog_list": "#/$defs/BlogListSection",
+                "compare": "#/$defs/CompareSection",
                 "contact": "#/$defs/ContactSection",
+                "cta": "#/$defs/CtaSection",
                 "faq": "#/$defs/FaqSection",
                 "features": "#/$defs/FeaturesSection",
                 "gallery": "#/$defs/GallerySection",
                 "hero": "#/$defs/HeroSection",
+                "hours": "#/$defs/HoursSection",
+                "logos": "#/$defs/LogosSection",
                 "map": "#/$defs/MapSection",
                 "pricing": "#/$defs/PricingSection",
                 "services": "#/$defs/ServicesSection",
+                "stats": "#/$defs/StatsSection",
+                "steps": "#/$defs/StepsSection",
+                "team": "#/$defs/TeamSection",
                 "testimonials": "#/$defs/TestimonialsSection",
                 "text": "#/$defs/TextSection",
                 "youtube": "#/$defs/YoutubeSection"
@@ -1266,6 +1733,27 @@
               },
               {
                 "$ref": "#/$defs/BlogListSection"
+              },
+              {
+                "$ref": "#/$defs/TeamSection"
+              },
+              {
+                "$ref": "#/$defs/HoursSection"
+              },
+              {
+                "$ref": "#/$defs/StatsSection"
+              },
+              {
+                "$ref": "#/$defs/LogosSection"
+              },
+              {
+                "$ref": "#/$defs/StepsSection"
+              },
+              {
+                "$ref": "#/$defs/CtaSection"
+              },
+              {
+                "$ref": "#/$defs/CompareSection"
               }
             ]
           },
@@ -2001,6 +2489,315 @@
         "announcement_text"
       ],
       "title": "SiteTranslation",
+      "type": "object"
+    },
+    "Stat": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "control": "text",
+          "default": "",
+          "hint": "e.g. 12,000+ or 98%",
+          "title": "Value",
+          "type": "string"
+        },
+        "label": {
+          "control": "text",
+          "default": "",
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "title": "Stat",
+      "type": "object"
+    },
+    "StatsProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Stat"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items"
+      ],
+      "title": "StatsProps",
+      "type": "object"
+    },
+    "StatsSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "stats",
+          "default": "stats",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "row",
+          "enum": [
+            "row",
+            "cards"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/StatsProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "StatsSection",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "control": "text",
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "text": {
+          "control": "textarea",
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "text"
+      ],
+      "title": "Step",
+      "type": "object"
+    },
+    "StepsProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Step"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items"
+      ],
+      "title": "StepsProps",
+      "type": "object"
+    },
+    "StepsSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "steps",
+          "default": "steps",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "horizontal",
+          "enum": [
+            "horizontal",
+            "timeline"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/StepsProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "StepsSection",
+      "type": "object"
+    },
+    "TeamProps": {
+      "additionalProperties": false,
+      "properties": {
+        "heading": {
+          "control": "text",
+          "default": "",
+          "group": "content",
+          "title": "Heading",
+          "type": "string"
+        },
+        "subheading": {
+          "control": "textarea",
+          "default": "",
+          "group": "content",
+          "title": "Subheading",
+          "type": "string"
+        },
+        "items": {
+          "control": "repeater",
+          "group": "content",
+          "items": {
+            "$ref": "#/$defs/Member"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "columns": {
+          "control": "segmented",
+          "default": 3,
+          "enum": [
+            2,
+            3,
+            4
+          ],
+          "group": "design",
+          "title": "Columns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "heading",
+        "subheading",
+        "items",
+        "columns"
+      ],
+      "title": "TeamProps",
+      "type": "object"
+    },
+    "TeamSection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/SectionStyle"
+        },
+        "i18n": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "I18N",
+          "type": "object"
+        },
+        "type": {
+          "const": "team",
+          "default": "team",
+          "title": "Type",
+          "type": "string"
+        },
+        "variant": {
+          "default": "cards",
+          "enum": [
+            "cards",
+            "round"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "props": {
+          "$ref": "#/$defs/TeamProps"
+        }
+      },
+      "required": [
+        "id",
+        "style",
+        "i18n",
+        "type",
+        "variant",
+        "props"
+      ],
+      "title": "TeamSection",
       "type": "object"
     },
     "Testimonial": {

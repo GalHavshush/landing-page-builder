@@ -1,0 +1,7 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<dl class="stats stats-{{ s.variant }}" style="--n:{{ [p.items|length, 4]|min }}">
+  {% for it in p.items %}
+  <div class="stat item"><dt class="stat-label">{{ it.label }}</dt><dd class="stat-value" data-count>{{ it.value }}</dd></div>
+  {% endfor %}
+</dl>

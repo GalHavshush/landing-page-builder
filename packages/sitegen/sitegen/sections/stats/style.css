@@ -1,0 +1,10 @@
+.stats{display:grid;gap:2rem 1.5rem;margin:0;grid-template-columns:repeat(2,1fr)}
+@media (min-width:860px){.stats{grid-template-columns:repeat(var(--n,4),1fr)}}
+.stat{display:flex;flex-direction:column-reverse;gap:.4rem}
+.stat-value{margin:0;font-family:var(--font-heading);font-size:clamp(2.4rem,5vw,3.8rem);line-height:1;letter-spacing:-.035em;font-variant-numeric:tabular-nums;color:var(--color-primary)}
+.bg-primary .stat-value,.bg-dark .stat-value{color:inherit}
+.stat-label{color:var(--muted);font-size:1rem;font-weight:500}
+.stats-row .stat{padding-inline-start:1.25rem;border-inline-start:1.5px solid var(--line)}
+.stats-cards .stat{background:var(--card);border:1px solid var(--line);border-radius:calc(var(--radius)*1.4);padding:1.6rem 1.5rem}
+.al-center .stats-row .stat{padding-inline-start:0;border-inline-start:0;align-items:center;text-align:center}
+.al-center .stats-cards .stat{align-items:center;text-align:center}

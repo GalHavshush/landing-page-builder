@@ -189,6 +189,59 @@ export type Subheading9 = string;
 export type Limit = 0 | 3 | 6 | 9 | 12;
 export type ShowExcerpt = boolean;
 export type ShowCover = boolean;
+export type Id13 = string;
+export type Type12 = "team";
+export type Variant12 = "cards" | "round";
+export type Heading12 = string;
+export type Subheading10 = string;
+export type Name3 = string;
+export type Role1 = string;
+export type Bio = string;
+export type Items5 = Member[];
+export type Columns3 = 2 | 3 | 4;
+export type Id14 = string;
+export type Type13 = "hours";
+export type Variant13 = "card" | "split";
+export type Heading13 = string;
+export type Subheading11 = string;
+export type Note = string;
+export type ShowContact = boolean;
+export type ShowAddress = boolean;
+export type Id15 = string;
+export type Type14 = "stats";
+export type Variant14 = "row" | "cards";
+export type Heading14 = string;
+export type Subheading12 = string;
+export type Value = string;
+export type Label3 = string;
+export type Items6 = Stat[];
+export type Id16 = string;
+export type Type15 = "logos";
+export type Variant15 = "row" | "grid";
+export type Heading15 = string;
+export type Items7 = LogoItem[];
+export type Id17 = string;
+export type Type16 = "steps";
+export type Variant16 = "horizontal" | "timeline";
+export type Heading16 = string;
+export type Subheading13 = string;
+export type Title4 = string;
+export type Text4 = string;
+export type Items8 = Step[];
+export type Id18 = string;
+export type Type17 = "cta";
+export type Variant17 = "banner" | "split" | "card";
+export type Heading17 = string;
+export type Text5 = string;
+export type Buttons1 = Button[];
+export type Id19 = string;
+export type Type18 = "compare";
+export type Variant18 = "wide" | "narrow";
+export type Heading18 = string;
+export type Subheading14 = string;
+export type BeforeLabel = string;
+export type AfterLabel = string;
+export type Caption2 = string;
 export type Sections = (
   | HeroSection
   | TextSection
@@ -202,8 +255,15 @@ export type Sections = (
   | YoutubeSection
   | MapSection
   | BlogListSection
+  | TeamSection
+  | HoursSection
+  | StatsSection
+  | LogosSection
+  | StepsSection
+  | CtaSection
+  | CompareSection
 )[];
-export type Title4 = string | null;
+export type Title5 = string | null;
 export type Slug1 = string | null;
 export type SeoTitle = string | null;
 export type SeoDescription = string | null;
@@ -362,7 +422,7 @@ export interface Page2 {
   title: Title;
   seo: SEO;
   sections: Sections;
-  i18n: I18N13;
+  i18n: I18N20;
 }
 export interface SEO {
   title: Title1;
@@ -645,11 +705,161 @@ export interface BlogListProps {
   show_excerpt: ShowExcerpt;
   show_cover: ShowCover;
 }
+export interface TeamSection {
+  id: Id13;
+  style: SectionStyle;
+  i18n: I18N13;
+  type: Type12;
+  variant: Variant12;
+  props: TeamProps;
+}
 export interface I18N13 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface TeamProps {
+  heading: Heading12;
+  subheading: Subheading10;
+  items: Items5;
+  columns: Columns3;
+}
+export interface Member {
+  name: Name3;
+  role: Role1;
+  bio: Bio;
+  photo: ImageRef | null;
+}
+export interface HoursSection {
+  id: Id14;
+  style: SectionStyle;
+  i18n: I18N14;
+  type: Type13;
+  variant: Variant13;
+  props: HoursProps;
+}
+export interface I18N14 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface HoursProps {
+  heading: Heading13;
+  subheading: Subheading11;
+  note: Note;
+  show_contact: ShowContact;
+  show_address: ShowAddress;
+}
+export interface StatsSection {
+  id: Id15;
+  style: SectionStyle;
+  i18n: I18N15;
+  type: Type14;
+  variant: Variant14;
+  props: StatsProps;
+}
+export interface I18N15 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface StatsProps {
+  heading: Heading14;
+  subheading: Subheading12;
+  items: Items6;
+}
+export interface Stat {
+  value: Value;
+  label: Label3;
+}
+export interface LogosSection {
+  id: Id16;
+  style: SectionStyle;
+  i18n: I18N16;
+  type: Type15;
+  variant: Variant15;
+  props: LogosProps;
+}
+export interface I18N16 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface LogosProps {
+  heading: Heading15;
+  items: Items7;
+}
+export interface LogoItem {
+  image: ImageRef | null;
+  link: Link1 | null;
+}
+export interface StepsSection {
+  id: Id17;
+  style: SectionStyle;
+  i18n: I18N17;
+  type: Type16;
+  variant: Variant16;
+  props: StepsProps;
+}
+export interface I18N17 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface StepsProps {
+  heading: Heading16;
+  subheading: Subheading13;
+  items: Items8;
+}
+export interface Step {
+  title: Title4;
+  text: Text4;
+}
+export interface CtaSection {
+  id: Id18;
+  style: SectionStyle;
+  i18n: I18N18;
+  type: Type17;
+  variant: Variant17;
+  props: CtaProps;
+}
+export interface I18N18 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface CtaProps {
+  heading: Heading17;
+  text: Text5;
+  buttons: Buttons1;
+}
+export interface CompareSection {
+  id: Id19;
+  style: SectionStyle;
+  i18n: I18N19;
+  type: Type18;
+  variant: Variant18;
+  props: CompareProps;
+}
+export interface I18N19 {
+  [k: string]: {
+    [k: string]: unknown;
+  };
+}
+export interface CompareProps {
+  heading: Heading18;
+  subheading: Subheading14;
+  before: ImageRef | null;
+  after: ImageRef | null;
+  before_label: BeforeLabel;
+  after_label: AfterLabel;
+  caption: Caption2;
+}
+export interface I18N20 {
   [k: string]: PageTranslation;
 }
 export interface PageTranslation {
-  title: Title4;
+  title: Title5;
   slug: Slug1;
   seo_title: SeoTitle;
   seo_description: SeoDescription;

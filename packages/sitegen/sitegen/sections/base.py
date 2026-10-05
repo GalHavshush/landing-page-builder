@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from sitegen.models import BaseSection, fields_in_group
+from sitegen.models import BaseSection, SectionStyle, fields_in_group
 
 SECTIONS_DIR = Path(__file__).parent
 
@@ -21,6 +21,9 @@ class SectionDef:
     props_model: type[BaseModel]
     defaults: dict | None = None  # starter props for a newly added section
     description: str = ""  # one line shown in the editor's "add section" picker
+    style: dict | None = (
+        None  # starting section style (e.g. a call-to-action starts on the brand color)
+    )
 
     @property
     def folder(self) -> Path:
@@ -36,7 +39,10 @@ class SectionDef:
 
     def create(self) -> BaseSection:
         """A fresh section of this type with starter content and a new id."""
-        return self.section_model(props=self.props_model.model_validate(self.defaults or {}))
+        return self.section_model(
+            props=self.props_model.model_validate(self.defaults or {}),
+            style=SectionStyle(**(self.style or {})),
+        )
 
     @property
     def translatable(self) -> set[str]:

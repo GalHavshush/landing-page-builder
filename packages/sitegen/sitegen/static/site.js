@@ -84,3 +84,42 @@ document.querySelectorAll(".yt[data-yt]").forEach(function (box) {
   }
   if (document.readyState === "complete") start(); else window.addEventListener("load", start);
 })();
+
+// Before/after slider: the range input drives the --pos custom property.
+document.querySelectorAll("[data-compare]").forEach(function (box) {
+  var r = box.querySelector(".cmp-range");
+  if (!r) return;
+  var set = function () { box.style.setProperty("--pos", r.value + "%"); };
+  r.addEventListener("input", set); set();
+});
+
+// Stats count-up: "1,200+" -> animate the number part when scrolled into view. Skipped for reduced
+// motion, without IntersectionObserver, and in the editor preview (the final value is always in the HTML).
+(function () {
+  var els = document.querySelectorAll(".stat-value[data-count]");
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!els.length || calm || !("IntersectionObserver" in window) || document.querySelector("[data-section-id]")) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      run(e.target);
+    });
+  }, { threshold: 0.4 });
+  function run(el) {
+    var text = el.textContent, m = text.match(/^(\D*?)([\d][\d,.\s]*)(.*)$/);
+    if (!m) return;
+    var digits = m[2].replace(/[^\d]/g, ""), target = parseInt(digits, 10);
+    if (!target || m[2].indexOf(".") > -1) return; // decimals: leave as written
+    var sep = /,/.test(m[2]) ? "," : "", t0 = null, dur = 1100;
+    function fmt(n) { var s = String(n); return sep ? s.replace(/\B(?=(\d{3})+(?!\d))/g, sep) : s; }
+    function tick(t) {
+      if (t0 === null) t0 = t;
+      var p = Math.min((t - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = m[1] + fmt(Math.round(target * eased)) + m[3];
+      if (p < 1) requestAnimationFrame(tick); else el.textContent = text;
+    }
+    requestAnimationFrame(tick);
+  }
+  els.forEach(function (el) { io.observe(el); });
+})();

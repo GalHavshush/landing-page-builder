@@ -280,3 +280,44 @@ def test_images_without_variants_keep_a_plain_src():
         .decode()
     )
     assert "srcset" not in html and "object-position" not in html
+
+
+def test_hours_reads_business_info_and_warns_when_empty():
+    s = create_section("hours")
+    html, issues = render(s)
+    assert any("opening hours" in i.message for i in issues)
+    html, issues = render(
+        s,
+        business={
+            "phone": "555-0100",
+            "hours": [{"label": "Mon-Fri", "open": "09:00", "close": "17:00"}],
+        },
+    )
+    assert "Mon-Fri" in html and "09:00" in html and "tel:555-0100" in html
+    assert not any("opening hours" in i.message for i in issues)
+
+
+def test_stats_markup_has_count_hook():
+    s = create_section("stats")
+    html, _ = render(s)
+    assert 'class="stats' in html and "data-count" in html
+
+
+def test_cta_defaults_to_primary_background():
+    s = create_section("cta")
+    assert s.style.background == "primary" and s.style.align == "center"
+
+
+def test_compare_needs_both_images():
+    s = create_section("compare")
+    html, issues = render(s)
+    assert any("before and an after" in i.message for i in issues)
+
+
+@pytest.mark.parametrize("variant", ["round", "cards"])
+def test_team_variants_render_initial_placeholder_without_photo(variant):
+    s = create_section("team")
+    s.variant = variant
+    s.props.items[0].photo = None
+    html, _ = render(s)
+    assert s.props.items[0].name[0] in html

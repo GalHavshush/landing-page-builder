@@ -26,6 +26,9 @@ KEYS = (
     "no_posts",
     "pause_background",
     "play_background",
+    "before",
+    "after",
+    "compare_slider",
 )
 
 STRINGS = {
@@ -51,6 +54,9 @@ STRINGS = {
         "No posts yet",
         "Pause background video",
         "Play background video",
+        "Before",
+        "After",
+        "Drag to compare before and after",
     ),
     "he": (
         "דלג לתוכן",
@@ -74,6 +80,9 @@ STRINGS = {
         "אין פוסטים עדיין",
         "השהה וידאו רקע",
         "הפעל וידאו רקע",
+        "לפני",
+        "אחרי",
+        "גררו כדי להשוות בין לפני ואחרי",
     ),
     "es": (
         "Saltar al contenido",
@@ -97,6 +106,9 @@ STRINGS = {
         "Aún no hay entradas",
         "Pausar vídeo de fondo",
         "Reproducir vídeo de fondo",
+        "Antes",
+        "Después",
+        "Arrastra para comparar antes y después",
     ),
     "de": (
         "Zum Inhalt springen",
@@ -120,6 +132,9 @@ STRINGS = {
         "Noch keine Beiträge",
         "Hintergrundvideo pausieren",
         "Hintergrundvideo abspielen",
+        "Vorher",
+        "Nachher",
+        "Ziehen, um Vorher und Nachher zu vergleichen",
     ),
     "fr": (
         "Aller au contenu",
@@ -143,6 +158,9 @@ STRINGS = {
         "Pas encore d'articles",
         "Mettre en pause la vidéo d'arrière-plan",
         "Lire la vidéo d'arrière-plan",
+        "Avant",
+        "Après",
+        "Faites glisser pour comparer avant et après",
     ),
     "ar": (
         "انتقل إلى المحتوى",
@@ -166,6 +184,9 @@ STRINGS = {
         "لا توجد مقالات بعد",
         "إيقاف فيديو الخلفية مؤقتًا",
         "تشغيل فيديو الخلفية",
+        "قبل",
+        "بعد",
+        "اسحب للمقارنة بين قبل وبعد",
     ),
 }
 _TABLES = {lang: dict(zip(KEYS, values, strict=True)) for lang, values in STRINGS.items()}

@@ -90,6 +90,12 @@ def _check_page(doc, page: Page, page_ids: set[str], assets) -> list[Issue]:
         issues.append(Issue("info", "No meta description", where))
     for section in page.sections:
         sec_where = f"{where} / {REGISTRY[section.type].label} ({section.id})"
+        if section.type == "hours" and not doc.site.business.hours:
+            issues.append(
+                Issue("info", "No opening hours set in Site settings > Business", sec_where)
+            )
+        if section.type == "compare" and not (section.props.before and section.props.after):
+            issues.append(Issue("info", "Add both a before and an after photo", sec_where))
         for node in _walk(section.props):
             if isinstance(node, ImageRef):
                 if node.asset not in assets and assets is not None and assets:

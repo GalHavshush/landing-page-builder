@@ -1,0 +1,7 @@
+{% from "_macros.html.j2" import head %}
+{{ head(p) }}
+<ol class="steps steps-{{ s.variant }}" style="--n:{{ [p.items|length, 4]|min }}">
+  {% for it in p.items %}
+  <li class="step item"><span class="step-num" aria-hidden="true">{{ loop.index }}</span><div class="step-body"><h3>{{ it.title }}</h3>{% if it.text %}<p>{{ it.text }}</p>{% endif %}</div></li>
+  {% endfor %}
+</ol>

@@ -1,0 +1,10 @@
+{% from "_macros.html.j2" import img as picture %}
+{% if p.heading %}<p class="logos-heading">{{ p.heading }}</p>{% endif %}
+<ul class="logos logos-{{ s.variant }}">
+  {% for it in p.items %}
+  {% set logo = ctx.image(it.image) %}
+  {% if logo %}
+  <li>{% if it.link %}<a href="{{ ctx.link(it.link) }}"{% if it.link.url %} rel="noopener"{% endif %}>{{ picture(logo, "160px") }}</a>{% else %}{{ picture(logo, "160px") }}{% endif %}</li>
+  {% endif %}
+  {% endfor %}
+</ul>

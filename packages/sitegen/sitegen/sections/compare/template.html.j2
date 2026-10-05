@@ -1,0 +1,16 @@
+{% from "_macros.html.j2" import head, img as picture %}
+{{ head(p) }}
+{% set a = ctx.image(p.before) %}{% set b = ctx.image(p.after) %}
+{% if a and b %}
+<figure class="compare-fig compare-{{ s.variant }}">
+  <div class="compare" data-compare style="--pos:50%">
+    {{ picture(b, "(min-width:1200px) 1120px, 100vw", "cmp-after") }}
+    <div class="cmp-before-wrap">{{ picture(a, "(min-width:1200px) 1120px, 100vw", "cmp-before") }}</div>
+    <span class="cmp-label cmp-l-before">{{ p.before_label or ctx.t("before") }}</span>
+    <span class="cmp-label cmp-l-after">{{ p.after_label or ctx.t("after") }}</span>
+    <span class="cmp-handle" aria-hidden="true"></span>
+    <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="{{ ctx.t('compare_slider') }}">
+  </div>
+  {% if p.caption %}<figcaption>{{ p.caption }}</figcaption>{% endif %}
+</figure>
+{% endif %}

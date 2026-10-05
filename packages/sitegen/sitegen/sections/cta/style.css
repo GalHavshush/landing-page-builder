@@ -1,0 +1,11 @@
+.cta{display:grid;gap:1.75rem;align-items:center}
+.cta h2{margin:0 0 .5rem}.cta .lead{margin:0;color:inherit;opacity:.88}
+.cta .buttons{margin:0}
+.cta-banner{text-align:center;justify-items:center}.cta-banner .buttons{justify-content:center}.cta-banner .cta-copy{max-width:42rem}
+@media (min-width:860px){
+  .cta-split{grid-template-columns:1fr auto;gap:3rem}.cta-split .buttons{justify-content:flex-end}
+}
+.cta-card{background:var(--card);border:1px solid var(--line);border-radius:calc(var(--radius)*2);padding:clamp(2rem,5vw,3.5rem);text-align:center;justify-items:center}
+.cta-card .buttons{justify-content:center}.cta-card .cta-copy{max-width:40rem}
+.al-start .cta-banner,.al-start .cta-card{text-align:start;justify-items:start}
+.al-start .cta-banner .buttons,.al-start .cta-card .buttons{justify-content:flex-start}

@@ -1,0 +1,7 @@
+<div class="cta cta-{{ s.variant }}">
+  <div class="cta-copy">
+    <h2>{{ p.heading }}</h2>
+    {% if p.text %}<p class="lead">{{ p.text }}</p>{% endif %}
+  </div>
+  {% if p.buttons %}<div class="buttons">{% for b in p.buttons %}<a class="btn btn-{{ b.style }}" href="{{ ctx.link(b.href) }}">{{ b.label }}</a>{% endfor %}</div>{% endif %}
+</div>

@@ -1,0 +1,19 @@
+{% from "_macros.html.j2" import head %}
+{% set b = ctx.site_view() %}
+<div class="hours-wrap hours-{{ s.variant }}">
+  <div class="hours-intro">{{ head(p) }}{% if p.note %}<p class="hours-note">{{ p.note }}</p>{% endif %}</div>
+  <div class="hours-card">
+    {% if b.hours %}
+    <table class="hours-table"><tbody>
+      {% for h in b.hours %}<tr><th scope="row">{{ h.label }}</th><td>{% if h.closed %}{{ ctx.t("closed") }}{% else %}{{ h.open }}&ndash;{{ h.close }}{% endif %}</td></tr>{% endfor %}
+    </tbody></table>
+    {% else %}<p class="muted">&nbsp;</p>{% endif %}
+    {% if p.show_contact and (b.phone or b.email or (p.show_address and b.address)) %}
+    <ul class="hours-contact">
+      {% if b.phone %}<li>{{ ctx.icon("phone") }}<a href="tel:{{ b.phone }}">{{ b.phone }}</a></li>{% endif %}
+      {% if b.email %}<li>{{ ctx.icon("mail") }}<a href="mailto:{{ b.email }}">{{ b.email }}</a></li>{% endif %}
+      {% if p.show_address and b.address %}<li>{{ ctx.icon("map-pin") }}<span>{{ b.address }}</span></li>{% endif %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
