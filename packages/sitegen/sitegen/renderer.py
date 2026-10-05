@@ -1,5 +1,6 @@
 """Turns a SiteDocument + one page + one language into an HTML string."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -8,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from markupsafe import Markup
 
 from sitegen import paths, seo, strings
+from sitegen.css import STATIC, compose_css
 from sitegen.icons import render_icon
 from sitegen.markdown import render_markdown
 from sitegen.models import Button, ImageRef, Link
@@ -29,6 +31,13 @@ class AssetFile:
     mime: str = "application/octet-stream"
     width: int | None = None
     height: int | None = None
+
+
+@dataclass
+class PreviewOptions:
+    """Editor preview mode: inline CSS, no navigation, and section ids for click-to-select."""
+
+    asset_url: Callable[[str], str]  # asset id -> URL the editor's iframe can load
 
 
 @dataclass
@@ -70,6 +79,7 @@ class RenderContext:
         issues: list[Issue],
         absolute: bool = False,
         page_id: str | None = None,
+        preview: PreviewOptions | None = None,
     ):
         self.doc = doc
         self.lang = lang
@@ -78,9 +88,12 @@ class RenderContext:
         self.issues = issues
         self.plan = paths.plan_pages(doc)
         self.page_id = page_id
+        self.preview = preview
         self.absolute = absolute  # root-relative URLs (needed for 404.html, served at any depth)
 
     def rel(self, target: str) -> str:
+        if self.preview:
+            return "#"
         return "/" + target if self.absolute else paths.relative(self.out_path, target)
 
     def asset_path(self, asset_id: str) -> str | None:
@@ -98,6 +111,8 @@ class RenderContext:
                 self.issues.append(Issue("warning", f"link to unknown page {link.page!r}"))
                 return "#"
             return self.rel(target)
+        if self.preview:
+            return self.preview.asset_url(link.asset)
         path = self.asset_path(link.asset)
         if path is None:
             self.issues.append(Issue("warning", f"link to missing asset {link.asset!r}"))
@@ -107,16 +122,19 @@ class RenderContext:
     def image(self, ref: ImageRef | None) -> dict | None:
         if ref is None:
             return None
-        path = self.asset_path(ref.asset)
-        if path is None:
+        asset = self.assets.get(ref.asset)
+        if asset is None and not self.preview:
             self.issues.append(Issue("warning", f"missing image asset {ref.asset!r}"))
             return None
-        asset = self.assets[ref.asset]
+        if self.preview:
+            src = self.preview.asset_url(ref.asset)
+        else:
+            src = self.rel(self.asset_path(ref.asset))
         return {
-            "src": self.rel(path),
+            "src": src,
             "alt": ref.alt,
-            "width": asset.width,
-            "height": asset.height,
+            "width": asset.width if asset else None,
+            "height": asset.height if asset else None,
         }
 
     def site_view(self) -> dict:
@@ -199,6 +217,7 @@ def render_page(
     *,
     out_path: str | None = None,
     absolute: bool = False,
+    preview: PreviewOptions | None = None,
 ) -> str:
     """Render one page in one language. `out_path`/`absolute` are for synthetic pages (404)."""
     env = get_env()
@@ -213,6 +232,7 @@ def render_page(
         issues,
         absolute=absolute,
         page_id=page.id if is_real_page else None,
+        preview=preview,
     )
     wrapper = env.get_template("_section.html.j2")
     sections_html = [
@@ -220,6 +240,7 @@ def render_page(
             s=section,
             p=localized_props(section, lang, doc.site.default_language),
             ctx=ctx,
+            preview=preview is not None,
         )
         for section in page.sections
     ]
@@ -252,6 +273,10 @@ def render_page(
         sections_html=sections_html,
         doc=doc,
         ctx=ctx,
+        preview=preview is not None,
+        inline_css=compose_css(doc) if preview else None,
+        inline_js=(STATIC / "site.js").read_text() if preview else None,
+        preview_js=(STATIC / "preview.js").read_text() if preview else None,
     )
 
 

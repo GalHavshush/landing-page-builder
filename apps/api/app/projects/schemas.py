@@ -35,3 +35,14 @@ class DocIn(BaseModel):
 class SavedOut(BaseModel):
     revision: int
     warnings: list[dict] = []
+
+
+class PreviewIn(BaseModel):
+    doc: dict
+    page_id: str
+    lang: str | None = None
+
+
+class PreviewOut(BaseModel):
+    html: str
+    issues: list[dict] = []

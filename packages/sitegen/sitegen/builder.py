@@ -1,9 +1,9 @@
 """build(): the one function that turns a document into files."""
 
 from dataclasses import dataclass, field
-from pathlib import Path
 
 from sitegen import paths, seo
+from sitegen.css import STATIC, compose_css
 from sitegen.renderer import (
     CSS_PATH,
     JS_PATH,
@@ -14,11 +14,7 @@ from sitegen.renderer import (
     render_page,
 )
 from sitegen.schema import SiteDocument
-from sitegen.sections import REGISTRY
-from sitegen.theme import theme_css
 from sitegen.validate import check
-
-STATIC = Path(__file__).parent / "static"
 
 
 @dataclass
@@ -45,10 +41,7 @@ def build(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> Buil
         result.issues.append(
             Issue("warning", "No base_url set: sitemap.xml, canonical and og:image were skipped")
         )
-    used = {s.type for page in doc.pages for s in page.sections}
-    css = [theme_css(doc.theme), (STATIC / "base.css").read_text()]
-    css += [REGISTRY[t].css() for t in sorted(used)]  # only CSS for sections actually used
-    result.files[CSS_PATH] = "\n".join(c for c in css if c).encode()
+    result.files[CSS_PATH] = compose_css(doc).encode()
     result.files[JS_PATH] = (STATIC / "site.js").read_bytes()
     # renderer and validator can report the same problem; show each once
     seen: set[tuple[str, str]] = set()
