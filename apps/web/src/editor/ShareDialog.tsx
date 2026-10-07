@@ -52,7 +52,7 @@ export function ShareDialog({ projectId }: { projectId: number }) {
             <ul className="divide-y divide-ink-100 rounded-md border border-ink-200">
               {members.data?.members.map((p) => (
                 <li key={p.user_id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
-                  <span className="min-w-0 truncate">{p.name || p.email}<span className="ml-2 text-ink-400">{p.name ? p.email : ""}</span></span>
+                  <span className="min-w-0 truncate">{p.name || p.email}<span className="ml-2 text-ink-500">{p.name ? p.email : ""}</span></span>
                   {p.role === "owner" ? (
                     <span className="text-xs text-ink-500">Owner</span>
                   ) : (
@@ -86,7 +86,7 @@ export function ShareDialog({ projectId }: { projectId: number }) {
             {(m.invite.error ?? m.setRole.error ?? m.remove.error ?? m.revoke.error) && (
               <p role="alert" className="text-xs text-red-600">{(m.invite.error ?? m.setRole.error ?? m.remove.error ?? m.revoke.error)!.message}</p>
             )}
-            <p className="text-xs text-ink-400">{ROLE_HELP[role]} With an email, only that account can use the link. Links work once and expire in 7 days.</p>
+            <p className="text-xs text-ink-500">{ROLE_HELP[role]} With an email, only that account can use the link. Links work once and expire in 7 days.</p>
             {link && (
               <div className="flex items-center gap-2 rounded-md bg-emerald-50 p-2">
                 <input readOnly aria-label="Invite link" value={link} onFocus={(e) => e.target.select()} className="min-w-0 flex-1 bg-transparent text-xs" />

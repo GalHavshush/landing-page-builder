@@ -42,7 +42,7 @@ export function BlogList() {
   };
 
   return (
-    <aside className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
+    <aside aria-label="Posts" className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
       <div className="flex-1 overflow-y-auto p-3">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-500">Posts</h2>
@@ -72,14 +72,14 @@ export function BlogList() {
                 <div className="truncate text-sm font-medium">{p.title}</div>
                 <div className="mt-0.5 flex items-center gap-1.5 text-xs">
                   <span className={`rounded px-1.5 py-0.5 ${STATUS_STYLE[p.status]}`}>{p.status}</span>
-                  {doc.site.languages.length > 1 && <span className="text-ink-400">{p.lang}</span>}
+                  {doc.site.languages.length > 1 && <span className="text-ink-500">{p.lang}</span>}
                 </div>
               </button>
             </li>
           ))}
         </ul>
         {posts.data?.length === 0 && !adding && <p className="text-sm text-ink-500">No posts yet. Write your first one!</p>}
-        <p className="mt-4 text-xs text-ink-400">
+        <p className="mt-4 text-xs text-ink-500">
           Show your posts on a page by adding a “Blog posts” section there. Only published posts appear on the site.
         </p>
       </div>

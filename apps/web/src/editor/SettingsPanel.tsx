@@ -18,7 +18,7 @@ export function SettingsPanel({ meta }: { meta: EditorMeta }) {
   const issueCount = useEditor((st) => (st.doc ? designChecks(st.doc).length : 0));
   const tabs = canEdit ? TABS : (["page", "site"] as const); // clients: search texts and business info only
   return (
-    <aside className="flex min-h-0 flex-col border-l border-ink-200 bg-white">
+    <aside aria-label="Settings" className="flex min-h-0 flex-col border-l border-ink-200 bg-white">
       <div className="border-b border-ink-200 px-4 pt-3.5">
         <h2 className="text-[13px] font-semibold tracking-tight">Settings</h2>
         <div role="tablist" className="no-scrollbar -mx-4 mt-2.5 flex gap-3 overflow-x-auto px-4">

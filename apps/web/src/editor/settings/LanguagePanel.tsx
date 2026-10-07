@@ -22,9 +22,9 @@ export function LanguagePanel({ meta }: { meta: EditorMeta }) {
         {site.languages.map((c) => (
           <li key={c} className="flex items-center justify-between rounded-md border border-ink-200 px-3 py-2 text-sm">
             <span>
-              {name(c)} <span className="text-ink-400">({c})</span>
+              {name(c)} <span className="text-ink-500">({c})</span>
               {c === site.default_language && <span className="ml-2 rounded bg-ink-100 px-1.5 py-0.5 text-xs text-ink-600">default</span>}
-              {meta.rtl_languages.includes(c.split("-")[0]) && <span className="ml-2 text-xs text-ink-400">right-to-left</span>}
+              {meta.rtl_languages.includes(c.split("-")[0]) && <span className="ml-2 text-xs text-ink-500">right-to-left</span>}
             </span>
             {c !== site.default_language && (
               <button className="text-xs text-ink-500 hover:text-red-600"

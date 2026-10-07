@@ -51,7 +51,7 @@ function PropField({ name, schema, ctx, env }: { name: string; schema: PropSchem
     return (
       <div className="space-y-1">
         <Control name={name} schema={schema} env={env} value={override ?? base} onChange={write} />
-        <p className="text-xs text-ink-400">
+        <p className="text-xs text-ink-500">
           {override === undefined ? "Using the default language." : "Translated."}
           {override !== undefined && (
             <button className="ml-2 text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
@@ -109,7 +109,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
   const translating = lang !== defaultLang;
 
   return (
-    <aside className="flex min-h-0 flex-col border-l border-ink-200 bg-white">
+    <aside aria-label="Section settings" className="flex min-h-0 flex-col border-l border-ink-200 bg-white">
       <div className="border-b border-ink-200 px-4 pt-3.5">
         <h2 className="flex items-center gap-2 text-[13px] font-semibold tracking-tight">
           <span className="grid h-5 w-5 place-items-center rounded bg-ink-100 text-ink-700"><SectionIcon type={section.type} size={12} /></span>

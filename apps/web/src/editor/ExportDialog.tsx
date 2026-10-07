@@ -19,7 +19,7 @@ function Issues({ issues }: { issues: SiteExport["issues"] }) {
         <div>
           <div className="font-medium text-amber-800">Worth fixing ({warnings.length})</div>
           <ul className="mt-1 list-disc space-y-0.5 pl-5 text-ink-700">
-            {warnings.map((i, k) => <li key={k}>{i.message}{i.where && <span className="text-ink-400"> · {i.where}</span>}</li>)}
+            {warnings.map((i, k) => <li key={k}>{i.message}{i.where && <span className="text-ink-500"> · {i.where}</span>}</li>)}
           </ul>
         </div>
       )}
@@ -27,7 +27,7 @@ function Issues({ issues }: { issues: SiteExport["issues"] }) {
         <div>
           <div className="font-medium text-ink-600">Suggestions ({info.length})</div>
           <ul className="mt-1 list-disc space-y-0.5 pl-5 text-ink-500">
-            {info.map((i, k) => <li key={k}>{i.message}{i.where && <span className="text-ink-400"> · {i.where}</span>}</li>)}
+            {info.map((i, k) => <li key={k}>{i.message}{i.where && <span className="text-ink-500"> · {i.where}</span>}</li>)}
           </ul>
         </div>
       )}
@@ -81,12 +81,12 @@ export function ExportDialog({ projectId }: { projectId: number }) {
               <ul className="divide-y divide-ink-100 rounded-md border border-ink-200 text-sm">
                 {history.data.map((e) => (
                   <li key={e.id} className="flex items-center justify-between gap-3 px-3 py-2">
-                    <span>{when(e.created_at)}<span className="ml-2 text-xs text-ink-400">by {e.created_by} · v{e.doc_revision} · {kb(e.size_bytes)}</span></span>
+                    <span>{when(e.created_at)}<span className="ml-2 text-xs text-ink-500">by {e.created_by} · v{e.doc_revision} · {kb(e.size_bytes)}</span></span>
                     <a className="text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" href={href(projectId, e.id)} download>Download</a>
                   </li>
                 ))}
               </ul>
-              <p className="mt-1 text-xs text-ink-400">The last 10 exports are kept.</p>
+              <p className="mt-1 text-xs text-ink-500">The last 10 exports are kept.</p>
             </section>
           )}
         </div>

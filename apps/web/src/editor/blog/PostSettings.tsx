@@ -29,21 +29,21 @@ export function PostSettings({
   const date = (draft.published_at ?? "").slice(0, 10);
 
   return (
-    <aside className="min-h-0 space-y-5 overflow-y-auto border-l border-ink-200 bg-white p-4">
+    <aside aria-label="Post settings" className="min-h-0 space-y-5 overflow-y-auto border-l border-ink-200 bg-white p-4">
       <h2 className="text-sm font-semibold">Post settings</h2>
       <SegmentedControl label="Status" value={draft.status} options={[{ value: "draft", label: "Draft" }, { value: "published", label: "Published" }]}
         onChange={(v) => update({ status: v as PostIn["status"] })} />
-      {draft.status === "draft" && <p className="-mt-3 text-xs text-ink-400">Drafts are never part of the site or its export.</p>}
+      {draft.status === "draft" && <p className="-mt-3 text-xs text-ink-500">Drafts are never part of the site or its export.</p>}
       <div>
         <label htmlFor="post-date" className="block text-xs font-medium text-ink-600">Publish date</label>
         <input id="post-date" type="date" value={date} onChange={(e) => update({ published_at: e.target.value ? `${e.target.value}T12:00:00Z` : null })}
           className="mt-1 block w-full rounded-md border border-ink-300 px-2.5 py-1.5 text-sm" />
-        <p className="mt-1 text-xs text-ink-400">Empty: set automatically when you publish.</p>
+        <p className="mt-1 text-xs text-ink-500">Empty: set automatically when you publish.</p>
       </div>
       <div>
         <label htmlFor="post-slug" className="block text-xs font-medium text-ink-600">URL name</label>
         <div className="mt-1 flex items-center rounded-md border border-ink-300 text-sm">
-          <span className="pl-2.5 text-ink-400">/blog/</span>
+          <span className="pl-2.5 text-ink-500">/blog/</span>
           <input id="post-slug" value={slug} aria-invalid={Boolean(slugProblem)} spellCheck={false}
             onChange={(e) => { const v = e.target.value.toLowerCase(); setSlug(v); if (v) update({ slug: v }); }}
             className="w-full rounded-md bg-transparent px-1 py-1.5 focus:outline-none" />
@@ -71,7 +71,7 @@ export function PostSettings({
               </li>
             ))}
           </ul>
-          <p className="mt-1 text-xs text-ink-400">Translating copies the text as a new draft to start from.</p>
+          <p className="mt-1 text-xs text-ink-500">Translating copies the text as a new draft to start from.</p>
         </div>
       )}
       <div className="border-t border-ink-200 pt-4">

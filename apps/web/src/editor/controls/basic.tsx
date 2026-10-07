@@ -26,7 +26,7 @@ export function FieldShell({ label, hint, htmlFor, children }: { label: string; 
 export function CharCount({ length, ideal, max }: { length: number; ideal: number; max: number }) {
   const over = length > ideal;
   return (
-    <p aria-live="polite" className={`mt-1 text-right text-[11px] tabular-nums ${over ? "text-amber-700" : "text-ink-400"}`}>
+    <p aria-live="polite" className={`mt-1 text-right text-[11px] tabular-nums ${over ? "text-warn" : "text-ink-500"}`}>
       {length} characters{over ? (length >= max ? ". Limit reached" : `. Aim for under ${ideal}, search engines may cut it off`) : ` (aim for under ${ideal})`}
     </p>
   );

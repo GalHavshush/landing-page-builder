@@ -67,7 +67,7 @@ export function ImageControl({
             {current ? (
               <img src={current.thumb_url} alt="" className="h-14 w-14 rounded object-cover" />
             ) : (
-              <div className="grid h-14 w-14 place-items-center rounded bg-ink-100 text-xs text-ink-400">?</div>
+              <div className="grid h-14 w-14 place-items-center rounded bg-ink-100 text-xs text-ink-500">?</div>
             )}
             <div className="min-w-0 flex-1 truncate text-xs text-ink-500">{current?.filename ?? "Image missing from library"}</div>
             <button type="button" onClick={() => onChange(null)} className="px-1 text-xs text-ink-500 hover:text-red-600" aria-label={`Remove ${label}`}>

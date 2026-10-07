@@ -69,11 +69,11 @@ function PageList({ meta }: { meta: EditorMeta }) {
               <button onClick={() => selectPage(p.id)} aria-current={on ? "page" : undefined}
                 className={`flex min-w-0 flex-1 items-baseline gap-2 rounded-md px-2 py-[5px] text-left text-[13px] transition ${on ? "bg-ink-100 font-medium text-ink-900" : "text-ink-700 hover:bg-ink-100/70"}`}>
                 <span className="truncate">{p.title}</span>
-                <span className="truncate font-mono text-[10.5px] font-normal text-ink-400">/{p.slug}</span>
+                <span className="truncate font-mono text-[10.5px] font-normal text-ink-500">/{p.slug}</span>
               </button>
               {canEdit && doc.pages.length > 1 && (
                 <button aria-label={`Delete page ${p.title}`} title="Delete page"
-                  className="absolute right-1 grid h-5 w-5 place-items-center rounded text-ink-400 opacity-0 transition hover:bg-red-600 hover:text-white focus:opacity-100 group-hover:opacity-100"
+                  className="absolute right-1 grid h-5 w-5 place-items-center rounded text-ink-500 opacity-0 transition hover:bg-red-600 hover:text-white focus:opacity-100 group-hover:opacity-100"
                   onClick={() => window.confirm(`Delete the page "${p.title}" and its sections?`) && apply(removePage(p.id))}>
                   <IconClose size={12} />
                 </button>
@@ -113,7 +113,7 @@ export function LeftRail({ meta }: { meta: EditorMeta }) {
       </div>
     );
   return (
-    <aside className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
+    <aside aria-label="Pages and sections" className="flex min-h-0 flex-col border-r border-ink-200 bg-white">
       <ViewTabs />
       <PageList meta={meta} />
       <div className="min-h-0 flex-1 overflow-y-auto px-2 py-3">

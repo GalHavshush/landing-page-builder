@@ -38,7 +38,7 @@ export function Repeater<T extends object>({
             <div className="flex items-center">
               <button type="button" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}
                 className="flex min-w-0 flex-1 items-center truncate px-2 py-2 text-left text-[13px] font-medium">
-                <IconChevronRight size={13} className={`mr-1 shrink-0 text-ink-400 transition-transform duration-150 ${open === i ? "rotate-90" : ""}`} />
+                <IconChevronRight size={13} className={`mr-1 shrink-0 text-ink-500 transition-transform duration-150 ${open === i ? "rotate-90" : ""}`} />
                 {itemTitle(item as Record<string, unknown>, i)}
               </button>
               <div className="flex gap-0.5 pr-1 text-ink-500">
