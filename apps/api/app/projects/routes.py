@@ -3,6 +3,7 @@ import json
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import ValidationError
 from sitegen import SiteDocument
+from sitegen.brief import Brief, build_document
 from sitegen.migrations import UnsupportedVersion, load_document
 from sitegen.starters import list_starters, load_starter, starter_info
 from sitegen.strings import LANGUAGE_NAMES
@@ -53,6 +54,20 @@ def templates(_: User = Depends(get_current_user)) -> list[dict]:
     return starter_info()
 
 
+def _persist_project(db: Session, user: User, name: str, template: str, doc: SiteDocument):
+    project = Project(
+        name=name,
+        slug=service.unique_slug(db, name),
+        template_id=template,
+        draft_doc=doc.model_dump(mode="json"),
+        created_by=user.id,
+    )
+    db.add(project)
+    db.flush()
+    db.add(ProjectMember(project_id=project.id, user_id=user.id, role=Role.owner))
+    return project_out(project, Role.owner)
+
+
 @router.post("/projects", response_model=ProjectOut, status_code=201)
 def create_project(
     body: ProjectCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)
@@ -67,17 +82,27 @@ def create_project(
         data = doc.model_dump(mode="json")
         data["site"].update(default_language=languages[0], languages=languages)
         doc = SiteDocument.model_validate(data)
-    project = Project(
-        name=body.name,
-        slug=service.unique_slug(db, body.name),
-        template_id=body.template,
-        draft_doc=doc.model_dump(mode="json"),
-        created_by=user.id,
-    )
-    db.add(project)
-    db.flush()
-    db.add(ProjectMember(project_id=project.id, user_id=user.id, role=Role.owner))
-    return project_out(project, Role.owner)
+    return _persist_project(db, user, body.name, body.template, doc)
+
+
+def brief_document(body: Brief) -> SiteDocument:
+    """The document a guided-form brief describes; unknown languages or starters are a 422."""
+    languages = [body.language, *body.extra_languages]
+    if not all(code in LANGUAGE_NAMES for code in languages):
+        raise HTTPException(422, "Unknown language")
+    if body.template is not None and body.template not in list_starters():
+        raise HTTPException(422, f"Unknown template {body.template!r}")
+    return build_document(body)
+
+
+@router.post("/projects/from-brief", response_model=ProjectOut, status_code=201)
+def create_project_from_brief(
+    body: Brief, user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    """Create a project from the guided new-site form; the editor then opens it as usual."""
+    doc = brief_document(body)
+    template = body.template or doc.theme.template
+    return _persist_project(db, user, body.name.strip(), template, doc)
 
 
 @router.get("/projects", response_model=list[ProjectOut])

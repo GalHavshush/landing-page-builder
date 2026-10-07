@@ -168,3 +168,52 @@ def test_hebrew_site_starts_with_hebrew_placeholder_text(client):
     )
     en = client.get("/editor-meta").json()
     assert en["page_recipes"]["about"]["title"] == "About us"
+
+
+def test_create_from_brief_opens_a_populated_site(client):
+    signup(client)
+    brief = {
+        "name": "Rosa Bakery",
+        "language": "he",
+        "pages": ["services"],
+        "headline": "לחם טרי",
+        "services": [{"title": "בגט", "price": "12"}],
+    }
+    r = client.post("/projects/from-brief", json=brief)
+    assert r.status_code == 201, r.text
+    p = r.json()
+    assert p["role"] == "owner"
+    doc = client.get(f"/projects/{p['id']}/doc").json()["doc"]
+    assert doc["site"]["default_language"] == "he"
+    assert doc["pages"][0]["sections"][0]["props"]["heading"] == "לחם טרי"
+    assert doc["pages"][1]["sections"][0]["props"]["items"][0]["title"] == "בגט"
+
+
+def test_from_brief_rejects_bad_input(client):
+    signup(client)
+    assert (
+        client.post("/projects/from-brief", json={"name": "X", "language": "xx"}).status_code == 422
+    )
+    assert (
+        client.post("/projects/from-brief", json={"name": "X", "template": "nope"}).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/projects/from-brief", json={"name": "X", "palette": {"primary": "red"}}
+        ).status_code
+        == 422
+    )
+
+
+def test_preview_brief_renders_without_saving(client):
+    signup(client)
+    r = client.post(
+        "/projects/preview-brief", json={"brief": {"name": "Rosa", "headline": "Hello there"}}
+    )
+    assert r.status_code == 200, r.text
+    assert "Hello there" in r.json()["html"]
+    assert client.get("/projects").json() == []
+    assert client.post("/projects/preview-brief", json={"brief": {"name": "R"}}).status_code == 200
+    client.cookies.clear()
+    assert client.post("/projects/preview-brief", json={"brief": {"name": "R"}}).status_code == 401

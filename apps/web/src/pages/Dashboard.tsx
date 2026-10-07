@@ -6,21 +6,11 @@ import { api } from "@/api/client";
 import { useCreateProject, useDeleteProject, useEditorMeta, useLogout, useMe, useProjects, useTemplates } from "@/api/hooks";
 import { IconClose, IconEye, IconPlus, IconSettings } from "@/components/icons";
 import { LivePreview } from "@/components/LivePreview";
-import { Button, ErrorText, Field } from "@/components/ui";
+import { Swatches } from "@/components/Swatches";
+import { Button, ErrorText, Field, linkButton } from "@/components/ui";
 import { getUiLang, t } from "@/i18n";
 
 const ROLE_LABEL: Record<string, string> = { owner: "Owner", designer: "Designer", editor: "Client access" };
-
-// A tiny stand-in for each starter's look, drawn from its palette (no screenshots needed).
-function Swatches({ palette }: { palette: Record<string, string> }) {
-  return (
-    <div className="flex h-9 overflow-hidden rounded-md ring-1 ring-inset ring-black/10" aria-hidden>
-      <div className="flex-[3]" style={{ background: palette.background }}><div className="m-2 h-1.5 w-8 rounded-full" style={{ background: palette.text }} /><div className="mx-2 h-1 w-12 rounded-full opacity-40" style={{ background: palette.text }} /></div>
-      <div className="flex-1" style={{ background: palette.primary }} />
-      <div className="flex-1" style={{ background: palette.accent }} />
-    </div>
-  );
-}
 
 const THUMB_W = 1280; // the page is laid out as on a laptop, then scaled down to the card
 
@@ -77,7 +67,12 @@ export default function Dashboard() {
             <h1 className="text-[26px] font-semibold tracking-[-0.025em]">{t("Your sites")}</h1>
             <p className="mt-1 text-[13px] text-ink-500">{projects.data ? (projects.data.length === 1 ? t("1 site") : t("{n} sites", { n: projects.data.length })) : " "}</p>
           </div>
-          {!creating && <Button onClick={() => setCreating(true)}><IconPlus size={14} />{t("New site")}</Button>}
+          {!creating && (
+            <div className="flex items-center gap-2">
+              <Button variant="quiet" onClick={() => setCreating(true)}>{t("Start from a template")}</Button>
+              <Link to="/new" className={linkButton}><IconPlus size={14} />{t("New site")}</Link>
+            </div>
+          )}
         </div>
 
         {creating && <NewProject onDone={() => setCreating(false)} />}
@@ -121,7 +116,7 @@ export default function Dashboard() {
           <div className="rounded-xl border border-dashed border-ink-300 p-12 text-center">
             <p className="text-[15px] font-medium">{t("No sites yet")}</p>
             <p className="mt-1 text-[13px] text-ink-500">{t("Pick a starting point and you'll be editing in seconds.")}</p>
-            <Button className="mt-4" onClick={() => setCreating(true)}><IconPlus size={14} />{t("New site")}</Button>
+            <Link to="/new" className={`${linkButton} mt-4`}><IconPlus size={14} />{t("New site")}</Link>
           </div>
         )}
       </main>

@@ -108,6 +108,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/projects/from-brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Project From Brief
+         * @description Create a project from the guided new-site form; the editor then opens it as usual.
+         */
+        post: operations["create_project_from_brief_projects_from_brief_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/projects/{project_id}": {
         parameters: {
             query?: never;
@@ -207,6 +227,26 @@ export interface paths {
         get: operations["live_projects__project_id__live_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/preview-brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Brief
+         * @description Live preview for the guided new-site form: renders the brief without saving anything.
+         */
+        post: operations["preview_brief_projects_preview_brief_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -556,6 +596,110 @@ export interface components {
             /** File */
             file: string;
         };
+        /** Brief */
+        Brief: {
+            /** Name */
+            name: string;
+            /**
+             * Language
+             * @default en
+             */
+            language: string;
+            /** Extra Languages */
+            extra_languages?: string[];
+            /**
+             * Business Type
+             * @default general
+             * @enum {string}
+             */
+            business_type: "general" | "local_shop" | "restaurant" | "salon" | "trades" | "clinic" | "photographer" | "consultant" | "fitness" | "garden" | "portfolio";
+            /** Template */
+            template?: string | null;
+            /**
+             * Tagline
+             * @default
+             */
+            tagline: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            goal?: components["schemas"]["Goal"];
+            business?: components["schemas"]["Business"];
+            /** Pages */
+            pages?: ("about" | "services" | "pricing" | "team" | "faq")[];
+            palette?: components["schemas"]["BriefPalette"];
+            /**
+             * Headline
+             * @default
+             */
+            headline: string;
+            /**
+             * Subheading
+             * @default
+             */
+            subheading: string;
+            /** Highlights */
+            highlights?: components["schemas"]["Highlight"][];
+            /** Stats */
+            stats?: components["schemas"]["StatItem"][];
+            /** Testimonials */
+            testimonials?: components["schemas"]["QuoteItem"][];
+            /**
+             * Story
+             * @default
+             */
+            story: string;
+            /** Services */
+            services?: components["schemas"]["ServiceItem"][];
+            /** Plans */
+            plans?: components["schemas"]["PlanItem"][];
+            /** Team */
+            team?: components["schemas"]["MemberItem"][];
+            /** Faq */
+            faq?: components["schemas"]["FaqEntry"][];
+        };
+        /** BriefPalette */
+        BriefPalette: {
+            /** Primary */
+            primary?: string | null;
+            /** Accent */
+            accent?: string | null;
+        };
+        /** BriefPreviewIn */
+        BriefPreviewIn: {
+            brief: components["schemas"]["Brief"];
+            /** Page Id */
+            page_id?: string | null;
+        };
+        /**
+         * Business
+         * @description Shared business info. Sections (contact, footer, map) read from here.
+         */
+        Business: {
+            /**
+             * Phone
+             * @default
+             */
+            phone: string;
+            /**
+             * Email
+             * @default
+             */
+            email: string;
+            /**
+             * Address
+             * @default
+             */
+            address: string;
+            /** Hours */
+            hours?: components["schemas"]["Hours"][];
+            /** Social */
+            social?: {
+                [key: string]: string;
+            };
+        };
         /** Credentials */
         Credentials: {
             /** Email */
@@ -600,10 +744,73 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
+        /** FaqEntry */
+        FaqEntry: {
+            /**
+             * Question
+             * @default
+             */
+            question: string;
+            /**
+             * Answer
+             * @default
+             */
+            answer: string;
+        };
+        /**
+         * Goal
+         * @description The one thing a visitor should do: becomes the main button on the home page and header.
+         */
+        Goal: {
+            /**
+             * Kind
+             * @default message
+             * @enum {string}
+             */
+            kind: "call" | "book" | "message" | "visit";
+            /**
+             * Url
+             * @default
+             */
+            url: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** Highlight */
+        Highlight: {
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /** Hours */
+        Hours: {
+            /** Label */
+            label: string;
+            /**
+             * Open
+             * @default
+             */
+            open: string;
+            /**
+             * Close
+             * @default
+             */
+            close: string;
+            /**
+             * Closed
+             * @default false
+             */
+            closed: boolean;
         };
         /** ImportBody */
         ImportBody: {
@@ -642,6 +849,24 @@ export interface components {
             /** Email */
             email: string | null;
         };
+        /** MemberItem */
+        MemberItem: {
+            /**
+             * Name
+             * @default
+             */
+            name: string;
+            /**
+             * Role
+             * @default
+             */
+            role: string;
+            /**
+             * Bio
+             * @default
+             */
+            bio: string;
+        };
         /** MemberOut */
         MemberOut: {
             /** User Id */
@@ -652,6 +877,34 @@ export interface components {
             name: string;
             /** Role */
             role: string;
+        };
+        /** PlanItem */
+        PlanItem: {
+            /**
+             * Name
+             * @default
+             */
+            name: string;
+            /**
+             * Price
+             * @default
+             */
+            price: string;
+            /**
+             * Period
+             * @default
+             */
+            period: string;
+            /**
+             * Features
+             * @default
+             */
+            features: string;
+            /**
+             * Highlighted
+             * @default false
+             */
+            highlighted: boolean;
         };
         /** PostIn */
         PostIn: {
@@ -816,6 +1069,24 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** QuoteItem */
+        QuoteItem: {
+            /**
+             * Quote
+             * @default
+             */
+            quote: string;
+            /**
+             * Author
+             * @default
+             */
+            author: string;
+            /**
+             * Role
+             * @default
+             */
+            role: string;
+        };
         /** RegisterRequest */
         RegisterRequest: {
             /** Email */
@@ -847,6 +1118,37 @@ export interface components {
             warnings: {
                 [key: string]: unknown;
             }[];
+        };
+        /** ServiceItem */
+        ServiceItem: {
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /**
+             * Price
+             * @default
+             */
+            price: string;
+        };
+        /** StatItem */
+        StatItem: {
+            /**
+             * Value
+             * @default
+             */
+            value: string;
+            /**
+             * Label
+             * @default
+             */
+            label: string;
         };
         /** StockPhotoOut */
         StockPhotoOut: {
@@ -1132,6 +1434,39 @@ export interface operations {
             };
         };
     };
+    create_project_from_brief_projects_from_brief_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Brief"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_project_projects__project_id__get: {
         parameters: {
             query?: never;
@@ -1374,6 +1709,39 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_brief_projects_preview_brief_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BriefPreviewIn"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

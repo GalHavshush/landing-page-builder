@@ -4,6 +4,7 @@ import Dashboard from "@/pages/Dashboard";
 import EditorPage from "@/pages/EditorPage";
 import InvitePage from "@/pages/InvitePage";
 import Login from "@/pages/Login";
+import NewSite from "@/pages/NewSite";
 import SettingsPage from "@/pages/SettingsPage";
 import { t } from "@/i18n";
 
@@ -22,6 +23,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route element={<RequireAuth />}>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/new" element={<NewSite />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/projects/:projectId" element={<EditorPage />} />
         <Route path="/invite/:token" element={<InvitePage />} />

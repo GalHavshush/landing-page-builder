@@ -11,8 +11,8 @@ from app.config import get_settings
 from app.db import get_db
 from app.projects.build import preview_assets, published_posts
 from app.projects.deps import VIEW, Access
-from app.projects.routes import parse_document
-from app.projects.schemas import PreviewIn, PreviewOut
+from app.projects.routes import brief_document, parse_document
+from app.projects.schemas import BriefPreviewIn, PreviewIn, PreviewOut
 
 router = APIRouter(tags=["output"])
 
@@ -88,3 +88,19 @@ def live(
     """Interactive preview of the saved draft (the dashboard's thumbnails and quick preview)."""
     doc = parse_document(access.project.draft_doc)
     return _render(db, access, doc, page_id or doc.pages[0].id, lang, True)
+
+
+@router.post("/projects/preview-brief", response_model=PreviewOut)
+def preview_brief(body: BriefPreviewIn, _: User = Depends(get_current_user)):
+    """Live preview for the guided new-site form: renders the brief without saving anything."""
+    doc = brief_document(body.brief)
+    try:
+        result = render_preview(
+            doc,
+            body.page_id or doc.pages[0].id,
+            font_base=f"{get_settings().media_url_prefix.rsplit('/', 1)[0]}/fonts/",
+            interactive=True,
+        )
+    except KeyError as exc:
+        raise HTTPException(404, f"Unknown page: {exc.args[0]}") from exc
+    return PreviewOut(html=result.html, issues=[i.__dict__ for i in result.issues])

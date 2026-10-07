@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { getUiLang, setUiLang, type UiLang } from "@/i18n";
 import { getThemePref, setThemePref, type ThemePref } from "@/theme";
 import { api, ApiError } from "./client";
+import type { Brief } from "@/newsite/model";
 import type { Asset, PostIn, PostOut, EditorMeta, Project, SiteDocument, User } from "./types";
 
 export function useMe() {
@@ -75,6 +76,14 @@ export function useCreateProject() {
   return useMutation({
     mutationFn: (body: { name: string; template: string; language: string; extra_languages: string[] }) =>
       api<Project>("/projects", { method: "POST", body }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
+  });
+}
+
+export function useCreateFromBrief() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: Brief) => api<Project>("/projects/from-brief", { method: "POST", body }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
   });
 }

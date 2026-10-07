@@ -251,6 +251,48 @@
         }
       }
     },
+    "/projects/from-brief": {
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Create Project From Brief",
+        "description": "Create a project from the guided new-site form; the editor then opens it as usual.",
+        "operationId": "create_project_from_brief_projects_from_brief_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Brief"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects/{project_id}": {
       "get": {
         "tags": [
@@ -625,6 +667,48 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/preview-brief": {
+      "post": {
+        "tags": [
+          "output"
+        ],
+        "summary": "Preview Brief",
+        "description": "Live preview for the guided new-site form: renders the brief without saving anything.",
+        "operationId": "preview_brief_projects_preview_brief_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BriefPreviewIn"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1908,6 +1992,249 @@
         ],
         "title": "Body_upload_asset_projects__project_id__assets_post"
       },
+      "Brief": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          },
+          "extra_languages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Extra Languages"
+          },
+          "business_type": {
+            "type": "string",
+            "enum": [
+              "general",
+              "local_shop",
+              "restaurant",
+              "salon",
+              "trades",
+              "clinic",
+              "photographer",
+              "consultant",
+              "fitness",
+              "garden",
+              "portfolio"
+            ],
+            "title": "Business Type",
+            "default": "general"
+          },
+          "template": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline",
+            "default": ""
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "goal": {
+            "$ref": "#/components/schemas/Goal"
+          },
+          "business": {
+            "$ref": "#/components/schemas/Business"
+          },
+          "pages": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "about",
+                "services",
+                "pricing",
+                "team",
+                "faq"
+              ]
+            },
+            "type": "array",
+            "title": "Pages"
+          },
+          "palette": {
+            "$ref": "#/components/schemas/BriefPalette"
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline",
+            "default": ""
+          },
+          "subheading": {
+            "type": "string",
+            "title": "Subheading",
+            "default": ""
+          },
+          "highlights": {
+            "items": {
+              "$ref": "#/components/schemas/Highlight"
+            },
+            "type": "array",
+            "title": "Highlights"
+          },
+          "stats": {
+            "items": {
+              "$ref": "#/components/schemas/StatItem"
+            },
+            "type": "array",
+            "title": "Stats"
+          },
+          "testimonials": {
+            "items": {
+              "$ref": "#/components/schemas/QuoteItem"
+            },
+            "type": "array",
+            "title": "Testimonials"
+          },
+          "story": {
+            "type": "string",
+            "title": "Story",
+            "default": ""
+          },
+          "services": {
+            "items": {
+              "$ref": "#/components/schemas/ServiceItem"
+            },
+            "type": "array",
+            "title": "Services"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/components/schemas/PlanItem"
+            },
+            "type": "array",
+            "title": "Plans"
+          },
+          "team": {
+            "items": {
+              "$ref": "#/components/schemas/MemberItem"
+            },
+            "type": "array",
+            "title": "Team"
+          },
+          "faq": {
+            "items": {
+              "$ref": "#/components/schemas/FaqEntry"
+            },
+            "type": "array",
+            "title": "Faq"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Brief"
+      },
+      "BriefPalette": {
+        "properties": {
+          "primary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary"
+          },
+          "accent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accent"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "BriefPalette"
+      },
+      "BriefPreviewIn": {
+        "properties": {
+          "brief": {
+            "$ref": "#/components/schemas/Brief"
+          },
+          "page_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "brief"
+        ],
+        "title": "BriefPreviewIn"
+      },
+      "Business": {
+        "properties": {
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "address": {
+            "type": "string",
+            "title": "Address",
+            "default": ""
+          },
+          "hours": {
+            "items": {
+              "$ref": "#/components/schemas/Hours"
+            },
+            "type": "array",
+            "title": "Hours"
+          },
+          "social": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Social"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Business",
+        "description": "Shared business info. Sections (contact, footer, map) read from here."
+      },
       "Credentials": {
         "properties": {
           "email": {
@@ -2014,6 +2341,47 @@
         ],
         "title": "ExportOut"
       },
+      "FaqEntry": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question",
+            "default": ""
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "FaqEntry"
+      },
+      "Goal": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "call",
+              "book",
+              "message",
+              "visit"
+            ],
+            "title": "Kind",
+            "default": "message"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Goal",
+        "description": "The one thing a visitor should do: becomes the main button on the home page and header."
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -2026,6 +2394,52 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "Highlight": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Highlight"
+      },
+      "Hours": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "open": {
+            "type": "string",
+            "title": "Open",
+            "default": ""
+          },
+          "close": {
+            "type": "string",
+            "title": "Close",
+            "default": ""
+          },
+          "closed": {
+            "type": "boolean",
+            "title": "Closed",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "label"
+        ],
+        "title": "Hours"
       },
       "ImportBody": {
         "properties": {
@@ -2142,6 +2556,28 @@
         ],
         "title": "InvitePreview"
       },
+      "MemberItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": ""
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "default": ""
+          },
+          "bio": {
+            "type": "string",
+            "title": "Bio",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "MemberItem"
+      },
       "MemberOut": {
         "properties": {
           "user_id": {
@@ -2169,6 +2605,38 @@
           "role"
         ],
         "title": "MemberOut"
+      },
+      "PlanItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": ""
+          },
+          "price": {
+            "type": "string",
+            "title": "Price",
+            "default": ""
+          },
+          "period": {
+            "type": "string",
+            "title": "Period",
+            "default": ""
+          },
+          "features": {
+            "type": "string",
+            "title": "Features",
+            "default": ""
+          },
+          "highlighted": {
+            "type": "boolean",
+            "title": "Highlighted",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "PlanItem"
       },
       "PostIn": {
         "properties": {
@@ -2576,6 +3044,28 @@
         ],
         "title": "ProjectUpdate"
       },
+      "QuoteItem": {
+        "properties": {
+          "quote": {
+            "type": "string",
+            "title": "Quote",
+            "default": ""
+          },
+          "author": {
+            "type": "string",
+            "title": "Author",
+            "default": ""
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "QuoteItem"
+      },
       "RegisterRequest": {
         "properties": {
           "email": {
@@ -2641,6 +3131,45 @@
           "revision"
         ],
         "title": "SavedOut"
+      },
+      "ServiceItem": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "price": {
+            "type": "string",
+            "title": "Price",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ServiceItem"
+      },
+      "StatItem": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value",
+            "default": ""
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "StatItem"
       },
       "StockPhotoOut": {
         "properties": {

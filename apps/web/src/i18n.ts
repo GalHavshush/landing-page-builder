@@ -53,8 +53,13 @@ export function useUiLang(): UiLang {
   );
 }
 
+/** Translate an English UI string into `l` (the guided new-site form uses the site's language). */
+export function tIn(l: UiLang, text: string, vars?: Record<string, string | number>): string {
+  const out = DICTS[l][text] ?? text;
+  return vars ? out.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m)) : out;
+}
+
 /** Translate an English UI string; `{name}` placeholders are filled from `vars`. */
 export function t(text: string, vars?: Record<string, string | number>): string {
-  const out = DICTS[lang][text] ?? text;
-  return vars ? out.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m)) : out;
+  return tIn(lang, text, vars);
 }

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from pydantic import BaseModel, Field
+from sitegen.brief import Brief
 
 
 class ProjectCreate(BaseModel):
@@ -44,6 +45,11 @@ class PreviewIn(BaseModel):
     page_id: str
     lang: str | None = None
     interactive: bool = False  # a try-it-out preview instead of the click-to-select one
+
+
+class BriefPreviewIn(BaseModel):
+    brief: Brief
+    page_id: str | None = None  # default: the home page
 
 
 class PreviewOut(BaseModel):

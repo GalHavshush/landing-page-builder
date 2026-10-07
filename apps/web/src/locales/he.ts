@@ -1,5 +1,8 @@
 /** Hebrew UI strings, keyed by the English source text. A missing key falls back to English. */
+import { newSiteHe } from "./newsite";
+
 export const he: Record<string, string> = {
+  ...newSiteHe,
   // ---- general ----
   "Add": "הוספה",
   "Back": "חזרה",
