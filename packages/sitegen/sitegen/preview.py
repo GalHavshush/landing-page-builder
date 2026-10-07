@@ -62,6 +62,6 @@ def render_post_preview(
         assets or {},
         issues,
         [*others, post],
-        preview=PreviewOptions(asset_url=asset_url),
+        preview=PreviewOptions(asset_url=asset_url, font_base=font_base),
     )
     return PreviewResult(html=html, issues=issues)

@@ -53,3 +53,22 @@ def test_editor_meta_describes_every_section_with_field_hints():
 
 def test_assetfile_still_exported():
     assert AssetFile("a.png", b"x").filename == "a.png"
+
+
+def test_post_preview_uses_the_given_font_base():
+    from datetime import datetime
+
+    from sitegen.posts import Post
+    from sitegen.preview import render_post_preview
+    from sitegen.starters import load_starter
+
+    post = Post(
+        id="p",
+        lang="en",
+        translation_group="g",
+        slug="s",
+        title="T",
+        published_at=datetime(2026, 1, 1),
+    )
+    html = render_post_preview(load_starter("clean"), post, font_base="/api/fonts/").html
+    assert "url(/api/fonts/" in html and "url(/fonts/" not in html
