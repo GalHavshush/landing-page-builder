@@ -139,3 +139,32 @@ def test_deleting_a_project_removes_everything_including_files(client, storage, 
     files = [f.relative_to(storage.root).parts[0] for f in storage.root.rglob("*") if f.is_file()]
     assert sorted(set(files)) == ["p2"]  # only the other project's upload is left
     assert [x["id"] for x in client.get("/projects").json()] == [keep["id"]]
+
+
+def test_create_project_in_hebrew_only(client):
+    signup(client)
+    r = client.post("/projects", json={"name": "Shop", "language": "he"})
+    assert r.status_code == 201
+    site = client.get(f"/projects/{r.json()['id']}/doc").json()["doc"]["site"]
+    assert (site["default_language"], site["languages"]) == ("he", ["he"])
+    both = client.post(
+        "/projects", json={"name": "Two", "language": "he", "extra_languages": ["en"]}
+    )
+    assert client.get(f"/projects/{both.json()['id']}/doc").json()["doc"]["site"]["languages"] == [
+        "he",
+        "en",
+    ]
+    assert client.post("/projects", json={"name": "X", "language": "zz"}).status_code == 422
+
+
+def test_hebrew_site_starts_with_hebrew_placeholder_text(client):
+    signup(client)
+    r = client.post("/projects", json={"name": "Shop", "template": "warm", "language": "he"})
+    doc = client.get(f"/projects/{r.json()['id']}/doc").json()["doc"]
+    assert doc["pages"][0]["title"] == "בית" and doc["site"]["name"] == "Shop"
+    assert (
+        client.get("/editor-meta", params={"lang": "he"}).json()["page_recipes"]["about"]["title"]
+        == "אודותינו"
+    )
+    en = client.get("/editor-meta").json()
+    assert en["page_recipes"]["about"]["title"] == "About us"

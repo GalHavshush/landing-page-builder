@@ -69,7 +69,8 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update Preferences */
+        patch: operations["update_preferences_auth_me_patch"];
         trace?: never;
     };
     "/templates": {
@@ -160,6 +161,8 @@ export interface paths {
         /**
          * Get Editor Meta
          * @description Section types, field hints, themes constants: everything the editor UI is generated from.
+         *
+         *     `lang`: the language of the placeholder text in new sections and pages (the site's language).
          */
         get: operations["get_editor_meta_editor_meta_get"];
         put?: never;
@@ -184,6 +187,26 @@ export interface paths {
          * @description Render a page of the document the editor currently holds (not necessarily saved yet).
          */
         post: operations["preview_projects__project_id__preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/projects/{project_id}/live": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Live
+         * @description Interactive preview of the saved draft (the dashboard's thumbnails and quick preview).
+         */
+        get: operations["live_projects__project_id__live_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -716,6 +739,13 @@ export interface components {
             /** Published At */
             published_at?: string | null;
         };
+        /** PreferencesIn */
+        PreferencesIn: {
+            /** Ui Language */
+            ui_language?: ("en" | "he") | null;
+            /** Ui Theme */
+            ui_theme?: ("system" | "light" | "dark") | null;
+        };
         /** PreviewIn */
         PreviewIn: {
             /** Doc */
@@ -726,6 +756,11 @@ export interface components {
             page_id: string;
             /** Lang */
             lang?: string | null;
+            /**
+             * Interactive
+             * @default false
+             */
+            interactive: boolean;
         };
         /** PreviewOut */
         PreviewOut: {
@@ -748,6 +783,13 @@ export interface components {
              * @default clean
              */
             template: string;
+            /**
+             * Language
+             * @default en
+             */
+            language: string;
+            /** Extra Languages */
+            extra_languages?: string[];
         };
         /** ProjectOut */
         ProjectOut: {
@@ -851,6 +893,10 @@ export interface components {
             email: string;
             /** Name */
             name: string;
+            /** Ui Language */
+            ui_language: string;
+            /** Ui Theme */
+            ui_theme: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -974,6 +1020,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserOut"];
+                };
+            };
+        };
+    };
+    update_preferences_auth_me_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreferencesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1216,7 +1295,9 @@ export interface operations {
     };
     get_editor_meta_editor_meta_get: {
         parameters: {
-            query?: never;
+            query?: {
+                lang?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1232,6 +1313,15 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1250,6 +1340,40 @@ export interface operations {
                 "application/json": components["schemas"]["PreviewIn"];
             };
         };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    live_projects__project_id__live_get: {
+        parameters: {
+            query?: {
+                page_id?: string | null;
+                lang?: string | null;
+            };
+            header?: never;
+            path: {
+                project_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {

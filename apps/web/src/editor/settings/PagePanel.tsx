@@ -4,6 +4,7 @@ import { TextAreaControl, TextControl, ToggleControl } from "../controls/basic";
 import { ImageControl } from "../controls/ImageControl";
 import { SlugControl } from "../controls/SlugControl";
 import { currentPage, useCanEditStructure, useEditor } from "../store";
+import { t } from "@/i18n";
 
 type TField = "title" | "slug" | "seo_title" | "seo_description";
 
@@ -35,11 +36,11 @@ export function PagePanel() {
 
   return (
     <div className="space-y-4">
-      {translating && <p className="text-[12px] text-ink-600">Translating this page. Empty fields use the default language.</p>}
+      {translating && <p className="text-[12px] text-ink-600">{t("Translating this page. Empty fields use the default language.")}</p>}
       {canEdit && <TextControl label="Page title" value={value("title")} placeholder={ph("title")} onChange={(v, t) => write("title", v, t)} />}
       {canEdit && <SlugControl label="URL name" value={isHome ? "" : value("slug")} disabled={isHome} taken={takenSlugs}
         placeholder={ph("slug")} onChange={(v, t) => write("slug", v, t)} />}
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Search engines</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Search engines")}</h3>
       <TextControl label="Search result title" value={value("seo_title")} placeholder={ph("seo_title") || page.title}
         hint="Leave empty to use the page title." ideal={60} max={200} onChange={(v, t) => write("seo_title", v, t)} />
       <TextAreaControl label="Search result description" value={value("seo_description")} placeholder={ph("seo_description")}

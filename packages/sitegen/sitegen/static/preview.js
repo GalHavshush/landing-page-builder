@@ -23,6 +23,8 @@
   });
   document.addEventListener("click", function (e) {
     e.preventDefault(); // links and forms must not navigate inside the preview
+    var nav = e.target.closest && e.target.closest("[data-page-id]");
+    if (nav) { parent.postMessage({ type: "page-click", id: nav.getAttribute("data-page-id") }, "*"); return; }
     var s = sectionOf(e.target);
     parent.postMessage({ type: "section-click", id: s ? s.getAttribute("data-section-id") : null }, "*");
   }, true);

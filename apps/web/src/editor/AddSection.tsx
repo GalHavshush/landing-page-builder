@@ -3,6 +3,7 @@ import type { EditorMeta, SectionMeta } from "@/api/types";
 import { IconClose, IconPlus, SectionIcon } from "@/components/icons";
 import { addSection, newId } from "./commands";
 import { currentPage, useEditor } from "./store";
+import { t } from "@/i18n";
 
 /** "Add section" button + a native <dialog> (focus trap and Esc come for free). */
 export function AddSection({ meta }: { meta: EditorMeta }) {
@@ -25,7 +26,7 @@ export function AddSection({ meta }: { meta: EditorMeta }) {
     <>
       <button onClick={() => dialog.current?.showModal()}
         className="flex w-full items-center gap-2 rounded-md border border-dashed border-ink-300 px-2.5 py-2 text-[13px] text-ink-600 transition hover:border-ink-900 hover:bg-white hover:text-ink-900">
-        <IconPlus size={14} /> Add section
+        <IconPlus size={14} /> {t("Add section")}
       </button>
       <dialog
         ref={dialog}
@@ -35,10 +36,10 @@ export function AddSection({ meta }: { meta: EditorMeta }) {
         <div className="p-5">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-[15px] font-semibold tracking-tight">Add a section</h2>
-              <p className="text-[13px] text-ink-500">Goes after the section you have selected.</p>
+              <h2 className="text-[15px] font-semibold tracking-tight">{t("Add a section")}</h2>
+              <p className="text-[13px] text-ink-500">{t("Goes after the section you have selected.")}</p>
             </div>
-            <button aria-label="Close" className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialog.current?.close()}>
+            <button aria-label={t("Close")} className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialog.current?.close()}>
               <IconClose size={15} />
             </button>
           </div>
@@ -47,14 +48,14 @@ export function AddSection({ meta }: { meta: EditorMeta }) {
               <li key={m.type}>
                 <button
                   onClick={() => add(m)}
-                  className="group flex h-full w-full items-start gap-3 rounded-lg border border-ink-200 p-3 text-left transition hover:border-ink-900 hover:bg-ink-50"
+                  className="group flex h-full w-full items-start gap-3 rounded-lg border border-ink-200 p-3 text-start transition hover:border-ink-900 hover:bg-ink-50"
                 >
                   <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md bg-ink-100 text-ink-700 transition group-hover:bg-ink-900 group-hover:text-white">
                     <SectionIcon type={m.type} size={16} />
                   </span>
                   <span>
-                    <span className="block text-[13px] font-medium">{m.label}</span>
-                    <span className="mt-0.5 block text-[12px] leading-snug text-ink-500">{m.description}</span>
+                    <span className="block text-[13px] font-medium">{t(m.label)}</span>
+                    <span className="mt-0.5 block text-[12px] leading-snug text-ink-500">{t(m.description)}</span>
                   </span>
                 </button>
               </li>

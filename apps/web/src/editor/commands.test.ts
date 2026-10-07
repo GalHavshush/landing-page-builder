@@ -119,3 +119,11 @@ describe("balanceBackgrounds", () => {
     );
   });
 });
+
+describe("movePage", () => {
+  it("reorders pages and the menu follows", () => {
+    const d = run(doc(), c.movePage("p2", 0));
+    expect(d.pages.map((p) => p.id)).toEqual(["p2", "p1"]);
+    expect(d.site.nav.map((n) => n.page)).toEqual(["p2", "p1"]);
+  });
+});

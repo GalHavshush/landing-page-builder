@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { api } from "@/api/client";
 import type { EditorMeta, Project } from "@/api/types";
-import { IconBack, IconDesktop, IconMobile, IconRedo, IconUndo } from "@/components/icons";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { IconBack, IconDesktop, IconEye, IconMobile, IconRedo, IconSettings, IconUndo } from "@/components/icons";
+import { LivePreview } from "@/components/LivePreview";
+import { Button } from "@/components/ui";
 import { ExportDialog } from "./ExportDialog";
 import { ShareDialog } from "./ShareDialog";
 import { useEditor, type SaveStatus } from "./store";
+import { t } from "@/i18n";
 
 const STATUS: Record<SaveStatus, { text: string; dot: string }> = {
   saved: { text: "Saved", dot: "bg-emerald-700" },
@@ -19,9 +23,9 @@ function SaveIndicator() {
   const status = useEditor((s) => s.saveStatus);
   const s = STATUS[status];
   return (
-    <span role="status" className="flex items-center gap-1.5 text-[12px] text-ink-500">
+    <span role="status" aria-label={t(s.text)} className="flex items-center gap-1.5 text-[12px] text-ink-500">
       <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {s.text}
+      <span className="hidden sm:inline">{t(s.text)}</span>
     </span>
   );
 }
@@ -39,33 +43,39 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
   const canRedo = useEditor((s) => s.redoStack.length > 0);
   const undo = useEditor((s) => s.undo);
   const redo = useEditor((s) => s.redo);
+  // the preview shows the document as it is when opened, saved or not
+  const [live, setLive] = useState<{ doc: typeof doc; page: string; lang: string } | null>(null);
+  const openLive = () => {
+    const s = useEditor.getState();
+    if (s.doc && s.pageId) setLive({ doc: s.doc, page: s.pageId, lang: s.lang ?? s.doc.site.default_language });
+  };
 
   return (
     <header className="flex h-11 items-center justify-between gap-2 border-b border-ink-200 bg-white px-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
       <div className="flex min-w-0 items-center gap-1">
-        <Link to="/" aria-label="All sites" title="All sites" className={iconBtn}>
+        <Link to="/" aria-label={t("All sites")} title={t("All sites")} className={iconBtn}>
           <IconBack size={15} />
         </Link>
-        <span className="mx-1 hidden h-4 w-px bg-ink-200 sm:block" />
+        <span className="mx-1 h-4 w-px bg-ink-200" />
         <h1 className="hidden truncate px-1 text-[13px] font-semibold tracking-tight sm:block">{project.name}</h1>
         <span className="mx-1 h-4 w-px bg-ink-200" />
-        <button aria-label="Undo" title="Undo  Ctrl+Z" disabled={!canUndo} onClick={undo} className={iconBtn}><IconUndo size={15} /></button>
-        <button aria-label="Redo" title="Redo  Ctrl+Shift+Z" disabled={!canRedo} onClick={redo} className={iconBtn}><IconRedo size={15} /></button>
-        <span className="ml-1 sm:ml-2"><SaveIndicator /></span>
+        <button aria-label={t("Undo")} title={`${t("Undo")}  Ctrl+Z`} disabled={!canUndo} onClick={undo} className={iconBtn}><IconUndo size={15} /></button>
+        <button aria-label={t("Redo")} title={`${t("Redo")}  Ctrl+Shift+Z`} disabled={!canRedo} onClick={redo} className={iconBtn}><IconRedo size={15} /></button>
+        <span className="ms-1 sm:ms-2"><SaveIndicator /></span>
       </div>
 
       <div className="flex items-center gap-2">
         {doc.site.languages.length > 1 && (
-          <select aria-label="Language" value={lang ?? ""} onChange={(e) => setLang(e.target.value)}
+          <select aria-label={t("Language")} value={lang ?? ""} onChange={(e) => setLang(e.target.value)}
             className="h-7 rounded-md border border-ink-300 bg-white px-2 text-[12px] font-medium">
             {doc.site.languages.map((l) => (
               <option key={l} value={l}>{meta.languages[l] ?? l}</option>
             ))}
           </select>
         )}
-        <div className="hidden gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200 lg:flex" role="group" aria-label="Preview size">
+        <div className="hidden gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200 lg:flex" role="group" aria-label={t("Preview size")}>
           {(["desktop", "mobile"] as const).map((d) => (
-            <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? "Desktop" : "Mobile"} title={d === "desktop" ? "Desktop" : "Mobile"}
+            <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? t("Desktop") : t("Mobile")} title={d === "desktop" ? t("Desktop") : t("Mobile")}
               className={`grid h-6 w-8 place-items-center rounded-[5px] transition ${device === d ? "bg-[var(--surface-raised)] text-ink-900 shadow-[0_1px_2px_rgb(0_0_0/0.18),0_0_0_1px_rgb(127_127_127/0.12)]" : "text-ink-500 hover:text-ink-900"}`}>
               {d === "desktop" ? <IconDesktop size={14} /> : <IconMobile size={14} />}
             </button>
@@ -74,11 +84,21 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
       </div>
 
       <div className="flex items-center justify-end gap-2">
-        {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">Content editing</span>}
-        <span className="hidden sm:block"><ThemeToggle /></span>
+        {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">{t("Content editing")}</span>}
+        <Button variant="ghost" aria-label={t("Preview")} onClick={openLive}><IconEye size={14} /><span className="hidden sm:inline">{t("Preview")}</span></Button>
+        <span className="hidden sm:block"><Link to="/settings" aria-label={t("Settings")} title={t("Settings")} className={iconBtn}><IconSettings size={15} /></Link></span>
         {project.role === "owner" && <ShareDialog projectId={project.id} />}
         <ExportDialog projectId={project.id} />
       </div>
+      {live && (
+        <LivePreview title={project.name} onClose={() => setLive(null)}
+          load={async (to, signal) =>
+            (await api<{ html: string }>(`/projects/${project.id}/preview`, {
+              method: "POST", signal,
+              body: { doc: live.doc, page_id: to.page ?? live.page, lang: to.lang ?? live.lang, interactive: true },
+            })).html}
+        />
+      )}
     </header>
   );
 }

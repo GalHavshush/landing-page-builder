@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 class ProjectCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     template: str = "clean"
+    language: str = "en"  # the site's main language
+    extra_languages: list[str] = Field(default_factory=list)  # offered in addition to it
 
 
 class ProjectUpdate(BaseModel):
@@ -41,6 +43,7 @@ class PreviewIn(BaseModel):
     doc: dict
     page_id: str
     lang: str | None = None
+    interactive: bool = False  # a try-it-out preview instead of the click-to-select one
 
 
 class PreviewOut(BaseModel):

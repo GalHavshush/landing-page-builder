@@ -4,6 +4,7 @@ import { SegmentedControl, TextControl, ToggleControl } from "../controls/basic"
 import { ImageControl } from "../controls/ImageControl";
 import { LinkControl, type LinkValue } from "../controls/LinkControl";
 import { useEditor } from "../store";
+import { t } from "@/i18n";
 
 type Site = SiteDocument["site"];
 const opts = <T extends string>(...values: T[]) => values.map((value) => ({ value, label: value }));
@@ -12,8 +13,8 @@ function Group({ title, hint, children }: { title: string; hint?: string; childr
   return (
     <section className="space-y-3 border-b border-ink-200 pb-5 last:border-0">
       <div>
-        <h3 className="eyebrow-label">{title}</h3>
-        {hint && <p className="mt-1 text-[12px] leading-snug text-ink-500">{hint}</p>}
+        <h3 className="eyebrow-label">{t(title)}</h3>
+        {hint && <p className="mt-1 text-[12px] leading-snug text-ink-500">{t(hint)}</p>}
       </div>
       {children}
     </section>
@@ -34,7 +35,7 @@ export function BrandPanel() {
   if (translating) {
     return (
       <div className="space-y-4">
-        <p className="text-[12px] text-ink-600">Translating the button and banner text. Layout and links are shared.</p>
+        <p className="text-[12px] text-ink-600">{t("Translating the button and banner text. Layout and links are shared.")}</p>
         {site.header.cta && (
           <TextControl label="Header button label" value={tr?.cta_label ?? ""} placeholder={site.header.cta.label}
             onChange={(v, t) => apply(setSiteTranslation(lang, "cta_label", v), { coalesceKey: t ? `site.cta.${lang}` : undefined })} />
@@ -52,7 +53,7 @@ export function BrandPanel() {
       <Group title="Logo" hint="Shown instead of the site name, and used as the browser tab icon.">
         <ImageControl label="Logo image" hideAlt={false} value={site.logo} onChange={(v) => set((s) => { s.logo = v; }, v ? "site.logo.alt" : undefined)} />
         {site.logo && <SegmentedControl label="Logo size" value={site.logo_size} options={opts("small", "medium", "large")} onChange={(v) => set((s) => { s.logo_size = v as Site["logo_size"]; })} />}
-        {site.logo && <p className="text-[12px] leading-snug text-ink-500">The description above is read out as your business name. Over a dark cover photo the logo is shown in white until the page scrolls.</p>}
+        {site.logo && <p className="text-[12px] leading-snug text-ink-500">{t("The description above is read out as your business name. Over a dark cover photo the logo is shown in white until the page scrolls.")}</p>}
       </Group>
 
       <Group title="Header">

@@ -46,6 +46,7 @@ export function Preview({ html }: { html: string | undefined }) {
   const scrollY = useRef(0);
   const selectedId = useEditor((s) => s.selectedId);
   const selectSection = useEditor((s) => s.selectSection);
+  const selectPage = useEditor((s) => s.selectPage);
   const device = useEditor((s) => s.device);
 
   useEffect(() => {
@@ -67,13 +68,15 @@ export function Preview({ html }: { html: string | undefined }) {
         setActive(idx);
       } else if (msg.type === "scroll" && idx === activeRef.current) {
         scrollY.current = msg.y;
+      } else if (msg.type === "page-click" && idx === activeRef.current) {
+        selectPage(msg.id); // a menu link in the preview opens that page in the editor
       } else if (msg.type === "section-click" && idx === activeRef.current) {
         selectSection(msg.id);
       }
     };
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [selectSection]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectSection, selectPage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // tell the visible frame which section is selected (e.g. picked from the section list)
   useEffect(() => {

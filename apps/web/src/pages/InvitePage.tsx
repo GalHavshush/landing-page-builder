@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAcceptInvite, useInvitePreview } from "@/api/hooks";
 import { Button, ErrorText } from "@/components/ui";
+import { t } from "@/i18n";
 
 export default function InvitePage() {
   const token = useParams().token!;
@@ -10,25 +11,25 @@ export default function InvitePage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-4 px-4">
-      {preview.isPending && <p className="text-ink-500">Checking your invitation…</p>}
+      {preview.isPending && <p className="text-ink-500">{t("Checking your invitation…")}</p>}
       {preview.isError && (
         <>
-          <h1 className="text-xl font-semibold">This invitation can't be used</h1>
-          <p className="text-sm text-ink-500">It may have expired, been used already, or been withdrawn. Ask the person who sent it for a new link.</p>
-          <Link to="/" className="text-sm text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900">Go to your sites</Link>
+          <h1 className="text-xl font-semibold">{t("This invitation can't be used")}</h1>
+          <p className="text-sm text-ink-500">{t("It may have expired, been used already, or been withdrawn. Ask the person who sent it for a new link.")}</p>
+          <Link to="/" className="text-sm text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900">{t("Go to your sites")}</Link>
         </>
       )}
       {preview.data && (
         <div className="space-y-4 rounded-xl bg-white p-6 shadow-sm ring-1 ring-ink-200">
-          <h1 className="text-xl font-semibold">You're invited to “{preview.data.project_name}”</h1>
+          <h1 className="text-xl font-semibold">{t("You're invited to “{name}”", { name: preview.data.project_name })}</h1>
           <p className="text-sm text-ink-600">
             {preview.data.role === "editor"
-              ? "You'll be able to update the text, images, prices and blog posts of this site."
-              : "You'll be able to edit the design and content of this site."}
+              ? t("You'll be able to update the text, images, prices and blog posts of this site.")
+              : t("You'll be able to edit the design and content of this site.")}
           </p>
           <ErrorText>{accept.error?.message}</ErrorText>
           <Button disabled={accept.isPending} onClick={() => accept.mutate(undefined, { onSuccess: (r) => navigate(`/projects/${r.project_id}`) })}>
-            Accept and open the site
+            {t("Accept and open the site")}
           </Button>
         </div>
       )}

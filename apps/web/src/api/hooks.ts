@@ -1,4 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { getUiLang, setUiLang, type UiLang } from "@/i18n";
+import { getThemePref, setThemePref, type ThemePref } from "@/theme";
 import { api, ApiError } from "./client";
 import type { Asset, PostIn, PostOut, EditorMeta, Project, SiteDocument, User } from "./types";
 
@@ -17,12 +20,36 @@ export function useMe() {
   });
 }
 
+/** Editor language and theme live on the account; apply them whenever the signed-in user loads. */
+export function useApplyPreferences() {
+  const me = useMe().data;
+  useEffect(() => {
+    if (!me) return;
+    setUiLang(me.ui_language as UiLang);
+    setThemePref(me.ui_theme as ThemePref);
+  }, [me]);
+}
+
+export function useSavePreferences() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: { ui_language?: UiLang; ui_theme?: ThemePref }) => api<User>("/auth/me", { method: "PATCH", body }),
+    onSuccess: (user) => qc.setQueryData(["me"], user),
+  });
+}
+
 export function useAuthMutation(kind: "login" | "register") {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: { email: string; password: string; name?: string }) =>
       api<User>(`/auth/${kind}`, { method: "POST", body }),
-    onSuccess: (user) => qc.setQueryData(["me"], user),
+    onSuccess: (user) => {
+      if (kind === "login") return qc.setQueryData(["me"], user);
+      // a new account starts with the language and theme chosen on the sign-in screen
+      const prefs = { ui_language: getUiLang(), ui_theme: getThemePref() };
+      qc.setQueryData(["me"], { ...user, ...prefs });
+      void api("/auth/me", { method: "PATCH", body: prefs });
+    },
   });
 }
 
@@ -46,17 +73,19 @@ export const useTemplates = () =>
 export function useCreateProject() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (body: { name: string; template: string }) =>
+    mutationFn: (body: { name: string; template: string; language: string; extra_languages: string[] }) =>
       api<Project>("/projects", { method: "POST", body }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
   });
 }
 
-export const useEditorMeta = () =>
+/** `lang`: the language of the placeholder text for new sections and pages (the site's language). */
+export const useEditorMeta = (lang?: string) =>
   useQuery({
-    queryKey: ["editor-meta"],
-    queryFn: () => api<EditorMeta>("/editor-meta"),
+    queryKey: ["editor-meta", lang ?? null],
+    queryFn: () => api<EditorMeta>(`/editor-meta${lang ? `?lang=${lang}` : ""}`),
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
   });
 
 export const useProject = (id: number) =>

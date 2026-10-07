@@ -120,6 +120,45 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Update Preferences",
+        "operationId": "update_preferences_auth_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/templates": {
@@ -436,17 +475,45 @@
           "output"
         ],
         "summary": "Get Editor Meta",
-        "description": "Section types, field hints, themes constants: everything the editor UI is generated from.",
+        "description": "Section types, field hints, themes constants: everything the editor UI is generated from.\n\n`lang`: the language of the placeholder text in new sections and pages (the site's language).",
         "operationId": "get_editor_meta_editor_meta_get",
+        "parameters": [
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lang"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Get Editor Meta Editor Meta Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -483,6 +550,81 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/live": {
+      "get": {
+        "tags": [
+          "output"
+        ],
+        "summary": "Live",
+        "description": "Interactive preview of the saved draft (the dashboard's thumbnails and quick preview).",
+        "operationId": "live_projects__project_id__live_get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "page_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Page Id"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lang"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -2249,6 +2391,43 @@
         ],
         "title": "PostPreviewIn"
       },
+      "PreferencesIn": {
+        "properties": {
+          "ui_language": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "en",
+                  "he"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ui Language"
+          },
+          "ui_theme": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "system",
+                  "light",
+                  "dark"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ui Theme"
+          }
+        },
+        "type": "object",
+        "title": "PreferencesIn"
+      },
       "PreviewIn": {
         "properties": {
           "doc": {
@@ -2270,6 +2449,11 @@
               }
             ],
             "title": "Lang"
+          },
+          "interactive": {
+            "type": "boolean",
+            "title": "Interactive",
+            "default": false
           }
         },
         "type": "object",
@@ -2313,6 +2497,18 @@
             "type": "string",
             "title": "Template",
             "default": "clean"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "default": "en"
+          },
+          "extra_languages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Extra Languages"
           }
         },
         "type": "object",
@@ -2541,13 +2737,23 @@
           "name": {
             "type": "string",
             "title": "Name"
+          },
+          "ui_language": {
+            "type": "string",
+            "title": "Ui Language"
+          },
+          "ui_theme": {
+            "type": "string",
+            "title": "Ui Theme"
           }
         },
         "type": "object",
         "required": [
           "id",
           "email",
-          "name"
+          "name",
+          "ui_language",
+          "ui_theme"
         ],
         "title": "UserOut"
       },

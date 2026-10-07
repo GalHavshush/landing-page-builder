@@ -1,4 +1,5 @@
 import re
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -32,3 +33,10 @@ class UserOut(BaseModel):
     id: int
     email: str
     name: str
+    ui_language: str
+    ui_theme: str
+
+
+class PreferencesIn(BaseModel):
+    ui_language: Literal["en", "he"] | None = None
+    ui_theme: Literal["system", "light", "dark"] | None = None

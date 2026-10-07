@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { t } from "@/i18n";
 import type { Asset } from "@/api/types";
 import { AssetPicker } from "../controls/ImageControl";
 import { insertAt, makeLink, prefixLines, wrap, type Edit } from "../markdown";
@@ -32,27 +33,28 @@ export function MarkdownEditor({ value, onChange }: Props) {
   const btn = "rounded px-2 py-1 text-[12px] font-medium text-ink-600 transition hover:bg-ink-100 hover:text-ink-900";
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div role="toolbar" aria-label="Formatting" className="flex flex-wrap items-center gap-0.5 border-b border-ink-200 bg-white px-2 py-1">
-        <button className={`${btn} font-bold`} title="Bold" aria-label="Bold" onClick={() => run((t, s, e) => wrap(t, s, e, "**"))}>B</button>
-        <button className={`${btn} italic`} title="Italic" aria-label="Italic" onClick={() => run((t, s, e) => wrap(t, s, e, "*"))}>I</button>
+      <div role="toolbar" aria-label={t("Formatting")} className="flex flex-wrap items-center gap-0.5 border-b border-ink-200 bg-white px-2 py-1">
+        <button className={`${btn} font-bold`} title={t("Bold")} aria-label={t("Bold")} onClick={() => run((t, s, e) => wrap(t, s, e, "**"))}>B</button>
+        <button className={`${btn} italic`} title={t("Italic")} aria-label={t("Italic")} onClick={() => run((t, s, e) => wrap(t, s, e, "*"))}>I</button>
         <span className="mx-1 h-4 w-px bg-ink-200" />
-        <button className={btn} title="Heading" aria-label="Heading" onClick={() => run((t, s, e) => prefixLines(t, s, e, "## "))}>H2</button>
-        <button className={btn} title="Subheading" aria-label="Subheading" onClick={() => run((t, s, e) => prefixLines(t, s, e, "### "))}>H3</button>
+        <button className={btn} title={t("Heading")} aria-label={t("Heading")} onClick={() => run((t, s, e) => prefixLines(t, s, e, "## "))}>H2</button>
+        <button className={btn} title={t("Subheading")} aria-label={t("Subheading")} onClick={() => run((t, s, e) => prefixLines(t, s, e, "### "))}>H3</button>
         <span className="mx-1 h-4 w-px bg-ink-200" />
-        <button className={btn} title="Bulleted list" aria-label="Bulleted list" onClick={() => run((t, s, e) => prefixLines(t, s, e, "- "))}>Bullets</button>
-        <button className={btn} title="Numbered list" aria-label="Numbered list" onClick={() => run((t, s, e) => prefixLines(t, s, e, (i) => `${i + 1}. `))}>Numbered</button>
-        <button className={btn} title="Quote" aria-label="Quote" onClick={() => run((t, s, e) => prefixLines(t, s, e, "> "))}>Quote</button>
+        <button className={btn} title={t("Bulleted list")} aria-label={t("Bulleted list")} onClick={() => run((t, s, e) => prefixLines(t, s, e, "- "))}>{t("Bullets")}</button>
+        <button className={btn} title={t("Numbered list")} aria-label={t("Numbered list")} onClick={() => run((t, s, e) => prefixLines(t, s, e, (i) => `${i + 1}. `))}>{t("Numbered")}</button>
+        <button className={btn} title={t("Quote")} aria-label={t("Quote")} onClick={() => run((t, s, e) => prefixLines(t, s, e, "> "))}>{t("Quote")}</button>
         <span className="mx-1 h-4 w-px bg-ink-200" />
-        <button className={btn} title="Link" aria-label="Link" onClick={() => run((t, s, e) => makeLink(t, s, e))}>Link</button>
-        <button className={btn} title="Insert image" aria-label="Insert image" onClick={() => dialog.current?.showModal()}>Image</button>
+        <button className={btn} title={t("Link")} aria-label={t("Link")} onClick={() => run((t, s, e) => makeLink(t, s, e))}>{t("Link")}</button>
+        <button className={btn} title={t("Insert image")} aria-label={t("Insert image")} onClick={() => dialog.current?.showModal()}>{t("Image")}</button>
       </div>
       <textarea
         ref={area}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="Post text"
+        aria-label={t("Post text")}
         spellCheck
-        placeholder="Write your post here. Use the toolbar for headings, lists, links and images."
+        dir="auto"
+        placeholder={t("Write your post here. Use the toolbar for headings, lists, links and images.")}
         className="min-h-0 flex-1 resize-none bg-white p-4 font-mono text-[13px] leading-[1.7] focus:outline-none"
       />
       <AssetPicker dialogRef={dialog} projectId={projectId} onPick={insertImage} />

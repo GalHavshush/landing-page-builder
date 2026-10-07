@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { EditorMeta, PropSchema, Section, SectionMeta } from "@/api/types";
 import { setVariant, setTranslation, updateProps, updateStyle } from "./commands";
-import { fieldLabel } from "./labels";
 import { SectionIcon } from "@/components/icons";
+import { fieldLabel } from "./labels";
 import { SegmentedControl } from "./controls/basic";
 import { Control, type Env } from "./controls/registry";
 import { SettingsPanel } from "./SettingsPanel";
 import { currentPage, useCanEditStructure, useEditor } from "./store";
+import { t } from "@/i18n";
 
 const humanize = fieldLabel;
 const enumOptions = (values: (string | number)[]) => values.map((v) => ({ value: v, label: String(v) }));
@@ -52,10 +53,10 @@ function PropField({ name, schema, ctx, env }: { name: string; schema: PropSchem
       <div className="space-y-1">
         <Control name={name} schema={schema} env={env} value={override ?? base} onChange={write} />
         <p className="text-xs text-ink-500">
-          {override === undefined ? "Using the default language." : "Translated."}
+          {override === undefined ? t("Using the default language.") : t("Translated.")}
           {override !== undefined && (
-            <button className="ml-2 text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
-              Reset to default
+            <button className="ms-2 text-ink-700 underline decoration-ink-300 underline-offset-2 hover:decoration-ink-900" onClick={() => apply(setTranslation(section.id, lang, name, undefined))}>
+              {t("Reset to default")}
             </button>
           )}
         </p>
@@ -109,18 +110,18 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
   const translating = lang !== defaultLang;
 
   return (
-    <aside aria-label="Section settings" className="flex min-h-0 flex-col border-l border-ink-200 bg-white">
+    <aside aria-label={t("Section settings")} className="flex min-h-0 flex-col border-s border-ink-200 bg-white">
       <div className="border-b border-ink-200 px-4 pt-3.5">
         <h2 className="flex items-center gap-2 text-[13px] font-semibold tracking-tight">
           <span className="grid h-5 w-5 place-items-center rounded bg-ink-100 text-ink-700"><SectionIcon type={section.type} size={12} /></span>
-          {sectionMeta?.label ?? section.type}
+          {t(sectionMeta?.label ?? section.type)}
         </h2>
-        {translating && <p className="mt-0.5 text-[12px] text-ink-600">Translating to {meta.languages[lang] ?? lang}</p>}
+        {translating && <p className="mt-0.5 text-[12px] text-ink-600">{t("Translating to {language}", { language: meta.languages[lang] ?? lang })}</p>}
         <div role="tablist" className="mt-2.5 flex gap-4">
-          {(canEdit ? (["content", "design"] as const) : (["content"] as const)).map((t) => (
-            <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
-              className={`-mb-px border-b-[1.5px] py-2 text-[13px] font-medium capitalize transition ${tab === t ? "border-ink-900 text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"}`}>
-              {t}
+          {(canEdit ? (["content", "design"] as const) : (["content"] as const)).map((k) => (
+            <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+              className={`-mb-px border-b-[1.5px] py-2 text-[13px] font-medium capitalize transition ${tab === k ? "border-ink-900 text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"}`}>
+              {t(humanize(k))}
             </button>
           ))}
         </div>
@@ -129,7 +130,7 @@ export function PropertiesPanel({ meta }: { meta: EditorMeta }) {
         {tab === "content" && content.map(([name, schema]) => <PropField key={`${section.id}.${name}`} name={name} schema={schema} ctx={ctx} env={env} />)}
         {tab === "design" &&
           (translating ? (
-            <p className="text-sm text-ink-500">Design is shared by all languages. Switch back to the default language to change it.</p>
+            <p className="text-sm text-ink-500">{t("Design is shared by all languages. Switch back to the default language to change it.")}</p>
           ) : (
             <>
               {sectionMeta && sectionMeta.variants.length > 1 && (

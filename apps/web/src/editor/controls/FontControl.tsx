@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import type { FontOption } from "@/api/types";
 import { FieldShell } from "./basic";
+import { t } from "@/i18n";
 
 const loaded = new Set<string>();
 
@@ -37,7 +38,7 @@ export function FontControl({
     <FieldShell label={label} htmlFor={id}>
       <select id={id} className="field-input" value={value} onChange={(e) => onChange(e.target.value)}>
         {GROUPS.map((g) => (
-          <optgroup key={g.kind} label={g.title}>
+          <optgroup key={g.kind} label={t(g.title)}>
             {options.filter((o) => o.kind === g.kind).map((o) => (
               <option key={o.key} value={o.key}>{o.label}</option>
             ))}
@@ -46,12 +47,12 @@ export function FontControl({
       </select>
       {current && (
         <p className="mt-2 truncate text-[17px] leading-tight text-ink-800" style={{ fontFamily: current.kind === "system" ? undefined : `"${current.label}", system-ui` }}>
-          Fresh bread, every morning
+          {t("Fresh bread, every morning")}
         </p>
       )}
       {lacking.length > 0 && (
         <p className="mt-1.5 text-[12px] leading-snug text-accent-700">
-          {current!.label} has no {lacking.join(" / ")} letters. Visitors will see a fallback font for that language.
+          {t("{font} has no {scripts} letters. Visitors will see a fallback font for that language.", { font: current!.label, scripts: lacking.map((s) => t(s)).join(" / ") })}
         </p>
       )}
     </FieldShell>

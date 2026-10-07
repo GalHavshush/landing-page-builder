@@ -107,3 +107,12 @@ def test_gallery_items_without_pictures_still_count_as_empty():
     assert "picture" in empty_hint("gallery", gallery.props)
     gallery.props.items = [GalleryItem(image=ImageRef(asset="a1", alt="x"))]
     assert empty_hint("gallery", gallery.props) is None
+
+
+def test_interactive_preview_behaves_like_the_site_but_reports_page_links():
+    doc = load_starter("clean")
+    editing = render_preview(doc, "pg_home").html
+    live = render_preview(doc, "pg_home", interactive=True).html
+    assert 'data-section-id="' in editing and 'data-section-id="' not in live  # animations can run
+    assert 'type: "navigate"' in live and "section-click" not in live
+    assert 'href="#pg:' in live  # menu and buttons name the page they lead to

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui";
 import { useEditor } from "../store";
 import { FieldShell, type ControlProps } from "./basic";
 import { StockPanel } from "./StockPanel";
+import { t } from "@/i18n";
 
 export interface ImageValue {
   asset: string;
@@ -25,9 +26,9 @@ function FocusPicker({ src, focus, onChange }: { src: string; focus: { x: number
   };
   return (
     <div>
-      <div className="field-label mb-1">Focus point</div>
+      <div className="field-label mb-1">{t("Focus point")}</div>
       <div
-        role="slider" aria-label="Focus point" aria-valuetext={`${focus.x}% across, ${focus.y}% down`} tabIndex={0}
+        role="slider" aria-label={t("Focus point")} aria-valuetext={t("{x}% across, {y}% down", { x: focus.x, y: focus.y })} tabIndex={0}
         className="relative cursor-crosshair touch-none select-none overflow-hidden rounded-md ring-1 ring-ink-200"
         onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); set(e); }}
         onPointerMove={(e) => e.buttons === 1 && set(e)}
@@ -45,7 +46,7 @@ function FocusPicker({ src, focus, onChange }: { src: string; focus: { x: number
           <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
         </span>
       </div>
-      <p className="mt-1.5 text-[12px] leading-snug text-ink-500">Cropping on cards, heroes and phones keeps this point in view.</p>
+      <p className="mt-1.5 text-[12px] leading-snug text-ink-500">{t("Cropping on cards, heroes and phones keeps this point in view.")}</p>
     </div>
   );
 }
@@ -69,14 +70,14 @@ export function ImageControl({
             ) : (
               <div className="grid h-14 w-14 place-items-center rounded bg-ink-100 text-xs text-ink-500">?</div>
             )}
-            <div className="min-w-0 flex-1 truncate text-xs text-ink-500">{current?.filename ?? "Image missing from library"}</div>
-            <button type="button" onClick={() => onChange(null)} className="px-1 text-xs text-ink-500 hover:text-red-600" aria-label={`Remove ${label}`}>
-              Remove
+            <div className="min-w-0 flex-1 truncate text-xs text-ink-500">{current?.filename ?? t("Image missing from library")}</div>
+            <button type="button" onClick={() => onChange(null)} className="px-1 text-xs text-ink-500 hover:text-red-600" aria-label={t("Remove {name}", { name: t(label) })}>
+              {t("Remove")}
             </button>
           </div>
         )}
         <Button type="button" variant="ghost" className="w-full" onClick={() => dialog.current?.showModal()}>
-          {value ? "Change image" : "Choose image"}
+          {value ? t("Change image") : t("Choose image")}
         </Button>
         {value && !hideAlt && current && (
           <FocusPicker src={current.thumb_url} focus={value.focus ?? { x: 50, y: 50 }} onChange={(focus) => onChange({ ...value, focus })} />
@@ -84,9 +85,9 @@ export function ImageControl({
         {value && !hideAlt && (
           <div>
             <label className="block text-xs text-ink-500" htmlFor={`${label}-alt`}>
-              Description for screen readers (alt text)
+              {t("Description for screen readers (alt text)")}
             </label>
-            <input id={`${label}-alt`} value={value.alt} placeholder="e.g. Fresh loaves on a wooden table"
+            <input id={`${label}-alt`} value={value.alt} placeholder={t("e.g. Fresh loaves on a wooden table")}
               onChange={(e) => onChange({ ...value, alt: e.target.value }, true)}
               className="mt-1 block w-full rounded-md border border-ink-300 px-2.5 py-1.5 text-sm" />
           </div>
@@ -133,38 +134,38 @@ export function AssetPicker({
       <div className="p-5" onDragOver={(e) => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)}
         onDrop={(e) => { e.preventDefault(); setDragging(false); send(e.dataTransfer.files); }}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-[15px] font-semibold tracking-tight">Images</h2>
+          <h2 className="text-[15px] font-semibold tracking-tight">{t("Images")}</h2>
           <div className="flex items-center gap-2">
             <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden
               onChange={(e) => e.target.files && send(e.target.files)} />
             <Button type="button" onClick={() => input.current?.click()} disabled={upload.isPending}>
-              {upload.isPending ? "Uploading…" : "Upload image"}
+              {upload.isPending ? t("Uploading…") : t("Upload image")}
             </Button>
-            <button aria-label="Close" className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialogRef.current?.close()}><IconClose size={15} /></button>
+            <button aria-label={t("Close")} className="grid h-7 w-7 place-items-center rounded-md text-ink-500 hover:bg-ink-100 hover:text-ink-900" onClick={() => dialogRef.current?.close()}><IconClose size={15} /></button>
           </div>
         </div>
         {stockOn && (
-          <div role="tablist" aria-label="Image source" className="mb-3 flex gap-4 border-b border-ink-200">
+          <div role="tablist" aria-label={t("Image source")} className="mb-3 flex gap-4 border-b border-ink-200">
             {([["mine", "My images"], ["stock", "Stock photos"]] as const).map(([k, l]) => (
               <button key={k} role="tab" type="button" aria-selected={tab === k} onClick={() => setTab(k)}
-                className={`-mb-px border-b-[1.5px] py-2 text-[13px] font-medium transition ${tab === k ? "border-ink-900 text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"}`}>{l}</button>
+                className={`-mb-px border-b-[1.5px] py-2 text-[13px] font-medium transition ${tab === k ? "border-ink-900 text-ink-900" : "border-transparent text-ink-500 hover:text-ink-800"}`}>{t(l)}</button>
             ))}
           </div>
         )}
         {error && <p role="alert" className="mb-3 text-sm text-red-600">{error}</p>}
         {stockOn && tab === "stock" ? <StockPanel projectId={projectId} onPick={onPick} /> : (
         <div className={`rounded-lg border-2 border-dashed p-3 ${dragging ? "border-accent-500 bg-accent-50" : "border-ink-200"}`}>
-          {assets.data?.length === 0 && <p className="py-8 text-center text-sm text-ink-500">Drop images here or use “Upload image”. JPEG, PNG or WebP, up to 10 MB.</p>}
+          {assets.data?.length === 0 && <p className="py-8 text-center text-sm text-ink-500">{t("Drop images here or use “Upload image”. JPEG, PNG or WebP, up to 10 MB.")}</p>}
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
             {assets.data?.map((a) => (
               <li key={a.id} className="group relative">
-                <button type="button" onClick={() => onPick(a)} aria-label={`Use ${a.filename}`}
+                <button type="button" onClick={() => onPick(a)} aria-label={t("Use {name}", { name: a.filename })}
                   className={`block aspect-square w-full overflow-hidden rounded-md ring-2 ${a.id === selected ? "ring-accent-500" : "ring-transparent hover:ring-accent-300"}`}>
                   <img src={a.thumb_url} alt={a.alt_default} className="h-full w-full object-cover" />
                 </button>
-                <button type="button" aria-label={`Delete ${a.filename}`} title="Delete from library"
-                  onClick={() => window.confirm("Delete this image from the library?") && remove.mutate(a.id)}
-                  className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded bg-white text-ink-600 opacity-0 shadow-sm ring-1 ring-ink-200 hover:bg-red-600 hover:text-white group-hover:opacity-100 focus:opacity-100"><IconClose size={12} /></button>
+                <button type="button" aria-label={t("Delete {name}", { name: a.filename })} title={t("Delete from library")}
+                  onClick={() => window.confirm(t("Delete this image from the library?")) && remove.mutate(a.id)}
+                  className="absolute end-1 top-1 grid h-5 w-5 place-items-center rounded bg-white text-ink-600 opacity-0 shadow-sm ring-1 ring-ink-200 hover:bg-red-600 hover:text-white group-hover:opacity-100 focus:opacity-100"><IconClose size={12} /></button>
               </li>
             ))}
           </ul>

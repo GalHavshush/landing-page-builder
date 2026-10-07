@@ -5,6 +5,7 @@ from pydantic import ValidationError
 from sitegen import SiteDocument
 from sitegen.migrations import UnsupportedVersion, load_document
 from sitegen.starters import list_starters, load_starter, starter_info
+from sitegen.strings import LANGUAGE_NAMES
 from sitegen.validate import check
 from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
@@ -58,7 +59,14 @@ def create_project(
 ):
     if body.template not in list_starters():
         raise HTTPException(422, f"Unknown template {body.template!r}")
-    doc = load_starter(body.template, site_name=body.name)
+    languages = list(dict.fromkeys([body.language, *body.extra_languages]))
+    if not all(code in LANGUAGE_NAMES for code in languages):
+        raise HTTPException(422, "Unknown language")
+    doc = load_starter(body.template, site_name=body.name, lang=body.language)  # placeholder text
+    if languages != ["en"]:
+        data = doc.model_dump(mode="json")
+        data["site"].update(default_language=languages[0], languages=languages)
+        doc = SiteDocument.model_validate(data)
     project = Project(
         name=body.name,
         slug=service.unique_slug(db, body.name),

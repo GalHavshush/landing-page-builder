@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { FieldShell, type ControlProps } from "./basic";
+import { t } from "@/i18n";
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -10,12 +11,12 @@ export function SlugControl({
   const id = useId();
   const [draft, setDraft] = useState(value);
   useEffect(() => setDraft(value), [value]);
-  const problem = draft === "" ? "A page needs a URL name" : !SLUG.test(draft) ? "Use lowercase letters, numbers and single hyphens" : taken.includes(draft) ? "Another page already uses this" : null;
+  const problem = draft === "" ? t("A page needs a URL name") : !SLUG.test(draft) ? t("Use lowercase letters, numbers and single hyphens") : taken.includes(draft) ? t("Another page already uses this") : null;
   return (
     <FieldShell label={label} htmlFor={id}>
       <div className="mt-1 flex items-center rounded-md border border-ink-300 bg-white text-sm focus-within:border-ink-900">
-        <span className="pl-2.5 text-ink-500">/</span>
-        <input id={id} value={draft} disabled={disabled} placeholder={placeholder} aria-invalid={Boolean(problem)} spellCheck={false}
+        <span className="ps-2.5 text-ink-500" dir="ltr">/</span>
+        <input id={id} dir="ltr" value={draft} disabled={disabled} placeholder={placeholder} aria-invalid={Boolean(problem)} spellCheck={false}
           onBlur={() => setDraft(value)} // leaving the field with something unusable puts the saved name back
           onChange={(e) => {
             const v = e.target.value.toLowerCase();
@@ -25,7 +26,7 @@ export function SlugControl({
           className="w-full rounded-md bg-transparent px-1 py-1.5 focus:outline-none disabled:text-ink-500" />
       </div>
       {!disabled && problem && <p className="mt-1 text-xs text-red-600">{problem}</p>}
-      {disabled && <p className="mt-1 text-xs text-ink-500">The home page always lives at the site root.</p>}
+      {disabled && <p className="mt-1 text-xs text-ink-500">{t("The home page always lives at the site root.")}</p>}
     </FieldShell>
   );
 }

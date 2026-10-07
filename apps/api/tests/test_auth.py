@@ -83,3 +83,19 @@ def test_unsafe_requests_need_the_csrf_header(client):
 def test_registration_can_be_closed(client, monkeypatch):
     monkeypatch.setattr(get_settings(), "allow_registration", False)
     assert register(client).status_code == 403
+
+
+def test_editor_preferences_are_saved_on_the_account(client):
+    user = register(client).json()
+    assert (user["ui_language"], user["ui_theme"]) == ("he", "system")  # Hebrew by default
+    r = client.patch("/auth/me", json={"ui_language": "he"})
+    assert (
+        r.status_code == 200
+        and r.json()["ui_language"] == "he"
+        and r.json()["ui_theme"] == "system"
+    )
+    assert (
+        client.patch("/auth/me", json={"ui_theme": "dark"}).json()["ui_language"] == "he"
+    )  # partial update
+    assert client.get("/auth/me").json()["ui_theme"] == "dark"
+    assert client.patch("/auth/me", json={"ui_language": "xx"}).status_code == 422

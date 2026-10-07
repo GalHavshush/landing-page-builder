@@ -23,6 +23,7 @@ def render_preview(
     assets: dict[str, AssetFile] | None = None,
     posts: list[Post] | None = None,
     font_base: str = "/fonts/",
+    interactive: bool = False,
 ) -> PreviewResult:
     page = doc.page_by_id(page_id)
     if page is None:
@@ -37,7 +38,7 @@ def render_preview(
         lang,
         assets or {},
         issues,
-        preview=PreviewOptions(asset_url=asset_url, font_base=font_base),
+        preview=PreviewOptions(asset_url=asset_url, font_base=font_base, interactive=interactive),
         posts=posts,
     )
     return PreviewResult(html=html, issues=issues)

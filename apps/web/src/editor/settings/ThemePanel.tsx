@@ -6,6 +6,7 @@ import { ColorControl } from "../controls/ColorControl";
 import { contrastRatio, isHex, MIN_CONTRAST } from "../contrast";
 import { useEditor } from "../store";
 import { paletteFromBrand } from "../palette";
+import { t } from "@/i18n";
 
 type Palette = SiteDocument["theme"]["palette"];
 
@@ -37,38 +38,38 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
 
   const warnings = (["background", "surface"] as const)
     .filter((bg) => isHex(theme.palette.text) && isHex(theme.palette[bg]) && contrastRatio(theme.palette.text, theme.palette[bg]) < MIN_CONTRAST)
-    .map((bg) => `Text on ${LABELS[bg].toLowerCase()} is hard to read (${contrastRatio(theme.palette.text, theme.palette[bg]).toFixed(1)}:1, aim for ${MIN_CONTRAST}:1).`);
+    .map((bg) => t("Text on {on} is hard to read ({ratio}:1, aim for {min}:1).", { on: t(LABELS[bg]).toLowerCase(), ratio: contrastRatio(theme.palette.text, theme.palette[bg]).toFixed(1), min: MIN_CONTRAST }));
 
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-xs font-medium text-ink-600">Look</div>
-        <p className="text-xs text-ink-500">Switch colours, fonts and style. Your content stays as it is.</p>
+        <div className="text-xs font-medium text-ink-600">{t("Look")}</div>
+        <p className="text-xs text-ink-500">{t("Switch colours, fonts and style. Your content stays as it is.")}</p>
         <div className="mt-1.5 grid grid-cols-2 gap-2">
           {meta.starter_info.map((st) => (
             <button key={st.id} type="button" aria-pressed={theme.template === st.theme.template}
               onClick={() => apply(updateTheme({ ...st.theme }))}
-              className="rounded-md border border-ink-200 p-1.5 text-left text-xs hover:border-ink-400 aria-pressed:border-accent-600">
+              className="rounded-md border border-ink-200 p-1.5 text-start text-xs hover:border-ink-400 aria-pressed:border-accent-600">
               <div className="mb-1 flex h-5 overflow-hidden rounded">
                 {Object.values(st.theme.palette).map((c, i) => <span key={i} className="flex-1" style={{ background: c }} />)}
               </div>
-              {st.label}
+              {t(st.label)}
             </button>
           ))}
         </div>
       </div>
       <div>
-        <div className="text-xs font-medium text-ink-600">Color schemes</div>
+        <div className="text-xs font-medium text-ink-600">{t("Color schemes")}</div>
         <div className="mt-1.5 grid grid-cols-3 gap-2">
           {Object.entries(PALETTES).map(([name, p]) => (
             <button key={name} type="button" onClick={() => apply(updateTheme({ palette: { ...p } }))}
-              className="rounded-md border border-ink-200 p-1.5 text-left text-xs hover:border-ink-400">
+              className="rounded-md border border-ink-200 p-1.5 text-start text-xs hover:border-ink-400">
               <div className="mb-1 flex h-5 overflow-hidden rounded">
                 {[p.primary, p.accent, p.background, p.surface, p.text].map((c, i) => (
                   <span key={i} className="flex-1" style={{ background: c }} />
                 ))}
               </div>
-              {name}
+              {t(name)}
             </button>
           ))}
         </div>
@@ -76,11 +77,11 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
       <div className="flex gap-2">
         <button type="button" className="flex-1 rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
           onClick={() => apply(updateTheme({ palette: paletteFromBrand(theme.palette.primary, "light") }))}>
-          Build light palette from brand color
+          {t("Build light palette from brand color")}
         </button>
         <button type="button" className="flex-1 rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
           onClick={() => apply(updateTheme({ palette: paletteFromBrand(theme.palette.primary, "dark") }))}>
-          Dark version
+          {t("Dark version")}
         </button>
       </div>
       {(Object.keys(LABELS) as (keyof Palette)[]).map((key) => (
@@ -89,9 +90,9 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
       {warnings.map((w) => (
         <p key={w} role="alert" className="rounded bg-amber-50 px-2 py-1.5 text-xs text-amber-800">{w}</p>
       ))}
-      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">Style</h3>
+      <h3 className="pt-2 text-xs font-semibold uppercase tracking-wide text-ink-500">{t("Style")}</h3>
       {(["heading", "body"] as const).map((role) => (
-        <FontControl key={role} label={`${role === "heading" ? "Heading" : "Body"} font`} value={theme.fonts[role]}
+        <FontControl key={role} label={role === "heading" ? "Heading font" : "Body font"} value={theme.fonts[role]}
           options={meta.fonts} siteHasScripts={neededScripts}
           onChange={(v) => apply((d) => { d.theme.fonts[role] = v as typeof theme.fonts.heading; })} />
       ))}
@@ -111,7 +112,7 @@ export function ThemePanel({ meta }: { meta: EditorMeta }) {
         onChange={(v) => apply(updateTheme({ heading_style: v as typeof theme.heading_style }))} />
       <button type="button" className="w-full rounded-md border border-ink-200 px-2 py-1.5 text-xs hover:border-ink-400"
         onClick={() => apply(balanceBackgrounds())}>
-        Tidy section backgrounds (alternate plain and tinted)
+        {t("Tidy section backgrounds (alternate plain and tinted)")}
       </button>
     </div>
   );

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.auth import deps
 from app.auth.models import User
-from app.auth.schemas import Credentials, RegisterRequest, UserOut
+from app.auth.schemas import Credentials, PreferencesIn, RegisterRequest, UserOut
 from app.auth.security import hash_password, verify_password
 from app.config import get_settings
 from app.db import get_db
@@ -44,4 +44,11 @@ def logout(request: Request, response: Response, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserOut)
 def me(user: User = Depends(deps.get_current_user)):
+    return user
+
+
+@router.patch("/me", response_model=UserOut)
+def update_preferences(body: PreferencesIn, user: User = Depends(deps.get_current_user)):
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(user, field, value)
     return user

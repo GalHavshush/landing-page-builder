@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from "react";
 import { FieldShell, type ControlProps } from "./basic";
+import { t } from "@/i18n";
 
 export interface LinkValue {
   page?: string | null;
@@ -44,17 +45,17 @@ export function LinkControl({
   return (
     <FieldShell label={label}>
       <div className="mt-1 space-y-1.5">
-        <select aria-label={`${label} type`} className="block w-full rounded-md border border-ink-300 bg-white px-2 py-1.5 text-sm"
+        <select aria-label={t("{label} type", { label: t(label) })} className="block w-full rounded-md border border-ink-300 bg-white px-2 py-1.5 text-sm"
           value={value ? kind : "none"}
           onChange={(e) => (e.target.value === "none" ? onChange(null) : setKind(e.target.value as Kind))}>
-          {optional && <option value="none">No link</option>}
-          <option value="page">Page on this site</option>
-          <option value="web">Web address</option>
-          <option value="email">Email address</option>
-          <option value="phone">Phone number</option>
+          {optional && <option value="none">{t("No link")}</option>}
+          <option value="page">{t("Page on this site")}</option>
+          <option value="web">{t("Web address")}</option>
+          <option value="email">{t("Email address")}</option>
+          <option value="phone">{t("Phone number")}</option>
         </select>
         {value && kind === "page" && (
-          <select aria-label={`${label} page`} className="block w-full rounded-md border border-ink-300 bg-white px-2 py-1.5 text-sm"
+          <select aria-label={t("{label} page", { label: t(label) })} className="block w-full rounded-md border border-ink-300 bg-white px-2 py-1.5 text-sm"
             value={value.page ?? ""} onChange={(e) => onChange({ page: e.target.value })}>
             {pages.map((p) => (
               <option key={p.id} value={p.id}>{p.title}</option>
@@ -63,13 +64,13 @@ export function LinkControl({
         )}
         {value && kind !== "page" && (
           <>
-            <input id={id} aria-label={`${label} address`} aria-invalid={invalid} value={draft}
+            <input id={id} aria-label={t("{label} address", { label: t(label) })} aria-invalid={invalid} value={draft}
               className={`block w-full rounded-md border px-2.5 py-1.5 text-sm ${invalid ? "border-red-400" : "border-ink-300"}`}
               onChange={(e) => {
                 setDraft(e.target.value);
                 if (SAFE_URL.test(e.target.value)) onChange({ url: e.target.value }, true);
               }} />
-            {invalid && <p className="text-xs text-red-600">Must start with https://, mailto: or tel:</p>}
+            {invalid && <p className="text-xs text-red-600">{t("Must start with https://, mailto: or tel:")}</p>}
           </>
         )}
       </div>
