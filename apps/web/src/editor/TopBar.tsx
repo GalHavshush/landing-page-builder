@@ -41,17 +41,17 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
   const redo = useEditor((s) => s.redo);
 
   return (
-    <header className="grid h-11 grid-cols-[1fr_auto_1fr] items-center border-b border-ink-200 bg-white px-3">
+    <header className="flex h-11 items-center justify-between gap-2 border-b border-ink-200 bg-white px-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
       <div className="flex min-w-0 items-center gap-1">
         <Link to="/" aria-label="All sites" title="All sites" className={iconBtn}>
           <IconBack size={15} />
         </Link>
-        <span className="mx-1 h-4 w-px bg-ink-200" />
-        <h1 className="truncate px-1 text-[13px] font-semibold tracking-tight">{project.name}</h1>
+        <span className="mx-1 hidden h-4 w-px bg-ink-200 sm:block" />
+        <h1 className="hidden truncate px-1 text-[13px] font-semibold tracking-tight sm:block">{project.name}</h1>
         <span className="mx-1 h-4 w-px bg-ink-200" />
         <button aria-label="Undo" title="Undo  Ctrl+Z" disabled={!canUndo} onClick={undo} className={iconBtn}><IconUndo size={15} /></button>
         <button aria-label="Redo" title="Redo  Ctrl+Shift+Z" disabled={!canRedo} onClick={redo} className={iconBtn}><IconRedo size={15} /></button>
-        <span className="ml-2"><SaveIndicator /></span>
+        <span className="ml-1 sm:ml-2"><SaveIndicator /></span>
       </div>
 
       <div className="flex items-center gap-2">
@@ -63,7 +63,7 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
             ))}
           </select>
         )}
-        <div className="flex gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200" role="group" aria-label="Preview size">
+        <div className="hidden gap-0.5 rounded-md bg-ink-100 p-0.5 ring-1 ring-inset ring-ink-200 lg:flex" role="group" aria-label="Preview size">
           {(["desktop", "mobile"] as const).map((d) => (
             <button key={d} onClick={() => setDevice(d)} aria-pressed={device === d} aria-label={d === "desktop" ? "Desktop" : "Mobile"} title={d === "desktop" ? "Desktop" : "Mobile"}
               className={`grid h-6 w-8 place-items-center rounded-[5px] transition ${device === d ? "bg-[var(--surface-raised)] text-ink-900 shadow-[0_1px_2px_rgb(0_0_0/0.18),0_0_0_1px_rgb(127_127_127/0.12)]" : "text-ink-500 hover:text-ink-900"}`}>
@@ -75,7 +75,7 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
 
       <div className="flex items-center justify-end gap-2">
         {project.role === "editor" && <span className="rounded bg-accent-50 px-2 py-0.5 text-[11px] font-medium text-accent-700">Content editing</span>}
-        <ThemeToggle />
+        <span className="hidden sm:block"><ThemeToggle /></span>
         {project.role === "owner" && <ShareDialog projectId={project.id} />}
         <ExportDialog projectId={project.id} />
       </div>

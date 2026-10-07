@@ -29,14 +29,14 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen">
       <header className="border-b border-ink-200 bg-white">
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-6">
+        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-2 text-[13px] font-semibold tracking-tight">
             <span className="grid h-5 w-5 place-items-center rounded-[4px] bg-ink-900 font-mono text-[10px] text-white">S</span>
             Sitebook
           </div>
           <div className="flex items-center gap-3 text-[13px] text-ink-600">
             <ThemeToggle />
-            <span>{me.data?.email}</span>
+            <span className="hidden truncate sm:inline">{me.data?.email}</span>
             <Button variant="quiet" onClick={() => logout.mutate()}>Sign out</Button>
           </div>
         </div>

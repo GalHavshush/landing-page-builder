@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDocument, useEditorMeta, useProject } from "@/api/hooks";
 import { PostWorkspace } from "@/editor/blog/PostWorkspace";
@@ -49,16 +49,24 @@ function EditorShell({
   useAutosave(projectId);
   useShortcuts();
 
+  // Below 1024px the three panels become one at a time, switched from a bar at the bottom.
+  const [pane, setPane] = useState<"pages" | "preview" | "settings">("preview");
+  const selectedId = useEditor((s) => s.selectedId);
+  useEffect(() => {
+    if (selectedId && window.matchMedia("(max-width: 1023px)").matches) setPane("settings");
+  }, [selectedId]);
+  const show = (p: typeof pane) => (pane === p ? "contents" : "hidden lg:contents");
+
   return (
-    <div className="grid h-screen grid-rows-[2.75rem_1fr]">
+    <div className="grid h-dvh grid-rows-[2.75rem_1fr_auto] lg:grid-rows-[2.75rem_1fr]">
       <TopBar project={project} meta={meta} />
-      <div className="grid min-h-0 grid-cols-[256px_1fr_344px]">
-        <LeftRail meta={meta} />
+      <div className="grid min-h-0 grid-cols-1 lg:grid-cols-[256px_1fr_344px]">
+        <div className={show("pages")}><LeftRail meta={meta} /></div>
         {view === "blog" ? (
-          <PostWorkspace />
+          <div className={pane === "preview" ? "contents" : "hidden lg:contents"}><PostWorkspace /></div>
         ) : (
         <>
-        <main className="relative min-h-0">
+        <main className={`relative min-h-0 ${pane === "preview" ? "" : "hidden lg:block"}`}>
           <Preview html={html} />
           {(saveStatus === "conflict" || saveStatus === "invalid") && (
             <div role="alert" className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3 rounded-md bg-red-600 px-3 py-2 text-sm text-white shadow">
@@ -76,10 +84,16 @@ function EditorShell({
             </div>
           )}
         </main>
-        <PropertiesPanel meta={meta} />
+        <div className={show("settings")}><PropertiesPanel meta={meta} /></div>
         </>
         )}
       </div>
+      <nav aria-label="Editor sections" className="grid grid-cols-3 border-t border-ink-200 bg-white lg:hidden">
+        {([["pages", "Pages"], ["preview", "Preview"], ["settings", "Settings"]] as const).map(([k, l]) => (
+          <button key={k} aria-pressed={pane === k} onClick={() => setPane(k)}
+            className={`py-2.5 text-[13px] font-medium ${pane === k ? "text-ink-900 shadow-[inset_0_2px_0_var(--color-ink-900)]" : "text-ink-500"}`}>{l}</button>
+        ))}
+      </nav>
     </div>
   );
 }
