@@ -238,3 +238,14 @@ def test_roles_do_not_leak_between_projects(client, project, editor):
     other = make_project(client, "Second site")
     assert editor.get(f"/projects/{other['id']}").status_code == 404
     assert editor.get(f"/projects/{other['id']}/doc").status_code == 404
+
+
+@pytest.mark.parametrize("bad", ["not-an-email", "a@b", "@x.com", "x@", "two words@x.com"])
+def test_invite_rejects_malformed_emails(client, project, bad):
+    r = client.post(f"/projects/{project['id']}/invitations", json={"role": "editor", "email": bad})
+    assert r.status_code == 422
+
+
+def test_invite_email_is_normalised_and_blank_means_open(client, project):
+    assert invite(client, project["id"], email="  Carl@Example.COM ")["email"] == "carl@example.com"
+    assert invite(client, project["id"], email="   ")["email"] is None

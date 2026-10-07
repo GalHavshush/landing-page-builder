@@ -1,11 +1,23 @@
 /** Thin fetch wrapper: same-origin cookie auth + the CSRF header the API requires. */
 
+/** A readable message for an error body: a plain string, or FastAPI's list of validation problems. */
+export function errorMessage(status: number, detail: unknown): string {
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    const texts = detail
+      .map((d) => (d && typeof d === "object" && "msg" in d ? String((d as { msg: unknown }).msg).replace(/^Value error, /, "") : ""))
+      .filter(Boolean);
+    if (texts.length) return texts.map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(". ");
+  }
+  return `Request failed (${status})`;
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
     public detail: unknown,
   ) {
-    super(typeof detail === "string" ? detail : `Request failed (${status})`);
+    super(errorMessage(status, detail));
   }
 }
 

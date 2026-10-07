@@ -2,12 +2,13 @@ from datetime import timedelta
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.auth.deps import get_current_user
 from app.auth.models import User
+from app.auth.schemas import normalize_email
 from app.auth.security import hash_token, new_token
 from app.db import get_db, utcnow
 from app.members.models import Invitation
@@ -40,7 +41,14 @@ class InvitationCreated(InvitationOut):
 
 class InviteIn(BaseModel):
     role: InvitableRole
-    email: str | None = None
+    email: str | None = Field(default=None, max_length=320)
+
+    @field_validator("email")
+    @classmethod
+    def _email(cls, v: str | None) -> str | None:
+        if v is None or not v.strip():
+            return None  # no email: the link works for anyone
+        return normalize_email(v)
 
 
 class RoleIn(BaseModel):
@@ -91,7 +99,7 @@ def create_invitation(
     inv = Invitation(
         project_id=access.project.id,
         role=body.role,
-        email=body.email.strip().lower() if body.email else None,
+        email=body.email,
         token_hash=hash_token(token),
         created_by=access.user.id,
         expires_at=utcnow() + timedelta(days=INVITE_DAYS),

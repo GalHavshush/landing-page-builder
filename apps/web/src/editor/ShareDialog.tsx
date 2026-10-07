@@ -83,6 +83,9 @@ export function ShareDialog({ projectId }: { projectId: number }) {
                 placeholder="their email (optional)" className="min-w-0 flex-1 rounded-md border border-ink-300 px-2.5 py-1.5 text-sm" />
               <Button onClick={createInvite} disabled={m.invite.isPending}>Create invite link</Button>
             </div>
+            {(m.invite.error ?? m.setRole.error ?? m.remove.error ?? m.revoke.error) && (
+              <p role="alert" className="text-xs text-red-600">{(m.invite.error ?? m.setRole.error ?? m.remove.error ?? m.revoke.error)!.message}</p>
+            )}
             <p className="text-xs text-ink-400">{ROLE_HELP[role]} With an email, only that account can use the link. Links work once and expire in 7 days.</p>
             {link && (
               <div className="flex items-center gap-2 rounded-md bg-emerald-50 p-2">

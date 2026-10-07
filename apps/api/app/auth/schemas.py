@@ -1,4 +1,16 @@
+import re
+
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+_EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def normalize_email(value: str) -> str:
+    """Lower-cased, trimmed, and shaped like name@domain.tld; raises ValueError otherwise."""
+    value = value.strip().lower()
+    if not _EMAIL.match(value):
+        raise ValueError("invalid email address")
+    return value
 
 
 class Credentials(BaseModel):
@@ -8,10 +20,7 @@ class Credentials(BaseModel):
     @field_validator("email")
     @classmethod
     def _email(cls, v: str) -> str:
-        v = v.strip().lower()
-        if "@" not in v or v.startswith("@") or v.endswith("@"):
-            raise ValueError("invalid email address")
-        return v
+        return normalize_email(v)
 
 
 class RegisterRequest(Credentials):
