@@ -16,6 +16,7 @@ export function SlugControl({
       <div className="mt-1 flex items-center rounded-md border border-ink-300 bg-white text-sm focus-within:border-ink-900">
         <span className="pl-2.5 text-ink-400">/</span>
         <input id={id} value={draft} disabled={disabled} placeholder={placeholder} aria-invalid={Boolean(problem)} spellCheck={false}
+          onBlur={() => setDraft(value)} // leaving the field with something unusable puts the saved name back
           onChange={(e) => {
             const v = e.target.value.toLowerCase();
             setDraft(v);
