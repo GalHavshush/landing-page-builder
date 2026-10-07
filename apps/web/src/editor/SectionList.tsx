@@ -17,12 +17,8 @@ import { CSS } from "@dnd-kit/utilities";
 import type { EditorMeta, Section } from "@/api/types";
 import { IconCopy, IconGrip, IconTrash, SectionIcon } from "@/components/icons";
 import { duplicateSection, moveSection, removeSection } from "./commands";
+import { sectionSummary } from "./sectionSummary";
 import { useCanEditStructure, useEditor } from "./store";
-
-function subtitle(s: Section): string {
-  const p = s.props as unknown as Record<string, unknown>;
-  return (((p.heading as string) || (p.eyebrow as string) || "") as string).slice(0, 40);
-}
 
 function Item({ section, label }: { section: Section; label: string }) {
   const selected = useEditor((s) => s.selectedId === section.id);
@@ -55,7 +51,7 @@ function Item({ section, label }: { section: Section; label: string }) {
         </span>
         <span className="min-w-0">
           <span className="block truncate text-[13px] font-medium leading-tight">{label}</span>
-          <span className="block truncate text-[11.5px] leading-tight text-ink-500">{subtitle(section) || "Empty"}</span>
+          <span className="block truncate text-[11.5px] leading-tight text-ink-500">{sectionSummary(section) || "Nothing added yet"}</span>
         </span>
       </button>
       {canEdit && (
