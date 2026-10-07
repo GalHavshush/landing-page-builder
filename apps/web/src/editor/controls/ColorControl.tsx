@@ -21,6 +21,7 @@ export function ColorControl({ label, value, onChange }: ControlProps<string>) {
           }}
           className={`w-28 rounded-md border px-2 py-1.5 font-mono text-sm ${invalid ? "border-red-400" : "border-ink-300"}`} />
       </div>
+      {invalid && <p role="alert" className="mt-1 text-xs text-red-600">Use a colour like #2563EB. It is not applied until it looks right.</p>}
     </FieldShell>
   );
 }

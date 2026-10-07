@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react";
 import type { SiteDocument } from "@/api/types";
 import { setNav, setSiteTranslation, updateSite } from "../commands";
 import { FieldShell, SelectControl, TextAreaControl, TextControl, ToggleControl } from "../controls/basic";
+import { EmailControl } from "../controls/EmailControl";
 import { Repeater } from "../controls/Repeater";
 import { useCanEditStructure, useEditor } from "../store";
 
@@ -59,10 +60,14 @@ export function SitePanel() {
       <TextControl label={label} hint={hint} value={value(f)} placeholder={translating ? base[f] : undefined} onChange={(v, t) => write(f, v, t)} />
     );
 
-  const business = (key: "phone" | "email") => (
-    <TextControl label={key === "phone" ? "Phone" : "Email"} value={site.business[key]} onChange={(v) =>
-      apply((d) => { d.site.business[key] = v; }, { coalesceKey: `site.${key}` })} />
-  );
+  const business = (key: "phone" | "email") => {
+    const write = (v: string) => apply((d) => { d.site.business[key] = v; }, { coalesceKey: `site.${key}` });
+    return key === "email" ? (
+      <EmailControl label="Email" value={site.business.email} onChange={write} />
+    ) : (
+      <TextControl label="Phone" value={site.business.phone} onChange={write} />
+    );
+  };
 
   return (
     <div className="space-y-4">
