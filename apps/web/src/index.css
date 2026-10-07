@@ -144,3 +144,7 @@ dialog::backdrop { background: rgb(8 7 6 / 0.5); animation: scrim-in 180ms ease-
   dialog[open], dialog::backdrop { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
+
+/* horizontally scrollable rows (settings tabs) without a visible scrollbar */
+.no-scrollbar{scrollbar-width:none}
+.no-scrollbar::-webkit-scrollbar{display:none}

@@ -52,7 +52,7 @@ function EditorShell({
   return (
     <div className="grid h-screen grid-rows-[2.75rem_1fr]">
       <TopBar project={project} meta={meta} />
-      <div className="grid min-h-0 grid-cols-[256px_1fr_312px]">
+      <div className="grid min-h-0 grid-cols-[256px_1fr_344px]">
         <LeftRail meta={meta} />
         {view === "blog" ? (
           <PostWorkspace />
