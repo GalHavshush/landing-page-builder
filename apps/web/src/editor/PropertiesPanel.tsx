@@ -1,13 +1,14 @@
 import { useState } from "react";
 import type { EditorMeta, PropSchema, Section, SectionMeta } from "@/api/types";
 import { setVariant, setTranslation, updateProps, updateStyle } from "./commands";
+import { fieldLabel } from "./labels";
 import { SectionIcon } from "@/components/icons";
 import { SegmentedControl } from "./controls/basic";
 import { Control, type Env } from "./controls/registry";
 import { SettingsPanel } from "./SettingsPanel";
 import { currentPage, useCanEditStructure, useEditor } from "./store";
 
-const humanize = (s: string) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
+const humanize = fieldLabel;
 const enumOptions = (values: (string | number)[]) => values.map((v) => ({ value: v, label: String(v) }));
 
 /** Where the editor reads/writes a prop: the section itself, or a translation overlay. */

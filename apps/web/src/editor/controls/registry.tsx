@@ -1,3 +1,4 @@
+import { fieldLabel } from "../labels";
 import type { EditorMeta, PropSchema } from "@/api/types";
 import { SegmentedControl, SelectControl, TextAreaControl, TextControl, ToggleControl } from "./basic";
 import { ImageControl, type ImageValue } from "./ImageControl";
@@ -5,7 +6,6 @@ import { LinkControl, type LinkValue } from "./LinkControl";
 import { Repeater } from "./Repeater";
 import { blankItem, isNullable, unwrap, type Defs } from "./schema";
 
-const humanize = (s: string) => s.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase());
 
 /** What controls need to know about the surrounding document and schema. */
 export interface Env {
@@ -29,7 +29,7 @@ interface Props {
 export function Control({ name, schema, value, onChange, env, placeholder, hint, label }: Props) {
   const resolved = unwrap(schema, env.defs);
   const control = (schema.control as string | undefined) ?? (resolved.control as string | undefined);
-  const text = label ?? (schema.title as string | undefined) ?? humanize(name);
+  const text = label ?? fieldLabel(name); // not schema.title: it is auto-generated in Title Case
 
   switch (control) {
     case "text":
