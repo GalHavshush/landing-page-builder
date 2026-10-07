@@ -13,3 +13,5 @@ qa/out/
 qa/shots/
 qa/node_modules/
 data/uploads/
+
+.DS_Store

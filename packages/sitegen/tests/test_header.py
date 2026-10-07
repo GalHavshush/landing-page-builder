@@ -119,14 +119,26 @@ def test_logo_silhouette_rule_exists_for_transparent_headers():
     assert "hdr-tone-light:not(.is-scrolled) .brand-logo{filter:brightness(0) invert(1)}" in css
 
 
-def test_social_links_render_in_footer_and_must_be_http_links():
+def test_social_links_render_in_the_contact_section_with_logos_not_in_the_footer():
     business = {
         "social": {"instagram": "https://instagram.com/x", "My Blog": "https://blog.example"}
     }
-    html = html_of(doc_with(business=business))
-    assert '<a href="https://instagram.com/x" rel="noopener" target="_blank">Instagram</a>' in html
-    assert ">My Blog</a>" in html
-    assert 'class="social"' not in html_of(doc_with())
+    data = doc_with(business=business).model_dump(mode="json")
+    data["pages"].append(
+        {"id": "pg_c", "slug": "c", "title": "Contact", "sections": [{"type": "contact"}]}
+    )
+    contact = SiteDocument.model_validate(data)
+    html = html_of(contact, "c/index.html")
+    assert 'class="contact-social"' in html
+    assert (
+        'href="https://instagram.com/x" rel="noopener" target="_blank" aria-label="Instagram"'
+        in html
+    )
+    assert 'aria-label="My Blog"' in html
+    social = html.split('class="contact-social"')[1].split("</ul>")[0]
+    assert social.count("<svg") == 2 and "<rect" in social  # Instagram's logo, a globe for the blog
+    assert 'class="social"' not in html  # the footer no longer lists them
+    assert "contact-social" not in html_of(doc_with(), "index.html")
     with pytest.raises(ValueError):
         doc_with(business={"social": {"x": "javascript:alert(1)"}})
 

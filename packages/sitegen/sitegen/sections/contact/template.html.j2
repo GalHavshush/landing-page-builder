@@ -12,6 +12,7 @@
       {% if b.address %}<li>{{ ctx.icon("map-pin") }}<span>{{ b.address }}</span></li>{% endif %}
       {% if b.hours %}<li>{{ ctx.icon("clock") }}<span>{% for h in b.hours %}{{ h.label }}: {% if h.closed %}{{ ctx.t("closed") }}{% else %}{{ h.open }}&ndash;{{ h.close }}{% endif %}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></li>{% endif %}
     </ul>
+    {% if b.social %}<ul class="contact-social" aria-label="Social">{% for s in b.social %}<li><a href="{{ s.href }}" rel="noopener" target="_blank" aria-label="{{ s.label }}" title="{{ s.label }}">{{ s.icon }}</a></li>{% endfor %}</ul>{% endif %}
     {% endif %}
   </div>
   {% if show_form %}

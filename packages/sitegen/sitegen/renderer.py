@@ -14,7 +14,7 @@ from markupsafe import Markup
 
 from sitegen import jsonld, paths, seo, strings
 from sitegen.css import STATIC, compose_css
-from sitegen.icons import render_icon
+from sitegen.icons import render_brand_icon, render_icon
 from sitegen.markdown import render_markdown
 from sitegen.models import Button, ImageRef, Link
 from sitegen.posts import Post, format_date, sort_newest_first
@@ -212,7 +212,7 @@ class RenderContext:
             "phone": site.business.phone,
             "email": site.business.email,
             "social": [
-                {"label": k.strip().title(), "href": u}
+                {"label": k.strip().title(), "href": u, "icon": render_brand_icon(k)}
                 for k, u in site.business.social.items()
                 if u.split("//", 1)[1]  # skip a bare "https://" left in the editor
             ],
