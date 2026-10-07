@@ -58,6 +58,15 @@ def check(doc: SiteDocument, assets: dict[str, AssetFile] | None = None) -> list
                 "theme",
             )
         )
+    if doc.site.base_url.startswith("http://"):
+        issues.append(
+            Issue(
+                "warning",
+                "The website address uses http://; use https:// so search engines and social "
+                "previews treat the site as secure",
+                "site",
+            )
+        )
     if doc.site.logo and not doc.site.logo.alt.strip():
         issues.append(Issue("warning", "The logo has no alt text (use the business name)", "site"))
     if doc.site.header.transparent and not any(

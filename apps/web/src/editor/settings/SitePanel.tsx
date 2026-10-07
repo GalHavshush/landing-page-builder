@@ -5,6 +5,7 @@ import { FieldShell, SelectControl, TextAreaControl, TextControl, ToggleControl 
 import { EmailControl } from "../controls/EmailControl";
 import { Repeater } from "../controls/Repeater";
 import { useCanEditStructure, useEditor } from "../store";
+import { isHttpsUrl } from "../validation";
 
 type Site = SiteDocument["site"];
 type Hours = Site["business"]["hours"][number];
@@ -14,13 +15,13 @@ function BaseUrl({ value, onChange }: { value: string; onChange: (v: string, typ
   const id = useId();
   const [draft, setDraft] = useState(value);
   useEffect(() => setDraft(value), [value]);
-  const bad = draft !== "" && !/^https?:\/\//.test(draft);
+  const bad = draft !== "" && !isHttpsUrl(draft);
   return (
     <FieldShell label="Website address" htmlFor={id} hint="The final address, e.g. https://example.com. Needed for sitemap, social previews and search engines.">
       <input id={id} value={draft} placeholder="https://example.com" aria-invalid={bad} spellCheck={false}
-        onChange={(e) => { setDraft(e.target.value); if (e.target.value === "" || /^https?:\/\//.test(e.target.value)) onChange(e.target.value, true); }}
+        onChange={(e) => { setDraft(e.target.value); if (e.target.value === "" || isHttpsUrl(e.target.value)) onChange(e.target.value, true); }}
         className={`mt-1 block w-full rounded-md border px-2.5 py-1.5 text-sm ${bad ? "border-red-400" : "border-ink-300"}`} />
-      {bad && <p className="mt-1 text-xs text-red-600">Must start with https://</p>}
+      {bad && <p role="alert" className="mt-1 text-xs text-red-600">Must start with https:// and include the domain, e.g. https://example.com</p>}
     </FieldShell>
   );
 }

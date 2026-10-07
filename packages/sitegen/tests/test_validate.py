@@ -97,3 +97,19 @@ def test_logo_alt_and_transparent_header_hints():
     assert any(level == "info" and "transparent header" in m for level, m in found)
     doc.pages[0].sections[0].variant = "cover"
     assert not any("transparent header" in m for _, m in messages(doc))
+
+
+def test_http_website_address_is_flagged():
+    from sitegen import SiteDocument, build
+
+    def issues(base):
+        doc = SiteDocument.model_validate(
+            {
+                "site": {"name": "T", "base_url": base},
+                "pages": [{"id": "p", "title": "A", "sections": []}],
+            }
+        )
+        return [i.message for i in build(doc).issues]
+
+    assert any("https://" in m and "http://" in m for m in issues("http://example.com"))
+    assert not any("use https://" in m for m in issues("https://example.com"))
