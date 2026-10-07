@@ -68,9 +68,12 @@ export function ExportDialog({ projectId }: { projectId: number }) {
             <section className="space-y-3 rounded-lg border border-emerald-200 bg-emerald-50/50 p-3">
               <div className="text-sm font-medium">Export ready · {latest.file_count} files · {kb(latest.size_bytes)}</div>
               <Issues issues={latest.issues} />
-              <a href={href(projectId, latest.id)} download className={linkButton}>
-                Download ZIP
-              </a>
+              <div className="flex flex-wrap items-center gap-2">
+                <a href={href(projectId, latest.id)} download className={linkButton}>
+                  Download ZIP
+                </a>
+                <Button variant="ghost" onClick={build} disabled={create.isPending}>{create.isPending ? "Building…" : "Export again"}</Button>
+              </div>
             </section>
           )}
           {create.error && <p role="alert" className="text-sm text-red-600">{create.error.message}</p>}
