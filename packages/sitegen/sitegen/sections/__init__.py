@@ -58,3 +58,20 @@ Section = Annotated[
 
 def create_section(section_type: str):
     return REGISTRY[section_type].create()
+
+
+def empty_hint(section_type: str, props) -> str | None:
+    """Why a section would show nothing yet (used by the editor preview only), or None."""
+    for name in ("items", "plans"):
+        value = getattr(props, name, None)
+        if isinstance(value, list) and not value:
+            return "Nothing to show yet. Add items in the panel on the right."
+    if section_type in ("logos", "gallery") and not any(i.image for i in props.items):
+        return "Choose a picture for each item in the panel on the right."
+    if section_type == "compare" and not (props.before and props.after):
+        return "Choose both a before and an after photo in the panel on the right."
+    if section_type == "youtube" and not props.url.strip():
+        return "Paste a YouTube link in the panel on the right."
+    if section_type == "map" and not props.query.strip():
+        return "Type an address in the panel on the right."
+    return None

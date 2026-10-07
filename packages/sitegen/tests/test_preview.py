@@ -72,3 +72,38 @@ def test_post_preview_uses_the_given_font_base():
     )
     html = render_post_preview(load_starter("clean"), post, font_base="/api/fonts/").html
     assert "url(/api/fonts/" in html and "url(/fonts/" not in html
+
+
+def test_empty_sections_get_a_hint_in_the_preview_only():
+    from sitegen import SiteDocument
+    from sitegen.sections import create_section
+
+    logos = create_section("logos")  # no logos yet
+    compare = create_section("compare")
+    doc = SiteDocument.model_validate(
+        {
+            "site": {"name": "T"},
+            "pages": [
+                {
+                    "id": "pg",
+                    "title": "A",
+                    "sections": [logos.model_dump(mode="json"), compare.model_dump(mode="json")],
+                }
+            ],
+        }
+    )
+    preview = render_preview(doc, "pg", "en").html
+    assert preview.count('<div class="pv-empty">') == 2
+    assert "pv-empty" not in build(doc).files["index.html"].decode()
+
+
+def test_gallery_items_without_pictures_still_count_as_empty():
+    from sitegen.sections import create_section, empty_hint
+    from sitegen.sections.gallery.model import GalleryItem
+
+    gallery = create_section("gallery")
+    assert empty_hint("gallery", gallery.props)
+    gallery.props.items = [GalleryItem()]
+    assert "picture" in empty_hint("gallery", gallery.props)
+    gallery.props.items = [GalleryItem(image=ImageRef(asset="a1", alt="x"))]
+    assert empty_hint("gallery", gallery.props) is None

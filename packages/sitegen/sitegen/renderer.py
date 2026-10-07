@@ -79,6 +79,12 @@ def get_env() -> Environment:
     return env
 
 
+def _empty_hint(section, lang: str, doc) -> str | None:
+    from sitegen.sections import empty_hint
+
+    return empty_hint(section.type, localized_props(section, lang, doc.site.default_language))
+
+
 def localized_props(section, lang: str, default_lang: str):
     """Section props for `lang`: translated values override, anything missing falls back."""
     override = section.i18n.get(lang) if lang != default_lang else None
@@ -401,6 +407,7 @@ def render_page(
             p=localized_props(section, lang, doc.site.default_language),
             ctx=ctx,
             preview=preview is not None,
+            empty_hint=_empty_hint(section, lang, doc) if preview is not None else None,
         )
         for section in page.sections
     ]

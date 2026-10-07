@@ -5,7 +5,8 @@
   style.textContent =
     "[data-section-id]{position:relative}" +
     "[data-section-id].pv-hover{outline:2px dashed #f2600f;outline-offset:-2px;cursor:pointer}" +
-    "[data-section-id].pv-selected{outline:3px solid #f2600f;outline-offset:-3px}";
+    "[data-section-id].pv-selected{outline:3px solid #f2600f;outline-offset:-3px}" +
+    ".pv-empty{margin-block:1rem;padding:1.5rem;border:2px dashed #b9b4a8;border-radius:10px;text-align:center;font:14px/1.4 system-ui,sans-serif;color:#5d5951;background:rgb(255 255 255 / .6)}";
   document.head.appendChild(style);
 
   function sectionOf(el) { return el.closest && el.closest("[data-section-id]"); }
