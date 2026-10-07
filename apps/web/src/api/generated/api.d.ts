@@ -1014,6 +1014,8 @@ export interface components {
              * @default false
              */
             interactive: boolean;
+            /** Post Id */
+            post_id?: string | null;
         };
         /** PreviewOut */
         PreviewOut: {
@@ -1701,6 +1703,7 @@ export interface operations {
             query?: {
                 page_id?: string | null;
                 lang?: string | null;
+                post_id?: string | null;
             };
             header?: never;
             path: {

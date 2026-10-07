@@ -166,3 +166,37 @@ def test_posts_are_private_to_members(client, project, db_session):
     assert eve.get(f"/projects/{pid}/posts").status_code == 404
     assert eve.get(f"/projects/{pid}/posts/{post['id']}").status_code == 404
     assert eve.delete(f"/projects/{pid}/posts/{post['id']}").status_code == 404
+
+
+def test_blog_links_in_the_live_preview_open_the_post(client, project):
+    """A post link in the interactive preview must lead to that post, not be a dead '#'."""
+    pid = project["id"]
+    live = new_post(client, pid, slug="live-post", title="Live post").json()
+    draft = new_post(client, pid, slug="secret-draft", title="Secret draft").json()
+    publish(client, pid, live)
+    doc = client.get(f"/projects/{pid}/doc").json()["doc"]
+    home = doc["pages"][0]
+    section = {"id": "sec_blog", "type": "blog_list", "variant": "cards", "props": {}, "style": {}}
+    saved = client.put(
+        f"/projects/{pid}/doc",
+        json={
+            "doc": {
+                **doc,
+                "pages": [{**home, "sections": [*home["sections"], section]}, *doc["pages"][1:]],
+            },
+            "base_revision": project["revision"],
+        },
+    )
+    assert saved.status_code == 200, saved.text
+    page = client.get(f"/projects/{pid}/live").json()["html"]
+    assert f'href="#post:{live["id"]}"' in page and "#post:" + draft["id"] not in page
+    post = client.get(f"/projects/{pid}/live", params={"post_id": live["id"]})
+    assert post.status_code == 200 and "Live post" in post.json()["html"]
+    assert 'type: "navigate"' in post.json()["html"]  # still the interactive preview
+    assert client.get(f"/projects/{pid}/live", params={"post_id": draft["id"]}).status_code == 404
+    # the editor's unsaved-document preview takes the same parameter
+    r = client.post(
+        f"/projects/{pid}/preview",
+        json={"doc": doc, "page_id": home["id"], "interactive": True, "post_id": live["id"]},
+    )
+    assert r.status_code == 200 and "Live post" in r.json()["html"]

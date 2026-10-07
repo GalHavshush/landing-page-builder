@@ -51,6 +51,7 @@ def render_post_preview(
     assets: dict[str, AssetFile] | None = None,
     all_posts: list[Post] | None = None,
     font_base: str = "/fonts/",
+    interactive: bool = False,
 ) -> PreviewResult:
     """Preview of one post page (the post may be an unsaved draft)."""
     issues: list[Issue] = []
@@ -63,6 +64,6 @@ def render_post_preview(
         assets or {},
         issues,
         [*others, post],
-        preview=PreviewOptions(asset_url=asset_url, font_base=font_base),
+        preview=PreviewOptions(asset_url=asset_url, font_base=font_base, interactive=interactive),
     )
     return PreviewResult(html=html, issues=issues)

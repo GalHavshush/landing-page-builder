@@ -82,6 +82,7 @@ export default function Dashboard() {
               const q = new URLSearchParams();
               if (to.page) q.set("page_id", to.page);
               if (to.lang) q.set("lang", to.lang);
+              if (to.post) q.set("post_id", to.post);
               return (await api<{ html: string }>(`/projects/${previewing.id}/live?${q}`, { signal })).html;
             }}
           />

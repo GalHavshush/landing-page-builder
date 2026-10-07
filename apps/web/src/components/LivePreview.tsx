@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { IconClose, IconDesktop, IconMobile } from "@/components/icons";
 import { t } from "@/i18n";
 
-type Target = { page: string | null; lang: string | null };
+type Target = { page: string | null; lang: string | null; post: string | null };
 type Device = "desktop" | "mobile";
 
 /**
@@ -17,7 +17,7 @@ export function LivePreview({
   load: (target: Target, signal: AbortSignal) => Promise<string>;
   onClose: () => void;
 }) {
-  const [target, setTarget] = useState<Target>({ page: null, lang: null });
+  const [target, setTarget] = useState<Target>({ page: null, lang: null, post: null });
   const [html, setHtml] = useState<string>();
   const [error, setError] = useState<string>();
   const [device, setDevice] = useState<Device>("desktop");
@@ -33,7 +33,7 @@ export function LivePreview({
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
       if (e.source !== frame.current?.contentWindow || e.data?.type !== "navigate") return;
-      setTarget({ page: String(e.data.page), lang: String(e.data.lang) });
+      setTarget(e.data.post ? { page: null, lang: null, post: String(e.data.post) } : { page: String(e.data.page), lang: String(e.data.lang), post: null });
     };
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("message", onMessage);

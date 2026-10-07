@@ -45,6 +45,7 @@ class PreviewIn(BaseModel):
     page_id: str
     lang: str | None = None
     interactive: bool = False  # a try-it-out preview instead of the click-to-select one
+    post_id: str | None = None  # show this blog post instead of a page
 
 
 class BriefPreviewIn(BaseModel):

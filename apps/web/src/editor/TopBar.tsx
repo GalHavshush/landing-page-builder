@@ -95,7 +95,7 @@ export function TopBar({ project, meta }: { project: Project; meta: EditorMeta }
           load={async (to, signal) =>
             (await api<{ html: string }>(`/projects/${project.id}/preview`, {
               method: "POST", signal,
-              body: { doc: live.doc, page_id: to.page ?? live.page, lang: to.lang ?? live.lang, interactive: true },
+              body: { doc: live.doc, page_id: to.page ?? live.page, lang: to.lang ?? live.lang, interactive: true, post_id: to.post },
             })).html}
         />
       )}

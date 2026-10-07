@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sitegen.fonts import FONTS_DIR
 from sitegen.meta import editor_meta
-from sitegen.preview import render_preview
+from sitegen.preview import render_post_preview, render_preview
 from sitegen.strings import LANGUAGE_NAMES
 from sqlalchemy.orm import Session
 
@@ -51,22 +51,35 @@ def bundled_font(path: str) -> Response:
     )
 
 
-def _render(db: Session, access: Access, doc, page_id: str, lang: str | None, interactive: bool):
+def _render(
+    db: Session,
+    access: Access,
+    doc,
+    page_id: str,
+    lang: str | None,
+    interactive: bool,
+    post_id: str | None = None,
+):
     known = preview_assets(db, access.project)
     prefix = get_settings().media_url_prefix
+    options = dict(
+        asset_url=lambda asset_id: f"{prefix}/{known[asset_id][1]}" if asset_id in known else "",
+        assets={asset_id: file for asset_id, (file, _) in known.items()},
+        font_base=f"{get_settings().media_url_prefix.rsplit('/', 1)[0]}/fonts/",
+    )
+    posts = published_posts(db, access.project)
     try:
-        result = render_preview(
-            doc,
-            page_id,
-            lang,
-            asset_url=lambda asset_id: (
-                f"{prefix}/{known[asset_id][1]}" if asset_id in known else ""
-            ),
-            assets={asset_id: file for asset_id, (file, _) in known.items()},
-            posts=published_posts(db, access.project),
-            font_base=f"{get_settings().media_url_prefix.rsplit('/', 1)[0]}/fonts/",
-            interactive=interactive,
-        )
+        if post_id is not None:
+            post = next((p for p in posts if p.id == post_id), None)
+            if post is None:
+                raise HTTPException(404, "Unknown post")
+            result = render_post_preview(
+                doc, post, all_posts=posts, interactive=interactive, **options
+            )
+        else:
+            result = render_preview(
+                doc, page_id, lang, posts=posts, interactive=interactive, **options
+            )
     except KeyError as exc:
         raise HTTPException(404, f"Unknown page or language: {exc.args[0]}") from exc
     return PreviewOut(html=result.html, issues=[i.__dict__ for i in result.issues])
@@ -75,19 +88,28 @@ def _render(db: Session, access: Access, doc, page_id: str, lang: str | None, in
 @router.post("/projects/{project_id}/preview", response_model=PreviewOut)
 def preview(body: PreviewIn, access: Access = VIEW, db: Session = Depends(get_db)):
     """Render a page of the document the editor currently holds (not necessarily saved yet)."""
-    return _render(db, access, parse_document(body.doc), body.page_id, body.lang, body.interactive)
+    return _render(
+        db,
+        access,
+        parse_document(body.doc),
+        body.page_id,
+        body.lang,
+        body.interactive,
+        body.post_id,
+    )
 
 
 @router.get("/projects/{project_id}/live", response_model=PreviewOut)
 def live(
     page_id: str | None = None,
     lang: str | None = None,
+    post_id: str | None = None,
     access: Access = VIEW,
     db: Session = Depends(get_db),
 ):
     """Interactive preview of the saved draft (the dashboard's thumbnails and quick preview)."""
     doc = parse_document(access.project.draft_doc)
-    return _render(db, access, doc, page_id or doc.pages[0].id, lang, True)
+    return _render(db, access, doc, page_id or doc.pages[0].id, lang, True, post_id)
 
 
 @router.post("/projects/preview-brief", response_model=PreviewOut)

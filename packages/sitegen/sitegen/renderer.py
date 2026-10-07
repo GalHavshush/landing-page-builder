@@ -133,10 +133,14 @@ class RenderContext:
 
     def rel(self, target: str) -> str:
         if self.preview:
-            # "#pg:<page id>:<lang>" lets the editor switch to that page; "#" if it is not a page
+            # "#pg:<page id>:<lang>" / "#post:<post id>" let the editor switch to that page or post;
+            # "#" if the target is neither
             for (page_id, lang), path in self.plan.items():
                 if path == target:
                     return f"#pg:{page_id}:{lang}"
+            for post in self.posts:
+                if paths.post_output_path(self.doc, post) == target:
+                    return f"#post:{post.id}"
             return "#"
         return "/" + target if self.absolute else paths.relative(self.out_path, target)
 

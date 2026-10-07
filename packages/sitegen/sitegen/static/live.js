@@ -6,9 +6,13 @@
     if (!a) return;
     var href = a.getAttribute("href") || "";
     var page = /^#pg:([^:]+):(.+)$/.exec(href);
+    var post = /^#post:(.+)$/.exec(href);
     if (page) {
       e.preventDefault();
       parent.postMessage({ type: "navigate", page: page[1], lang: page[2] }, "*");
+    } else if (post) {
+      e.preventDefault();
+      parent.postMessage({ type: "navigate", post: post[1] }, "*");
     } else if (href === "#") {
       e.preventDefault(); // a link the preview cannot follow
     } else if (/^https?:/i.test(href)) {
