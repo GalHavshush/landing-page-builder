@@ -1998,6 +1998,7 @@
         "title": {
           "anyOf": [
             {
+              "maxLength": 200,
               "type": "string"
             },
             {
@@ -2010,6 +2011,7 @@
         "description": {
           "anyOf": [
             {
+              "maxLength": 500,
               "type": "string"
             },
             {
@@ -2351,6 +2353,7 @@
         },
         "default_description": {
           "default": "",
+          "maxLength": 500,
           "title": "Default Description",
           "type": "string"
         },

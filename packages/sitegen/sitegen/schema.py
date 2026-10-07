@@ -32,8 +32,8 @@ def language_dir(lang: str) -> str:
 
 
 class SEO(Strict):
-    title: str | None = None
-    description: str | None = None
+    title: str | None = Field(default=None, max_length=200)
+    description: str | None = Field(default=None, max_length=500)
     social_image: str | None = None  # asset id
     noindex: bool = False
 
@@ -57,7 +57,7 @@ class Business(Strict):
 
 class SiteSEO(Strict):
     title_template: str = "{page} | {site}"
-    default_description: str = ""
+    default_description: str = Field(default="", max_length=500)
     social_image: str | None = None
 
 

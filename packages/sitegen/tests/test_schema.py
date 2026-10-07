@@ -44,3 +44,17 @@ def test_design_props_are_not_translatable():
     data["pages"][0]["sections"][0]["i18n"] = {"he": {"image_position": "start"}}
     with pytest.raises(ValidationError, match="not translatable"):
         SiteDocument.model_validate(data)
+
+
+def test_seo_texts_have_sane_length_limits():
+    import pytest
+    from pydantic import ValidationError
+    from sitegen.schema import SEO, SiteSEO
+
+    assert SEO(title="t" * 200, description="d" * 500)
+    with pytest.raises(ValidationError):
+        SEO(title="t" * 201)
+    with pytest.raises(ValidationError):
+        SEO(description="d" * 501)
+    with pytest.raises(ValidationError):
+        SiteSEO(default_description="d" * 501)

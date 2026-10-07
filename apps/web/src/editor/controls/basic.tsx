@@ -22,22 +22,34 @@ export function FieldShell({ label, hint, htmlFor, children }: { label: string; 
   );
 }
 
-export function TextControl({ label, value, onChange, placeholder, disabled, hint }: ControlProps<string>) {
+/** "62 / 160": turns amber past the recommended length, and the field stops accepting text at the hard limit. */
+export function CharCount({ length, ideal, max }: { length: number; ideal: number; max: number }) {
+  const over = length > ideal;
+  return (
+    <p aria-live="polite" className={`mt-1 text-right text-[11px] tabular-nums ${over ? "text-amber-700" : "text-ink-400"}`}>
+      {length} characters{over ? (length >= max ? ". Limit reached" : `. Aim for under ${ideal}, search engines may cut it off`) : ` (aim for under ${ideal})`}
+    </p>
+  );
+}
+
+export function TextControl({ label, value, onChange, placeholder, disabled, hint, ideal, max }: ControlProps<string> & { ideal?: number; max?: number }) {
   const id = useId();
   return (
     <FieldShell label={label} hint={hint} htmlFor={id}>
-      <input id={id} className="field-input" value={value} placeholder={placeholder} disabled={disabled}
+      <input id={id} className="field-input" value={value} placeholder={placeholder} disabled={disabled} maxLength={max}
         onChange={(e) => onChange(e.target.value, true)} />
+      {ideal && max ? <CharCount length={value.length} ideal={ideal} max={max} /> : null}
     </FieldShell>
   );
 }
 
-export function TextAreaControl({ label, value, onChange, placeholder, disabled, hint, rows = 3 }: ControlProps<string> & { rows?: number }) {
+export function TextAreaControl({ label, value, onChange, placeholder, disabled, hint, rows = 3, ideal, max }: ControlProps<string> & { rows?: number; ideal?: number; max?: number }) {
   const id = useId();
   return (
     <FieldShell label={label} hint={hint} htmlFor={id}>
-      <textarea id={id} rows={rows} className="field-input resize-y" value={value} placeholder={placeholder} disabled={disabled}
+      <textarea id={id} rows={rows} className="field-input resize-y" value={value} placeholder={placeholder} disabled={disabled} maxLength={max}
         onChange={(e) => onChange(e.target.value, true)} />
+      {ideal && max ? <CharCount length={value.length} ideal={ideal} max={max} /> : null}
     </FieldShell>
   );
 }

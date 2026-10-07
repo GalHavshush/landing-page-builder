@@ -54,7 +54,7 @@ export function SitePanel() {
   };
   const field = (f: SiteTField, label: string, area = false, hint?: string) =>
     area ? (
-      <TextAreaControl label={label} hint={hint} value={value(f)} placeholder={translating ? base[f] : undefined} onChange={(v, t) => write(f, v, t)} />
+      <TextAreaControl label={label} hint={hint} value={value(f)} placeholder={translating ? base[f] : undefined} ideal={f === "description" ? 160 : undefined} max={f === "description" ? 500 : undefined} onChange={(v, t) => write(f, v, t)} />
     ) : (
       <TextControl label={label} hint={hint} value={value(f)} placeholder={translating ? base[f] : undefined} onChange={(v, t) => write(f, v, t)} />
     );
